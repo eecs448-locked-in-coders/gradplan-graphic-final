@@ -7,79 +7,60 @@
 		#course-grid {
 			border: 2px dashed red;
 		}
-		.course {
-			width: 50px;
+		#course-grid tr {
+			height: 80px;
+		}
+		.redips-drag {
+			width: 95px;
 			height: 50px;
 			border-radius: 5px;
 			background: #0cc;
+			/* Center text */
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 	</style>
+	<script>
+		window.addEventListener('DOMContentLoaded', e => {
+			REDIPS.drag.init();
+			REDIPS.drag.dropMode = "single";
+		});
+	</script>
 </head>
-<body onload="REDIPS.drag.init()">
-	<div id="redips-drag">
-		<table id="course-grid">
-			<colgroup><col width="100"/><col width="100"/><col width="100"/><col width="100"/><col width="100"/></colgroup>
-			<tr>
-				<td class="redips-mark">Fall 2018</td>
-				<td></td>
-				<td><div class="redips-drag">EECS 168</div></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td class="redips-mark">Spring 2019</td>
-				<td></td>
-				<td></td>
-				<td><div class="redips-drag">EECS 140</div></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td class="redips-mark">Fall 2019</td>
-				<td><div class="redips-drag">EECS 268</div></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-		</table>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4">
+				<h1>The stuff besides the class chart goes here</h1>
+			</div>
+			<div id="redips-drag" class="col-md-8">
+				<table id="course-grid" class="table w-auto">
+					<colgroup><col width="120"/><col width="120"/><col width="120"/><col width="120"/><col width="120"/></colgroup>
+					<tr>
+						<td class="redips-mark">Fall 2018</td>
+						<td></td>
+						<td><div class="redips-drag">EECS 168</div></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="redips-mark">Spring 2019</td>
+						<td></td>
+						<td></td>
+						<td><div class="redips-drag">EECS 140</div></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="redips-mark">Fall 2019</td>
+						<td><div class="redips-drag">EECS 268</div></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
-
-<!--
-<div id="course-grid">
-	<div class="btn btn-primary course">Drag test</div>
-	<div class="btn btn-primary course">Drag test</div>
-	<div class="btn btn-primary course">Drag test</div>
-</div>
-
-<script type="module">
-import interact from 
-'https://cdn.jsdelivr.net/npm/@interactjs/interactjs/index.js'
-
-var x = 0; var y = 0;
-interact('.course').draggable({
-    modifiers: [
-      interact.modifiers.snap({
-        targets: [
-          interact.createSnapGrid({ x: 50, y: 50 })
-        ],
-        range: Infinity,
-        relativePoints: [ { x: 0, y: 0 } ]
-      }),
-      interact.modifiers.restrict({
-        restriction: document.getElementById("course-grid"),
-        elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
-        endOnly: true
-      })
-    ],
-    inertia: true
-  })
-  .on('dragmove', function (event) {
-    x += event.dx;
-    y += event.dy;
-
-    event.target.style.transform =
-        'translate(' + x + 'px, ' + y + 'px)';
-  })
-</script>
--->
