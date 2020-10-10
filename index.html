@@ -7,7 +7,12 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+	<!-- latest version of svg.js does not work with connectable -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.3.2/svg.min.js" integrity="sha512-z2MY2TNwheymYjcr9rZPbIkMkpoYInZ6oCqvH8+xF8CIDNf0su5IqN/NihB1DW5eW3RFySxjajiLZTspWInT7Q==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.connectable.js/2.0.1/svg.connectable.min.js" integrity="sha512-NwzNxetjVmB85p+qBoBOR1ef4IdpKxXVL+Ln8M8ryQBVKasWLRJqwmwHK6oGM+jGaQTHHwEUzlo935/zb3ktbA==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.draggy.js/1.1.1/svg.draggy.min.js" integrity="sha512-K/4+ur3lrUV7eZyU/43QPKgH4P4Zm57fI5vqrHawFuV+zh2kUOX2vwrRUwcREziIIOkruJkxfuHUHyMxy9EWVw==" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="redips-drag-min.js"></script>
+	<script type="text/javascript" src="Render.js"></script>
 	<style>
 		#course-grid tr {
 			height: 80px;
@@ -21,12 +26,18 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			z-index: 100;
+		}
+		#arrows svg {
+			border: 2px dashed red;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
 		}
 	</style>
 	<script>
 		window.addEventListener('DOMContentLoaded', e => {
-			REDIPS.drag.init();
-			REDIPS.drag.dropMode = "single";
+			window.render = new Render();
 		});
 	</script>
 </head>
@@ -38,6 +49,7 @@
 				<input type="button" class="btn btn-primary" value="I am a button">
 			</div>
 			<div id="redips-drag" class="col-md-8">
+				<div id="arrows"></div>
 				<table id="course-grid" class="table w-auto mx-auto border">
 					<colgroup><col width="120"/><col width="120"/><col width="120"/><col width="120"/><col width="120"/></colgroup>
 					<tr>
