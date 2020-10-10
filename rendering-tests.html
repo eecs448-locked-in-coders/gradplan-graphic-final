@@ -1,21 +1,51 @@
 <!DOCTYPE html>
-<!--
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
--->
-<style>
-	#course-grid {
-		width: 500px;
-		height: 500px;
-		border: 2px dashed red;
-	}
-	.course {
-		width: 50px;
-		height: 50px;
-		border-radius: 5px;
-		background: #0cc;
-	}
-</style>
+<html>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<script type="text/javascript" src="redips-drag-min.js"></script>
+	<style>
+		#course-grid {
+			border: 2px dashed red;
+		}
+		.course {
+			width: 50px;
+			height: 50px;
+			border-radius: 5px;
+			background: #0cc;
+		}
+	</style>
+</head>
+<body onload="REDIPS.drag.init()">
+	<div id="redips-drag">
+		<table id="course-grid">
+			<colgroup><col width="100"/><col width="100"/><col width="100"/><col width="100"/><col width="100"/></colgroup>
+			<tr>
+				<td class="redips-mark">Fall 2018</td>
+				<td></td>
+				<td><div class="redips-drag">EECS 168</div></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td class="redips-mark">Spring 2019</td>
+				<td></td>
+				<td></td>
+				<td><div class="redips-drag">EECS 140</div></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td class="redips-mark">Fall 2019</td>
+				<td><div class="redips-drag">EECS 268</div></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
 
+<!--
 <div id="course-grid">
 	<div class="btn btn-primary course">Drag test</div>
 	<div class="btn btn-primary course">Drag test</div>
@@ -52,4 +82,4 @@ interact('.course').draggable({
         'translate(' + x + 'px, ' + y + 'px)';
   })
 </script>
-
+-->
