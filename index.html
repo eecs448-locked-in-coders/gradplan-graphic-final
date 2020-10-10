@@ -7,17 +7,63 @@
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="redips-drag-min.js"></script>
+	<style>
+		#course-grid tr {
+			height: 80px;
+		}
+		.redips-drag {
+			width: 95px;
+			height: 50px;
+			border-radius: 5px;
+			background: #0cc;
+			/* Center text */
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	</style>
+	<script>
+		window.addEventListener('DOMContentLoaded', e => {
+			REDIPS.drag.init();
+			REDIPS.drag.dropMode = "single";
+		});
+	</script>
 </head>
 <body>
 	<div class="container-fluid">
-		<div class="row">
-			<div class="col-4 border-right">
+		<div class="row mt-2">
+			<div class="col-md-4 border-right">
 				<h1>Available Courses and stuff can go here</h1>
 				<input type="button" class="btn btn-primary" value="I am a button">
 			</div>
-			<div class="col-8">
-				The fancy chart will go here
+			<div id="redips-drag" class="col-md-8">
+				<table id="course-grid" class="table w-auto mx-auto border">
+					<colgroup><col width="120"/><col width="120"/><col width="120"/><col width="120"/><col width="120"/></colgroup>
+					<tr>
+						<td class="redips-mark">Fall 2018</td>
+						<td></td>
+						<td><div class="redips-drag">EECS 168</div></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="redips-mark">Spring 2019</td>
+						<td></td>
+						<td></td>
+						<td><div class="redips-drag">EECS 140</div></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="redips-mark">Fall 2019</td>
+						<td><div class="redips-drag">EECS 268</div></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
 			</div>
+		</div>
 		</div>
 	</div>
 </body>
