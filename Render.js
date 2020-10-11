@@ -2,7 +2,7 @@ const UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
 
 // Position of all arrows relative to top-left of svg
 const LEFT_OFFSET = 120; // Offset due to the column of the chart with the semester names
-const TOP_OFFSET = 0; // Currently zero, but of padding is added for outside channels may increase
+const TOP_OFFSET = -2; // Currently zero, but of padding is added for outside channels may increase
 
 const NUM_CHANNELS = 5;
 
@@ -34,8 +34,6 @@ class Render {
 			}
 		}
 		
-		//console.log(this.vertChannels);
-		
 		// Test arrow
 		this.arrows = [new Arrow(1, 0, 0, 2, false)];
 		
@@ -57,23 +55,30 @@ class Render {
 	
 	renderArrows() {
 		for (let arrow of this.arrows) {
-			//console.log(arrow);
-			//console.log(arrow.startPoint());
+			console.log(arrow);
+			console.log(arrow.endPoint());
 			
 			let path = [
 				arrow.startPoint(),
 				[25,50],
 				[50,50],
-				...this.arrowHead(50, 100, DOWN)
+				...this.arrowHead(...arrow.endPoint(), DOWN)
 			];
+			
 			// Find the minimum x and y coordinates in the path (needed to properly offset the arrow)
 			let mins = path.reduce((acc, val) => [
-				(acc[0] === undefined || val[0] < acc[0]) ? val[0] : acc[0], 
-				(acc[1] === undefined || val[1] < acc[1]) ? val[1] : acc[1]
-			], [9999,9999]);
+				val[0] < acc[0] ? val[0] : acc[0], 
+				val[1] < acc[1] ? val[1] : acc[1]
+			], [Number.MAX_VALUE, Number.MAX_VALUE]);
 			
 			this.draw.polyline(path).fill('none').move(LEFT_OFFSET+mins[0], TOP_OFFSET+mins[1]).stroke({ color: '#f06', width: 2, linecap: 'round', linejoin: 'round' });
 		}
+	}
+	
+	findHorizChannel(startX, y, endX) {
+	}
+	
+	findVertChannel(x, startY, endY) {
 	}
 	
 	arrowHead(x, y, dir = DOWN, length = 6) {
@@ -109,11 +114,16 @@ class Arrow {
 	constructor(xIn, yIn, xOut, yOut, fromSide) {
 		this.xIn = xIn;
 		this.yIn = yIn;
+		this.xOut = xOut;
 		this.yOut = yOut;
 		this.fromSide = fromSide;
 	}
 	
 	startPoint() {
 		return [(this.xIn+.5)*TD_WIDTH, (this.yIn+.5)*TD_HEIGHT + COURSE_HEIGHT/2];
+	}
+	
+	endPoint() {
+		return [(this.xOut+.5)*TD_WIDTH, (this.yOut+.5)*TD_HEIGHT - COURSE_HEIGHT/2];
 	}
 }
