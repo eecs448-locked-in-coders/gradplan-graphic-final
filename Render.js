@@ -59,17 +59,16 @@ class Render {
 	
 	renderArrows() {
 		for (let arrow of this.arrows) {
-			console.log(arrow);
-			console.log(arrow.endPoint());
-			
-			let firstChannelY = this.findHorizChannel(arrow.xIn+.5, arrow.xIn+1, arrow.yIn+1);
-			let secondChannelX;
+			let firstChannelY = this.findHorizChannel(arrow.xIn+.5, ...arrow.node1());
+			let secondChannelX = this.findVertChannel(...arrow.node1(), arrow.node2()[1]);
 			let thirdChannelY;
+			
+			console.log(secondChannelX);
 			
 			let path = [
 				arrow.startPoint(),
 				[(arrow.xIn+.5)*TD_WIDTH, firstChannelY], 
-				[(arrow.xIn+1)*TD_WIDTH, firstChannelY],
+				[secondChannelX, firstChannelY],
 				[25,50],
 				[50,50],
 				...this.arrowHead(...arrow.endPoint(), DOWN)
@@ -87,6 +86,8 @@ class Render {
 	
 	// Return the y coordinate (pixel) to draw the channel at
 	findHorizChannel(startX, endX, y) {
+		// TODO: The loops here currently don't work if endX < startX (arrow going left). Need to flip startX/endX in that case or something.
+		
 		// Find an available channel (all segments along length of line available)
 		var chan;
 		for (chan = 0; chan < NUM_CHANNELS; chan++) {
@@ -112,6 +113,30 @@ class Render {
 	}
 	
 	findVertChannel(x, startY, endY) {
+		// TODO: The same problem as findHorizChannel for upward pointing arrows (though this is much less common)
+		
+		// Find an available channel (all segments along length of line available)
+		var chan;
+		for (chan = 0; chan < NUM_CHANNELS; chan++) {
+			var channelValid = true;
+			for (var row = Math.floor(startY); row < Math.ceil(endY); row++) {
+				// if this segment of the channel is already taken
+				if (this.vertChannels[row][x][chan]) { 
+					channelValid = false;
+					break;
+				}
+			}
+			// Available channel found
+			if (channelValid) break;
+		}
+		
+		// Mark channel as unavailable
+		for (var row = Math.floor(startY); row < Math.ceil(endY); row++) {
+			this.vertChannels[row][x][chan] = true;
+		}
+		
+		// X coordinate pixel of the channel
+		return (chan - ((NUM_CHANNELS-1)/2)) * VERT_CHANNEL_SIZE + x*TD_WIDTH;
 	}
 	
 	arrowHead(x, y, dir = DOWN, length = 6) {
@@ -152,11 +177,23 @@ class Arrow {
 		this.fromSide = fromSide;
 	}
 	
+	// Pixels of start point
 	startPoint() {
 		return [(this.xIn+.5)*TD_WIDTH, (this.yIn+.5)*TD_HEIGHT + COURSE_HEIGHT/2];
 	}
 	
+	// Pixels of end point
 	endPoint() {
 		return [(this.xOut+.5)*TD_WIDTH, (this.yOut+.5)*TD_HEIGHT - COURSE_HEIGHT/2];
+	}
+	
+	// Grid coordinates of junction point between first and second channels (diagonally down-left or down-right from starting course)
+	node1() {
+		return [(this.xOut >= this.xIn) ? this.xIn+1 : this.xIn, this.yIn+1];
+	}
+	
+	// Grid coordinates of the junction point between the second and third channels (below node1)
+	node2() {
+		return [(this.xOut >= this.xIn) ? this.xIn+1 : this.xIn, this.yOut];
 	}
 }
