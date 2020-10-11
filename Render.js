@@ -40,8 +40,9 @@ class Render {
 		
 		// Prerequisite test arrows from and to hard-coded positions
 		this.arrows = [
-			new Arrow(0, 0, 2, 2, false), // EECS 168 to EECS 268
 			new Arrow(0, 1, 3, 2, false), // EECS 140 to EECS 388
+			new Arrow(0, 0, 2, 2, false), // EECS 168 to EECS 268
+			
 		];
 		
 		// Initialize drag-and-drop
@@ -63,6 +64,7 @@ class Render {
 	renderArrows() {
 		for (let arrow of this.arrows) {
 			// TODO: Handle the special case of the course directly below (should be simple) and only one semester below (currently should work, but wastes a vertChannel)
+			// TODO: Nodes can currently overlap, which is ambiguous. Possible solution is rounded or diagonal corners instead of right turns at nodes.
 			
 			// Find the coordinates of the channels the arrow will go through
 			let firstChannelY = this.findHorizChannel(arrow.xIn+.5, ...arrow.node1());
