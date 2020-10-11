@@ -1,13 +1,43 @@
 const UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
 
+// Position of all arrows relative to top-left of svg
+const LEFT_OFFSET = 120; // Offset due to the column of the chart with the semester names
+const TOP_OFFSET = 0; // Currently zero, but of padding is added for outside channels may increase
+
+const NUM_CHANNELS = 5;
+
+const TD_WIDTH = 120;
+const TD_HEIGHT = 80;
+const COURSE_WIDTH = 95;
+const COURSE_HEIGHT = 50;
+
 class Render {
 	constructor() {
+		// Rows and columns of courses in the grid (not counting column of semester names)
 		// TODO: These shouldn't be hard-coded and should change based on things like number of semesters
 		this.rows = 3;
 		this.cols = 4;
 		
+		// Initialize channels (note there is one more set of channels than the number of rows/cols as the channels go between them)
+		this.vertChannels = [];
+		this.horizChannels = [];
+		for (var row = 0; row <= this.rows; row++) {
+			this.vertChannels[row] = [];
+			this.horizChannels[row] = [];
+			for (var col = 0; col <= this.cols; col++) {
+				this.vertChannels[row][col] = [];
+				this.horizChannels[row][col] = [];
+				for (var chan = 0; chan < NUM_CHANNELS; chan++) {
+					this.vertChannels[row][col][chan] = false;
+					this.horizChannels[row][col][chan] = false;
+				}
+			}
+		}
+		
+		//console.log(this.vertChannels);
+		
 		// Test arrow
-		this.arrows = [new Arrow(2, 0, 1, 2, false)];
+		this.arrows = [new Arrow(1, 0, 0, 2, false)];
 		
 		// Initialize drag-and-drop
 		REDIPS.drag.init();
@@ -27,15 +57,23 @@ class Render {
 	
 	renderArrows() {
 		for (let arrow of this.arrows) {
-			console.log(arrow);
-			// First parameter is coordinates pairs of the line
-			// The move command offsets the entire line by a fixed distance from 0, 0
-			this.draw.polyline([[0,0],[0,50],[50,50],...this.arrowHead(50, 100, DOWN)]).fill('none').move(100, 20).stroke({ color: '#f06', width: 2, linecap: 'round', linejoin: 'round' });
+			//console.log(arrow);
+			//console.log(arrow.startPoint());
+			
+			let path = [
+				arrow.startPoint(),
+				[25,50],
+				[50,50],
+				...this.arrowHead(50, 100, DOWN)
+			];
+			// Find the minimum x and y coordinates in the path (needed to properly offset the arrow)
+			let mins = path.reduce((acc, val) => [
+				(acc[0] === undefined || val[0] < acc[0]) ? val[0] : acc[0], 
+				(acc[1] === undefined || val[1] < acc[1]) ? val[1] : acc[1]
+			], [9999,9999]);
+			
+			this.draw.polyline(path).fill('none').move(LEFT_OFFSET+mins[0], TOP_OFFSET+mins[1]).stroke({ color: '#f06', width: 2, linecap: 'round', linejoin: 'round' });
 		}
-	}
-	
-	drawLine(coords, moveX = 0, moveY = 0) {
-		this.draw.polyline(coords).fill('none').move(100, 20).stroke({ color: '#f06', width: 2, linecap: 'round', linejoin: 'round' });
 	}
 	
 	arrowHead(x, y, dir = DOWN, length = 6) {
@@ -55,7 +93,15 @@ class Render {
 	 - As the lines are placed booleans are set to indicate which channels are in use so future lines don't draw on top of them
 	 - Lines are also different colors to make them easier to tell apart
 	 - Channels would be stored as two 3D arrays of booleans (x, y, and which of the 5 channels; one array for vertical and one for horizontal)
-	 - Lines try to stay within the same channel when moving along horizontally or vertically - look for a fully open one
+	 - Lines try to stay within the same channel when moving along horizontally or vertically - look for a fully open one (findChannel function, takes start and end/dir/length)
+	 - Process of drawing a prereq line: 
+	     - Draw point below course, 
+		 - findChannel(horizontal left or right, starting at a .5 value and only going a distace of .5), 
+		 - findChannel(vertical usually down), 
+		 - findChannel(horizontal left or right, ending at a .5 value and going a variable distance to reach course)
+		 - draw arrowHead
+	 - When starting/ending at a .5 value, actually have findChannel offset the coordinate in the direction of travel to cause a 45 degree diagonal line from the terminal point
+	 - If I want to allow shard lines for a course (like colored lines in draw.io), the 3D arrays would store which course/node the line is coming from instead of booleans)
 	*/
 }
 
@@ -65,5 +111,9 @@ class Arrow {
 		this.yIn = yIn;
 		this.yOut = yOut;
 		this.fromSide = fromSide;
+	}
+	
+	startPoint() {
+		return [(this.xIn+.5)*TD_WIDTH, (this.yIn+.5)*TD_HEIGHT + COURSE_HEIGHT/2];
 	}
 }
