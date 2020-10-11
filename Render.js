@@ -40,9 +40,8 @@ class Render {
 		
 		// Prerequisite test arrows from and to hard-coded positions
 		this.arrows = [
-			new Arrow(0, 1, 3, 2, false), // EECS 140 to EECS 388
-			new Arrow(0, 0, 2, 2, false), // EECS 168 to EECS 268
-			
+			new Arrow(0, 0, 3, 2, false), // EECS 168 to EECS 268
+			new Arrow(2, 1, 1, 2, false), // EECS 140 to EECS 388
 		];
 		
 		// Initialize drag-and-drop
@@ -63,22 +62,33 @@ class Render {
 	
 	renderArrows() {
 		for (let arrow of this.arrows) {
-			// TODO: Handle the special case of the course directly below (should be simple) and only one semester below (currently should work, but wastes a vertChannel)
-			// TODO: Nodes can currently overlap, which is ambiguous. Possible solution is rounded or diagonal corners instead of right turns at nodes.
+			let path = [arrow.startPoint()]; // Start below middle of starting course
 			
-			// Find the coordinates of the channels the arrow will go through
-			let firstChannelY = this.findHorizChannel(arrow.xIn+.5, ...arrow.node1());
-			let secondChannelX = this.findVertChannel(...arrow.node1(), arrow.node2()[1]);
-			let thirdChannelY = this.findHorizChannel(arrow.node2()[0], arrow.xOut+.5, arrow.node2()[1]);
+			// If the course is not in the next semester, will need 3 line segments through channels
+			if (arrow.yIn+1 != arrow.yOut) {
+				// Find the coordinates of the channels the arrow will go through
+				let firstChannelY = this.findHorizChannel(arrow.xIn, ...arrow.node1());
+				let secondChannelX = this.findVertChannel(...arrow.node1(), arrow.node2()[1]);
+				let thirdChannelY = this.findHorizChannel(arrow.node2()[0], arrow.xOut, arrow.node2()[1]);
+				
+				path.push(
+					[(arrow.xIn+.5)*TD_WIDTH, firstChannelY], // Enter first channel
+					[secondChannelX, firstChannelY], // Traverse along first channel to node1, the junction between channels 1 and 2
+					[secondChannelX, thirdChannelY], // Traverse down second channel to node2, the junction between channels 2 and 3
+					[(arrow.xOut+.5)*TD_WIDTH, thirdChannelY], // Traverse along third channel to the point above the ending course
+				);
+			}
+			// If the course is in the next semester, but not directly below, will need 1 line segment through a channel
+			else if (arrow.xIn != arrow.xOut) {
+				let channelY = this.findHorizChannel(arrow.xIn, arrow.xOut, arrow.yOut);
+				path.push(
+					[(arrow.xIn+.5)*TD_WIDTH, channelY], // Enter channel
+					[(arrow.xOut+.5)*TD_WIDTH, channelY], // Traverse along channel to the point directly above the ending course
+				);
+			}
+			// else: Course directly below current one - just draw the line straight to it
 			
-			let path = [
-				arrow.startPoint(), // Start below middle of starting course
-				[(arrow.xIn+.5)*TD_WIDTH, firstChannelY], // Enter first channel
-				[secondChannelX, firstChannelY], // Traverse along first channel to node1, the junction between channels 1 and 2
-				[secondChannelX, thirdChannelY], // Traverse down second channel to node2, the junction between channels 2 and 3
-				[(arrow.xOut+.5)*TD_WIDTH, thirdChannelY], // Traverse along third channel to the point above the ending course
-				...this.arrowHead(...arrow.endPoint(), DOWN) // Connect to ending course with an arrowhead
-			];
+			path.push(...this.arrowHead(...arrow.endPoint(), DOWN)); // Connect to ending course with an arrowhead
 			
 			// Find the minimum x and y coordinates in the path (needed to properly offset the arrow)
 			let mins = path.reduce((acc, val) => [
@@ -92,13 +102,11 @@ class Render {
 	
 	// Return the y coordinate (pixel) to draw the channel at
 	findHorizChannel(startX, endX, y) {
-		// IMPORTANT TODO: The loops here currently don't work if endX < startX (arrow going left). Need to flip startX/endX in that case or something.
-		
 		// Find an available channel (all segments along length of line available)
 		var chan;
 		for (chan = 0; chan < NUM_CHANNELS; chan++) {
 			var channelValid = true;
-			for (var col = Math.floor(startX); col < Math.ceil(endX); col++) {
+			for (var col = Math.min(startX, endX); col < Math.max(startX, endX); col++) {
 				// if this segment of the channel is already taken
 				if (this.horizChannels[y][col][chan]) { 
 					channelValid = false;
@@ -110,7 +118,7 @@ class Render {
 		}
 		
 		// Mark channel as unavailable
-		for (var col = Math.floor(startX); col < Math.ceil(endX); col++) {
+		for (var col = Math.min(startX, endX); col < Math.max(startX, endX); col++) {
 			this.horizChannels[y][col][chan] = true;
 		}
 		
@@ -119,13 +127,11 @@ class Render {
 	}
 	
 	findVertChannel(x, startY, endY) {
-		// TODO: The same problem as findHorizChannel for upward pointing arrows (though this is much less common)
-		
 		// Find an available channel (all segments along length of line available)
 		var chan;
 		for (chan = 0; chan < NUM_CHANNELS; chan++) {
 			var channelValid = true;
-			for (var row = Math.floor(startY); row < Math.ceil(endY); row++) {
+			for (var row = Math.min(startY, endY); row < Math.max(startY, endY); row++) {
 				// if this segment of the channel is already taken
 				if (this.vertChannels[row][x][chan]) { 
 					channelValid = false;
@@ -137,7 +143,7 @@ class Render {
 		}
 		
 		// Mark channel as unavailable
-		for (var row = Math.floor(startY); row < Math.ceil(endY); row++) {
+		for (var row = Math.min(startY, endY); row < Math.max(startY, endY); row++) {
 			this.vertChannels[row][x][chan] = true;
 		}
 		
