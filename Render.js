@@ -106,7 +106,7 @@ class Render {
 		var chan;
 		for (chan = 0; chan < NUM_CHANNELS; chan++) {
 			var channelValid = true;
-			for (var col = Math.min(startX, endX); col < Math.max(startX, endX); col++) {
+			for (var col = Math.min(startX, endX); col <= Math.max(startX, endX); col++) {
 				// if this segment of the channel is already taken
 				if (this.horizChannels[y][col][chan]) { 
 					channelValid = false;
@@ -118,7 +118,7 @@ class Render {
 		}
 		
 		// Mark channel as unavailable
-		for (var col = Math.min(startX, endX); col < Math.max(startX, endX); col++) {
+		for (var col = Math.min(startX, endX); col <= Math.max(startX, endX); col++) {
 			this.horizChannels[y][col][chan] = true;
 		}
 		
@@ -131,7 +131,7 @@ class Render {
 		var chan;
 		for (chan = 0; chan < NUM_CHANNELS; chan++) {
 			var channelValid = true;
-			for (var row = Math.min(startY, endY); row < Math.max(startY, endY); row++) {
+			for (var row = Math.min(startY, endY); row <= Math.max(startY, endY); row++) {
 				// if this segment of the channel is already taken
 				if (this.vertChannels[row][x][chan]) { 
 					channelValid = false;
@@ -143,7 +143,7 @@ class Render {
 		}
 		
 		// Mark channel as unavailable
-		for (var row = Math.min(startY, endY); row < Math.max(startY, endY); row++) {
+		for (var row = Math.min(startY, endY); row <= Math.max(startY, endY); row++) {
 			this.vertChannels[row][x][chan] = true;
 		}
 		
