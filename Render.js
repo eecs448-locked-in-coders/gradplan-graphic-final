@@ -61,16 +61,14 @@ class Render {
 		for (let arrow of this.arrows) {
 			let firstChannelY = this.findHorizChannel(arrow.xIn+.5, ...arrow.node1());
 			let secondChannelX = this.findVertChannel(...arrow.node1(), arrow.node2()[1]);
-			let thirdChannelY;
-			
-			console.log(secondChannelX);
+			let thirdChannelY = this.findHorizChannel(arrow.node2()[0], arrow.xOut+.5, arrow.node2()[1]);
 			
 			let path = [
 				arrow.startPoint(),
 				[(arrow.xIn+.5)*TD_WIDTH, firstChannelY], 
 				[secondChannelX, firstChannelY],
-				[25,50],
-				[50,50],
+				[secondChannelX, thirdChannelY],
+				[(arrow.xOut+.5)*TD_WIDTH, thirdChannelY],
 				...this.arrowHead(...arrow.endPoint(), DOWN)
 			];
 			
