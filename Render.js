@@ -38,8 +38,11 @@ class Render {
 			}
 		}
 		
-		// Test arrow
-		this.arrows = [new Arrow(1, 0, 0, 2, false)];
+		// Prerequisite test arrows from and to hard-coded positions
+		this.arrows = [
+			new Arrow(0, 0, 2, 2, false), // EECS 168 to EECS 268
+			new Arrow(0, 1, 3, 2, false), // EECS 140 to EECS 388
+		];
 		
 		// Initialize drag-and-drop
 		REDIPS.drag.init();
@@ -59,17 +62,20 @@ class Render {
 	
 	renderArrows() {
 		for (let arrow of this.arrows) {
+			// TODO: Handle the special case of the course directly below (should be simple) and only one semester below (currently should work, but wastes a vertChannel)
+			
+			// Find the coordinates of the channels the arrow will go through
 			let firstChannelY = this.findHorizChannel(arrow.xIn+.5, ...arrow.node1());
 			let secondChannelX = this.findVertChannel(...arrow.node1(), arrow.node2()[1]);
 			let thirdChannelY = this.findHorizChannel(arrow.node2()[0], arrow.xOut+.5, arrow.node2()[1]);
 			
 			let path = [
-				arrow.startPoint(),
-				[(arrow.xIn+.5)*TD_WIDTH, firstChannelY], 
-				[secondChannelX, firstChannelY],
-				[secondChannelX, thirdChannelY],
-				[(arrow.xOut+.5)*TD_WIDTH, thirdChannelY],
-				...this.arrowHead(...arrow.endPoint(), DOWN)
+				arrow.startPoint(), // Start below middle of starting course
+				[(arrow.xIn+.5)*TD_WIDTH, firstChannelY], // Enter first channel
+				[secondChannelX, firstChannelY], // Traverse along first channel to node1, the junction between channels 1 and 2
+				[secondChannelX, thirdChannelY], // Traverse down second channel to node2, the junction between channels 2 and 3
+				[(arrow.xOut+.5)*TD_WIDTH, thirdChannelY], // Traverse along third channel to the point above the ending course
+				...this.arrowHead(...arrow.endPoint(), DOWN) // Connect to ending course with an arrowhead
 			];
 			
 			// Find the minimum x and y coordinates in the path (needed to properly offset the arrow)
@@ -84,7 +90,7 @@ class Render {
 	
 	// Return the y coordinate (pixel) to draw the channel at
 	findHorizChannel(startX, endX, y) {
-		// TODO: The loops here currently don't work if endX < startX (arrow going left). Need to flip startX/endX in that case or something.
+		// IMPORTANT TODO: The loops here currently don't work if endX < startX (arrow going left). Need to flip startX/endX in that case or something.
 		
 		// Find an available channel (all segments along length of line available)
 		var chan;
@@ -137,7 +143,7 @@ class Render {
 		return (chan - ((NUM_CHANNELS-1)/2)) * VERT_CHANNEL_SIZE + x*TD_WIDTH;
 	}
 	
-	arrowHead(x, y, dir = DOWN, length = 6) {
+	arrowHead(x, y, dir = DOWN, length = 4) {
 		if (dir == UP)    return [[x, y], [x-length, y+length], [x, y], [x+length, y+length], [x, y]];
 		if (dir == DOWN)  return [[x, y], [x-length, y-length], [x, y], [x+length, y-length], [x, y]];
 		if (dir == LEFT)  return [[x, y], [x+length, y-length], [x, y], [x+length, y+length], [x, y]];
