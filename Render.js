@@ -11,6 +11,10 @@ const TD_HEIGHT = 80;
 const COURSE_WIDTH = 95;
 const COURSE_HEIGHT = 50;
 
+// The thickness of each individual channel (line drawn in middle)
+const HORIZ_CHANNEL_SIZE = (TD_HEIGHT-COURSE_HEIGHT)/NUM_CHANNELS;
+const VERT_CHANNEL_SIZE = (TD_WIDTH-COURSE_WIDTH)/NUM_CHANNELS;
+
 class Render {
 	constructor() {
 		// Rows and columns of courses in the grid (not counting column of semester names)
@@ -58,8 +62,14 @@ class Render {
 			console.log(arrow);
 			console.log(arrow.endPoint());
 			
+			let firstChannelY = this.findHorizChannel(arrow.xIn+.5, arrow.xIn+1, arrow.yIn+1);
+			let secondChannelX;
+			let thirdChannelY;
+			
 			let path = [
 				arrow.startPoint(),
+				[(arrow.xIn+.5)*TD_WIDTH, firstChannelY], 
+				[(arrow.xIn+1)*TD_WIDTH, firstChannelY],
 				[25,50],
 				[50,50],
 				...this.arrowHead(...arrow.endPoint(), DOWN)
@@ -75,7 +85,30 @@ class Render {
 		}
 	}
 	
-	findHorizChannel(startX, y, endX) {
+	// Return the y coordinate (pixel) to draw the channel at
+	findHorizChannel(startX, endX, y) {
+		// Find an available channel (all segments along length of line available)
+		var chan;
+		for (chan = 0; chan < NUM_CHANNELS; chan++) {
+			var channelValid = true;
+			for (var col = Math.floor(startX); col < Math.ceil(endX); col++) {
+				// if this segment of the channel is already taken
+				if (this.horizChannels[y][col][chan]) { 
+					channelValid = false;
+					break;
+				}
+			}
+			// Available channel found
+			if (channelValid) break;
+		}
+		
+		// Mark channel as unavailable
+		for (var col = Math.floor(startX); col < Math.ceil(endX); col++) {
+			this.horizChannels[y][col][chan] = true;
+		}
+		
+		// Y coordinate pixel of the channel
+		return (chan - ((NUM_CHANNELS-1)/2)) * HORIZ_CHANNEL_SIZE + y*TD_HEIGHT;
 	}
 	
 	findVertChannel(x, startY, endY) {
