@@ -42,9 +42,10 @@ class Render {
 		// Test arrows from and to hard-coded course positions
 		this.arrows = [
 			new Arrow(1, 0, 1, 2, false), // EECS 168 to EECS 268
+			new Arrow(1, 0, 0, 2, false), // EECS 168 to EECS 388
 			new Arrow(2, 0, 0, 2, false), // EECS 140 to EECS 388
 			new Arrow(0, 0, 2, 1, true),  // MATH 126 to PHSX 210 (corequisite)
-			new Arrow(2, 1, 3, 2, true),
+			new Arrow(2, 1, 3, 2, true),  // PHSX 210 to PHSX 216
 		];
 		
 		// Initialize drag-and-drop (perhaps this should be moved to Executive.js)
@@ -125,7 +126,9 @@ class Render {
 				val[1] < acc[1] ? val[1] : acc[1]
 			], [Number.MAX_VALUE, Number.MAX_VALUE]);
 			
-			this.draw.polyline(path).fill('none').move(LEFT_OFFSET+mins[0], TOP_OFFSET+mins[1]).stroke({ color: '#f06', width: 2, linecap: 'round', linejoin: 'round' });
+			// TODO: Temporary random colors - in the future, the color should match the course the arrow starts at
+			let color = "hsl(" + Math.floor(90+Math.random()*270) + ", 100%, 50%)";
+			this.draw.polyline(path).fill('none').move(LEFT_OFFSET+mins[0], TOP_OFFSET+mins[1]).stroke({color: color, width: 2, linecap: 'round', linejoin: 'round'});
 		}
 	}
 	
@@ -187,27 +190,6 @@ class Render {
 		if (dir == LEFT)  return [[x, y], [x+length, y-length], [x, y], [x+length, y+length], [x, y]];
 		if (dir == RIGHT) return [[x, y], [x-length, y-length], [x, y], [x-length, y+length], [x, y]];
 	}
-	
-	/*
-	Line positioning logic:
-	 - "Channels" exist in between the courses 
-	 - Each channel is the length/width of a single course, i.e. not the full size of the chart
-	 - There is a fixed number of channels, most likely 5 (could maybe do just 3)
-	 - When drawing a line, the middle channel is used if available, then the outermost two, then the remaining two
-	 - Lines go out of the bottom of a box, then left/right to the nearest vertical channel in the direction of the class below, then down all the way, then over to the class
-	 - As the lines are placed booleans are set to indicate which channels are in use so future lines don't draw on top of them
-	 - Lines are also different colors to make them easier to tell apart
-	 - Channels would be stored as two 3D arrays of booleans (x, y, and which of the 5 channels; one array for vertical and one for horizontal)
-	 - Lines try to stay within the same channel when moving along horizontally or vertically - look for a fully open one (findChannel function, takes start and end/dir/length)
-	 - Process of drawing a prereq line: 
-	     - Draw point below course, 
-		 - findChannel(horizontal left or right, starting at a .5 value and only going a distace of .5), 
-		 - findChannel(vertical usually down), 
-		 - findChannel(horizontal left or right, ending at a .5 value and going a variable distance to reach course)
-		 - draw arrowHead
-	 - When starting/ending at a .5 value, actually have findChannel offset the coordinate in the direction of travel to cause a 45 degree diagonal line from the terminal point
-	 - If I want to allow shard lines for a course (like colored lines in draw.io), the 3D arrays would store which course/node the line is coming from instead of booleans)
-	*/
 }
 
 class Arrow {
@@ -243,3 +225,19 @@ class Arrow {
 		else return [(this.xOut > this.xIn) ? this.xIn+1 : this.xIn, this.yOut];
 	}
 }
+
+/*
+	Line positioning logic:
+	 - "Channels" exist in between the courses 
+	 - Each channel is the length/width of a single course, i.e. not the full size of the chart
+	 - There is a fixed number of channels available (5)
+	 - When drawing a line, the middle channel is used if available, if not it works its way outward
+	 - Prerequisite lines go out of the bottom of a box, then left/right to the nearest vertical channel in the direction of the class below, then down all the way, then over to the class
+	 - Corequisite lines are the same logic transposed (swap all x and y - out of the right side and into the left side of courses)
+	 - As the lines are placed booleans are set to indicate which channels are in use so future lines don't draw on top of them
+	 - Lines could be made different colors to make them easier to tell apart
+	 - Channels are stored as two 3D arrays of booleans (x, y, and which of the 5 channels; one array for vertical and one for horizontal)
+	 - Lines stay within the same channel when moving along horizontally or vertically - looks for a fully open one (findChannel function, takes start and end/dir/length)
+	 - Could add 45 degree diagonal lines from starting/ending points to entering channels and rounding the nodes between channels
+	 - If I wanted to allow shared lines for a course (like colored lines in draw.io), the 3D arrays would store which course/node the line is coming from instead of booleans)
+*/
