@@ -2,14 +2,14 @@ const UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
 
 // Position of all arrows relative to top-left of svg
 const LEFT_OFFSET = 120; // Offset due to the column of the chart with the semester names
-const TOP_OFFSET = -2; // Currently zero, but of padding is added for outside channels may increase
+const TOP_OFFSET = 0; // Currently zero, but of padding is added for outside channels may increase
 
 const CHANNELS = [2, 1, 3, 0, 4]; // Order channels will be filled
 const NUM_CHANNELS = CHANNELS.length; //5
 
 const TD_WIDTH = 120;
 const TD_HEIGHT = 80;
-const COURSE_WIDTH = 95;
+const COURSE_WIDTH = 90;
 const COURSE_HEIGHT = 50;
 
 // The thickness of each individual channel (line drawn in middle)
@@ -39,10 +39,12 @@ class Render {
 			}
 		}
 		
-		// Prerequisite test arrows from and to hard-coded positions
+		// Test arrows from and to hard-coded course positions
 		this.arrows = [
-			new Arrow(0, 0, 3, 2, false), // EECS 168 to EECS 268
-			new Arrow(2, 1, 1, 2, false), // EECS 140 to EECS 388
+			new Arrow(1, 0, 1, 2, false), // EECS 168 to EECS 268
+			new Arrow(2, 0, 0, 2, false), // EECS 140 to EECS 388
+			new Arrow(0, 0, 2, 1, true),  // MATH 126 to PHSX 210 (corequisite)
+			new Arrow(2, 1, 3, 2, true),
 		];
 		
 		// Initialize drag-and-drop (perhaps this should be moved to Executive.js)
@@ -66,9 +68,29 @@ class Render {
 			let path = [arrow.startPoint()]; // Start below middle of starting course
 			
 			if (arrow.fromSide) { // corequisite
-				// TODO: Similar logic to prerequisites but flipped x/y
+				// If the course is not in the adjacent column, will need 3 line segments through channels
+				if (arrow.xIn+1 != arrow.xOut) {
+					let firstChannelX = this.findVertChannel(...arrow.node1(), arrow.yIn);
+					let secondChannelY = this.findHorizChannel(arrow.node1()[0], ...arrow.node2());
+					let thirdChannelX = this.findVertChannel(...arrow.node2(), arrow.yOut);
+					path.push(
+						[firstChannelX, arrow.startPoint()[1]], // Enter first channel
+						[firstChannelX, secondChannelY], // Traverse down first channel to node1, the junction between channels 1 and 2
+						[thirdChannelX, secondChannelY], // Traverse along second channel to node2, the junction between channels 2 and 3
+						[thirdChannelX, arrow.endPoint()[1]] // Traverse down third channel to the point beside the ending course
+					);
+				}
+				// If the course is in the adjacent column, but not directly beside, will need 1 line segment through a channel
+				else if (arrow.yIn != arrow.yOut) {
+					let channelX = this.findVertChannel(arrow.xOut, arrow.yIn, arrow.yOut);
+					path.push(
+						[channelX, arrow.startPoint()[1]],
+						[channelX, arrow.endPoint()[1]]
+					);
+				}
+				// else: Course directly right of current one - just draw the line straight to it
 				
-				path.push(...this.arrowHead(...arrow.endPoint(), RIGHT));
+				path.push(...this.arrowHead(...arrow.endPoint(), RIGHT)); // Connect to ending course with an arrowhead
 			}
 			else { // prerequisite
 				// If the course is not in the next semester, will need 3 line segments through channels
@@ -76,21 +98,20 @@ class Render {
 					// Find the coordinates of the channels the arrow will go through
 					let firstChannelY = this.findHorizChannel(arrow.xIn, ...arrow.node1());
 					let secondChannelX = this.findVertChannel(...arrow.node1(), arrow.node2()[1]);
-					let thirdChannelY = this.findHorizChannel(arrow.node2()[0], arrow.xOut, arrow.node2()[1]);
-					
+					let thirdChannelY = this.findHorizChannel(arrow.xOut, ...arrow.node2());
 					path.push(
-						[(arrow.xIn+.5)*TD_WIDTH, firstChannelY], // Enter first channel
+						[arrow.startPoint()[0], firstChannelY], // Enter first channel
 						[secondChannelX, firstChannelY], // Traverse along first channel to node1, the junction between channels 1 and 2
 						[secondChannelX, thirdChannelY], // Traverse down second channel to node2, the junction between channels 2 and 3
-						[(arrow.xOut+.5)*TD_WIDTH, thirdChannelY], // Traverse along third channel to the point above the ending course
+						[arrow.endPoint()[0], thirdChannelY], // Traverse along third channel to the point above the ending course
 					);
 				}
 				// If the course is in the next semester, but not directly below, will need 1 line segment through a channel
 				else if (arrow.xIn != arrow.xOut) {
 					let channelY = this.findHorizChannel(arrow.xIn, arrow.xOut, arrow.yOut);
 					path.push(
-						[(arrow.xIn+.5)*TD_WIDTH, channelY], // Enter channel
-						[(arrow.xOut+.5)*TD_WIDTH, channelY], // Traverse along channel to the point directly above the ending course
+						[arrow.startPoint()[0], channelY], // Enter channel
+						[arrow.endPoint()[0], channelY], // Traverse along channel to the point directly above the ending course
 					);
 				}
 				// else: Course directly below current one - just draw the line straight to it
@@ -109,6 +130,7 @@ class Render {
 	}
 	
 	// Return the y coordinate (pixel) to draw the channel at
+	// startX and endX can be in either order
 	findHorizChannel(startX, endX, y) {
 		// Find an available channel (all segments along length of line available)
 		var chan;
@@ -209,13 +231,15 @@ class Arrow {
 		else return [(this.xOut+.5)*TD_WIDTH, (this.yOut+.5)*TD_HEIGHT - COURSE_HEIGHT/2];
 	}
 	
-	// Grid coordinates of junction point between first and second channels (diagonally down-left or down-right from starting course)
+	// Grid coordinates of junction point between first and second channels (for !fromSide, diagonally down-left or down-right from starting course)
 	node1() {
-		return [(this.xOut >= this.xIn) ? this.xIn+1 : this.xIn, this.yIn+1];
+		if (this.fromSide) return [this.xIn+1, (this.yOut > this.yIn) ? this.yIn+1 : this.yIn];
+		else return [(this.xOut > this.xIn) ? this.xIn+1 : this.xIn, this.yIn+1];
 	}
 	
-	// Grid coordinates of the junction point between the second and third channels (below node1)
+	// Grid coordinates of the junction point between the second and third channels (for !fromSide, below node1)
 	node2() {
-		return [(this.xOut >= this.xIn) ? this.xIn+1 : this.xIn, this.yOut];
+		if (this.fromSide) return [this.xOut, (this.yOut > this.yIn) ? this.yIn+1 : this.yIn];
+		else return [(this.xOut > this.xIn) ? this.xIn+1 : this.xIn, this.yOut];
 	}
 }
