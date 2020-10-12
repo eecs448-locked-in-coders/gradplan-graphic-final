@@ -23,7 +23,34 @@ class Render {
 		this.rows = 3;
 		this.cols = 4;
 		
-		// Initialize channels (note there is one more set of channels than the number of rows/cols as the channels go between them)
+		// Test arrows from and to hard-coded course positions
+		this.arrows = [
+			new Arrow(1, 0, 1, 2, false), // EECS 168 to EECS 268
+			new Arrow(1, 0, 0, 2, false), // EECS 168 to EECS 388
+			new Arrow(2, 0, 0, 2, false), // EECS 140 to EECS 388
+			new Arrow(0, 0, 2, 1, true),  // MATH 126 to PHSX 210 (corequisite)
+			new Arrow(2, 1, 3, 2, true),  // PHSX 210 to PHSX 216
+		];
+		
+		// Initialize drag-and-drop (perhaps this should be moved to Executive.js)
+		REDIPS.drag.init();
+		REDIPS.drag.dropMode = "single";
+		
+		this.draw = SVG().addTo(document.getElementById("arrows"));
+		this.rescale();
+		this.renderArrows();
+	}
+	
+	rescale() {
+		// Place svg behind the course-grid and make it the same size
+		document.querySelector("#arrows svg").style.width = document.getElementById("course-grid").offsetWidth;
+		document.querySelector("#arrows svg").style.height = document.getElementById("course-grid").offsetHeight;
+		document.querySelector("#arrows svg").style.marginBottom = -document.getElementById("course-grid").offsetHeight;
+	}
+	
+	renderArrows() {
+		// Initialize all channels as unused (false)
+		// Note there is one more set of channels than the number of course rows/cols as the channels go between and around them
 		this.vertChannels = [];
 		this.horizChannels = [];
 		for (var row = 0; row <= this.rows; row++) {
@@ -39,32 +66,6 @@ class Render {
 			}
 		}
 		
-		// Test arrows from and to hard-coded course positions
-		this.arrows = [
-			new Arrow(1, 0, 1, 2, false), // EECS 168 to EECS 268
-			new Arrow(1, 0, 0, 2, false), // EECS 168 to EECS 388
-			new Arrow(2, 0, 0, 2, false), // EECS 140 to EECS 388
-			new Arrow(0, 0, 2, 1, true),  // MATH 126 to PHSX 210 (corequisite)
-			new Arrow(2, 1, 3, 2, true),  // PHSX 210 to PHSX 216
-		];
-		
-		// Initialize drag-and-drop (perhaps this should be moved to Executive.js)
-		REDIPS.drag.init();
-		REDIPS.drag.dropMode = "single";
-		
-		// Place svg behind the course-grid and make it the same size
-		this.draw = SVG().addTo(document.getElementById("arrows"));
-		this.rescale();
-		this.renderArrows();
-	}
-	
-	rescale() {
-		document.querySelector("#arrows svg").style.width = document.getElementById("course-grid").offsetWidth;
-		document.querySelector("#arrows svg").style.height = document.getElementById("course-grid").offsetHeight;
-		document.querySelector("#arrows svg").style.marginBottom = -document.getElementById("course-grid").offsetHeight;
-	}
-	
-	renderArrows() {
 		for (let arrow of this.arrows) {
 			let path = [arrow.startPoint()]; // Start below middle of starting course
 			
@@ -193,6 +194,7 @@ class Render {
 }
 
 class Arrow {
+	// In = course arrow starts at; Out = course arrow ends at; fromSide = if arrows should be in/out the side of courses (corequisite)
 	constructor(xIn, yIn, xOut, yOut, fromSide) {
 		this.xIn = xIn;
 		this.yIn = yIn;
