@@ -19,9 +19,6 @@ const ARROW_SIZE = 4;
 const HORIZ_CHANNEL_SIZE = (TD_HEIGHT-COURSE_HEIGHT)/NUM_CHANNELS;
 const VERT_CHANNEL_SIZE = (TD_WIDTH-COURSE_WIDTH)/NUM_CHANNELS;
 
-
-
-
 // Colors to use on courses with the most arrows (from https://www.materialpalette.com/)
 // Red is deliberately not included as it is intended to be used when hovering over a course
 const COLORS = ["#2196F3" /*blue*/, "#4CAF50" /*green*/, "#9C27B0" /*purple*/, 
@@ -47,14 +44,13 @@ class Render {
 		this.rescale();
 		
 		// Test arrows from and to hard-coded course positions
-		let arrows = [
+		this.renderArrows([
 			new Arrow(1, 0, 0, 2, false), // EECS 168 to EECS 268
 			new Arrow(1, 0, 2, 2, false), // EECS 168 to EECS 388
 			new Arrow(2, 0, 2, 2, false), // EECS 140 to EECS 388
 			new Arrow(1, 1, 1, 2, true),  // MATH 126 to PHSX 210 (corequisite)
 			new Arrow(1, 2, 3, 2, true),  // PHSX 210 to PHSX 216
-		];
-		this.renderArrows(arrows);
+		]);
 	}
 	
 	rescale() {
@@ -66,53 +62,8 @@ class Render {
 	
 	renderArrows(arrows) {
 		this.arrows = arrows;
-		
-		// Initialize all channels as unused (false)
-		// Note there is one more set of channels than the number of course rows/cols as the channels go between and around them
-		this.vertChannels = [];
-		this.horizChannels = [];
-		// Note the bounds: one more vert/horiz channel than number of rows/cols as channels go around them
-		for (var row = 0; row <= this.rows; row++) { 
-			this.vertChannels[row] = [];
-			this.horizChannels[row] = [];
-			for (var col = 0; col <= this.cols; col++) {
-				this.vertChannels[row][col] = [];
-				this.horizChannels[row][col] = [];
-				for (var chan = 0; chan < NUM_CHANNELS; chan++) {
-					this.vertChannels[row][col][chan] = false;
-					this.horizChannels[row][col][chan] = false;
-				}
-			}
-		}
-		
-		// Find which starting points will have the most arrows coming out of them
-		let courseCounts = [];
-		for (var row = 0; row < this.rows; row++) {
-			courseCounts[row] = [];
-			for (var col = 0; col <= this.cols; col++) {
-				courseCounts[row][col] = 0;
-			}
-		}
-		for (let arrow of this.arrows) {
-			courseCounts[arrow.yIn][arrow.xIn]++;
-		}
-		
-		// Apply colors to the courses with more than 2 arrows (default otherwise
-		let courseColors = [];
-		let curColor = 0;
-		for (var row = 0; row < this.rows; row++) {
-			courseColors[row] = [];
-			for (var col = 0; col <= this.cols; col++) {
-				// If course has enough arrows to justify a color and there are still unused colors available
-				if (curColor < COLORS.length && courseCounts[row][col] >= ARROWS_FOR_COLOR) {
-					courseColors[row][col] = COLORS[curColor];
-					curColor++;
-				} 
-				else {
-					courseColors[row][col] = DEFAULT_COLOR;
-				}
-			}
-		}
+		this.initChannels();
+		let courseColors = this.findColors();
 		
 		for (let arrow of this.arrows) {
 			let path = [];
@@ -259,6 +210,59 @@ class Render {
 		if (dir == DOWN)  return [[x, y], [x-length, y-length], [x, y], [x+length, y-length], [x, y]];
 		if (dir == LEFT)  return [[x, y], [x+length, y-length], [x, y], [x+length, y+length], [x, y]];
 		if (dir == RIGHT) return [[x, y], [x-length, y-length], [x, y], [x-length, y+length], [x, y]];
+	}
+	
+	initChannels() {
+		// Initialize all channels as unused (false)
+		// Note there is one more set of channels than the number of course rows/cols as the channels go between and around them
+		this.vertChannels = [];
+		this.horizChannels = [];
+		// Note the bounds: one more vert/horiz channel than number of rows/cols as channels go around them
+		for (var row = 0; row <= this.rows; row++) { 
+			this.vertChannels[row] = [];
+			this.horizChannels[row] = [];
+			for (var col = 0; col <= this.cols; col++) {
+				this.vertChannels[row][col] = [];
+				this.horizChannels[row][col] = [];
+				for (var chan = 0; chan < NUM_CHANNELS; chan++) {
+					this.vertChannels[row][col][chan] = false;
+					this.horizChannels[row][col][chan] = false;
+				}
+			}
+		}
+	}
+	
+	findColors() {
+		// Find which starting points will have the most arrows coming out of them
+		let courseCounts = [];
+		for (var row = 0; row < this.rows; row++) {
+			courseCounts[row] = [];
+			for (var col = 0; col <= this.cols; col++) {
+				courseCounts[row][col] = 0;
+			}
+		}
+		for (let arrow of this.arrows) {
+			courseCounts[arrow.yIn][arrow.xIn]++;
+		}
+		
+		// Apply colors to the courses with more than 2 arrows (default otherwise
+		let courseColors = [];
+		let curColor = 0;
+		for (var row = 0; row < this.rows; row++) {
+			courseColors[row] = [];
+			for (var col = 0; col <= this.cols; col++) {
+				// If course has enough arrows to justify a color and there are still unused colors available
+				if (curColor < COLORS.length && courseCounts[row][col] >= ARROWS_FOR_COLOR) {
+					courseColors[row][col] = COLORS[curColor];
+					curColor++;
+				} 
+				else {
+					courseColors[row][col] = DEFAULT_COLOR;
+				}
+			}
+		}
+		
+		return courseColors;
 	}
 }
 
