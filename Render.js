@@ -19,6 +19,19 @@ const ARROW_SIZE = 4;
 const HORIZ_CHANNEL_SIZE = (TD_HEIGHT-COURSE_HEIGHT)/NUM_CHANNELS;
 const VERT_CHANNEL_SIZE = (TD_WIDTH-COURSE_WIDTH)/NUM_CHANNELS;
 
+
+
+
+// Colors to use on courses with the most arrows (from https://www.materialpalette.com/)
+// Red is deliberately not included as it is intended to be used when hovering over a course
+const COLORS = ["#2196F3" /*blue*/, "#4CAF50" /*green*/, "#9C27B0" /*purple*/, 
+	"#FF5722" /*deep orange*/, "#00BCD4" /*cyan*/, "#3F51B5" /*indigo*/,
+	"#FFC107" /*amber*/, "#CDDC39" /*lime*/, "#673AB7" /*deep purple*/,
+	"#FF9800" /*orange*/, "#FFEB3B" /*yellow*/, "#009688" /*teal*/,
+	"#03A9F4" /*light blue*/, "#607D8B" /*blue grey*/];
+const ARROWS_FOR_COLOR = 2; // Minimum number of arrows leaving a course before they will be given unique colors
+const DEFAULT_COLOR = "black"; // Color of arrows that don't meet the minimum
+
 class Render {
 	constructor() {
 		// Rows and columns of courses in the grid (not counting column of semester names)
@@ -58,7 +71,8 @@ class Render {
 		// Note there is one more set of channels than the number of course rows/cols as the channels go between and around them
 		this.vertChannels = [];
 		this.horizChannels = [];
-		for (var row = 0; row <= this.rows; row++) {
+		// Note the bounds: one more vert/horiz channel than number of rows/cols as channels go around them
+		for (var row = 0; row <= this.rows; row++) { 
 			this.vertChannels[row] = [];
 			this.horizChannels[row] = [];
 			for (var col = 0; col <= this.cols; col++) {
@@ -67,6 +81,35 @@ class Render {
 				for (var chan = 0; chan < NUM_CHANNELS; chan++) {
 					this.vertChannels[row][col][chan] = false;
 					this.horizChannels[row][col][chan] = false;
+				}
+			}
+		}
+		
+		// Find which starting points will have the most arrows coming out of them
+		let courseCounts = [];
+		for (var row = 0; row < this.rows; row++) {
+			courseCounts[row] = [];
+			for (var col = 0; col <= this.cols; col++) {
+				courseCounts[row][col] = 0;
+			}
+		}
+		for (let arrow of this.arrows) {
+			courseCounts[arrow.yIn][arrow.xIn]++;
+		}
+		
+		// Apply colors to the courses with more than 2 arrows (default otherwise
+		let courseColors = [];
+		let curColor = 0;
+		for (var row = 0; row < this.rows; row++) {
+			courseColors[row] = [];
+			for (var col = 0; col <= this.cols; col++) {
+				// If course has enough arrows to justify a color and there are still unused colors available
+				if (curColor < COLORS.length && courseCounts[row][col] >= ARROWS_FOR_COLOR) {
+					courseColors[row][col] = COLORS[curColor];
+					curColor++;
+				} 
+				else {
+					courseColors[row][col] = DEFAULT_COLOR;
 				}
 			}
 		}
@@ -148,8 +191,7 @@ class Render {
 				val[1] < acc[1] ? val[1] : acc[1]
 			], [Number.MAX_VALUE, Number.MAX_VALUE]);
 			
-			// TODO: Temporary random colors - in the future, the color should match the course the arrow starts at
-			let color = "hsl(" + Math.floor(90+Math.random()*270) + ", 100%, 50%)";
+			let color = courseColors[arrow.yIn][arrow.xIn];
 			this.draw.polyline(path).fill('none').move(LEFT_OFFSET+mins[0], TOP_OFFSET+mins[1]).stroke({color: color, width: 2, linecap: 'round', linejoin: 'round'});
 		}
 	}
