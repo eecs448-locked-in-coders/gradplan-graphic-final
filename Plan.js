@@ -13,7 +13,7 @@ class Plan {
     this.major = major;
     this.semesters = [];
     this.course_bank = [];
-    for(i=0; i<4; i++)
+    for(var i=0; i<4; i++)
     {
       //Makes 8 semester of fall/spring, flips between fall and spring
       //ONLY WOKRS IF YOU START AT FALL/SPRING
@@ -25,17 +25,26 @@ class Plan {
 
   }
   remove_course(course){
-    for(i=0; i<this.semesters.length(); i++){
-      for(j=0; j<this.semesters[i].semester_courses.length(); j++){
-        if(this.semesters[i].semester_courses[j] == course){
-          this.semesters[i].semester_course[j] = undefined;
-        }
-      }
+    for(var i=0; i<this.semesters.length(); i++){
+      this.semesters[i].semester_course.remove_course(course);
     }
     //check course bank
-    for(i=0; i<this.course_bank.length(); i++){
+    for(var i=0; i<this.course_bank.length(); i++){
       this.course_bank[i] = undefined;
     }
   }
+  //id is string
+  course_id_to_object(id){
+    for(var i=0; i<COURSES.length(); i++){
+      if(id == COURSES[i].course_code){
+        return(COURSES[i]);
+      }
+    }
+  }
 
+  fill_course_bank(){
+    for(var i=0; i<this.major.req_class.length(); i++){
+      this.course_bank.push(course_id_to_object(this.major.req_class[i]));
+    }
+  }
 }

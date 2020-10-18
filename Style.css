@@ -1,0 +1,68 @@
+#course-grid tr {
+    height: 80px;
+}
+.redips-drag {
+    width: 90px;
+    height: 50px;
+    border-radius: 5px;
+    background: #0cc;
+    /* Center this within td */
+    margin-left: auto;
+    margin-right: auto;
+    /* Center text within this */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+#arrows svg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.searchbar{
+    margin-bottom: auto;
+    margin-top: auto;
+    height: 30px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.search_input{
+    color: black;
+    border: 0;
+    outline: 0;
+    background: none;
+    width: 0;
+    caret-color:transparent;
+    line-height: 20px;
+    transition: width 0.4s linear;
+}
+
+.searchbar:hover > .search_input{
+    padding: 0 10px;
+    width: 450px;
+    caret-color: rgb(0, 81, 186);
+    transition: width 0.4s linear;
+}
+
+.searchbar:hover > .search_icon{
+    background: white;
+    color:  rgb(0, 81, 186);
+}
+
+.search_icon{
+    height: 20px;
+    width: 20px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: rgb(0, 81, 186);
+    text-decoration:none;
+}
+
