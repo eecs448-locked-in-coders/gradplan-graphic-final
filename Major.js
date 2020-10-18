@@ -2,8 +2,8 @@
 class Major {
 
   /*
-    req_class = [string]
-    elective = [string]
+    req_class = [course obj]
+    elective = [course obj]
     cred_hour_req = int
   */
   constructor(req_class, elective, cred_hour_req){
@@ -11,5 +11,5 @@ class Major {
     this.elective = electice;
     this.cred_hour_req = cred_hour_req;
   }
-
+  
 }

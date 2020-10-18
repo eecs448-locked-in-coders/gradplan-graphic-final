@@ -10,6 +10,6 @@ class Plan {
     this.major = major;
     this.semester = semester;
     this.transfer = transfer;
-
   }
+  
 }
