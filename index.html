@@ -42,25 +42,33 @@
 		});
 	</script>
 </head>
-<body>
-	<div class="jumbotron text-center" style="margin-bottom:0">
-		<h1>Gradplan Graphic</h1>
-		<p>EECS 448 Team 13</p> 
-	  </div>
-	  
-	  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-		<a class="navbar-brand" href="#">Link</a>
+<body style="font-family: Raleway,sans-serif;">
+	<div class="jumbotron container-fluid pt-4" style="margin-bottom:0; max-height: 3cm;" >
+		<div class="row">
+			<div class="col-sm-4"> <img src="KUSig_Horz_Web_Blue.png" style="float:left; max-height: 5cm; max-width: 6cm;" ></div>
+			<h1 class="col-sm-4 text-center" style="color: rgb(0, 81, 186);">Gradplan Graphic</h1>
+		</div>
+		<div class="row text-center">
+			<p class="col" style="color: rgb(0, 81, 186)">EECS 448 Team 13</p> 
+		</div>
+	</div>
+	  <!-- Navigation bar -->
+	  <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: rgb(0, 81, 186);"> <!--border:1px solid #0416bb-->
+		<a class="navbar-brand" href="index.html">Home</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 		  <span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 		  <ul class="navbar-nav">
 			<li class="nav-item">
-			  <a class="nav-link" href="https://www.classes.ku.edu">Schedule of classes</a>
+			  <a class="nav-link" href="http://www.classes.ku.edu">Schedule of classes</a>
 			</li>
 			<li class="nav-item">
-			  <a class="nav-link" href="https://www.sa.ku.edu">Enroll and Pay</a>
+			  <a class="nav-link" href="http://www.sa.ku.edu">Enroll and Pay</a>
 			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="https://my.ku.edu/uPortal/">myKU</a>
+			</li> 
 			<li class="nav-item">
 			  <a class="nav-link" href="members.html">Members</a>
 			</li>    
@@ -69,48 +77,24 @@
 	  </nav>
 	<div class="container-fluid">
 		<div class="row mt-2">
-			<div class="col-md-4 border-right">
-				<h1>Available Courses and stuff can go here</h1>
-				<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light" style="max-width: 800px; max-height: 200px;"> <!--class="btn-toolbar"-->
-					
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-								
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<tr>
-						<td class="redips-mark">Fall 2018</td>
-						<td><div class="redips-drag">MATH 126</div></td>
-						<td><div class="redips-drag">EECS 168</div></td>
-						<td><div class="redips-drag">EECS 140</div></td>
-						<td></td>
-					</tr>
-				  </div>
+			<div class="col-sm-4"><!--  border-right" > --> 
+				<h2>Student's name</h2>
+				<div class="row ml-2">
+					<img src="ku_jayhawk_2.jpg" style="max-height: 5cm; max-width: 6cm;">
+				</div>
+				<div class="row ml-2 mt-2">
+					<p style="font-weight: bold;">Major: </p>
+					<p> Computer Science</p>
+				</div>
+				<div class="row ml-2 mt-n3">
+					<p style="font-weight: bold;">Student ID: </p>
+					<p> 9999999</p>
+				</div>
 				
 			</div>
-			<div id="redips-drag" class="col-md-8" >
+			<div id="redips-drag" class="col-sm-8"> <!-- style="border:1px solid #cecece"> --> 
 				<div id="arrows"></div>
-				<table id="course-grid" class="mx-auto border">
+				<table id="course-grid" class="mx-auto"> <!--border"> --> 
 					<colgroup><col width="120"/><col width="120"/><col width="120"/><col width="120"/><col width="120"/></colgroup>
 					<tr>
 						<td class="redips-mark">Fall 2018</td>
@@ -134,6 +118,34 @@
 						<td><div class="redips-drag">PHSX 216</div></td>
 					</tr>
 				</table>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4">
+				<h1>Available Courses and stuff can go here</h1>
+				<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="max-width: 800px; max-height: 200px;"> <!--class="btn-toolbar"-->
+					
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+					<input type="button" class="btn btn-primary" value="I am a button">	
+				
+					<tr>
+						<td class="redips-mark">Fall 2018</td>
+						<td><div class="redips-drag">MATH 126</div></td>
+						<td><div class="redips-drag">EECS 168</div></td>
+						<td><div class="redips-drag">EECS 140</div></td>
+						<td></td>
+					</tr>
+				</div>
 			</div>
 		</div>
 		</div>
