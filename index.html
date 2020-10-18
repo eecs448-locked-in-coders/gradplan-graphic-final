@@ -12,30 +12,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.0.16/svg.min.js" integrity="sha512-p3Tp2zn+wApBreZCgRkmMwnfpN8MUPXzzOihXx7iGYXqE7t6m9drY8HeyMeeFuDWiTFKrGUrq3jpbT0vX6zY/Q==" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="redips-drag-min.js"></script>
 	<script type="text/javascript" src="Render.js"></script>
-	<style>
-		#course-grid tr {
-			height: 80px;
-		}
-		.redips-drag {
-			width: 90px;
-			height: 50px;
-			border-radius: 5px;
-			background: #0cc;
-			/* Center this within td */
-			margin-left: auto;
-			margin-right: auto;
-			/* Center text within this */
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			z-index: 100;
-		}
-		#arrows svg {
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-		}
-	</style>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<link rel="stylesheet" href="style.css">
+
 	<script>
 		window.addEventListener('DOMContentLoaded', e => {
 			window.render = new Render();
@@ -46,14 +25,14 @@
 	<div class="jumbotron container-fluid pt-4" style="margin-bottom:0; max-height: 3cm;" >
 		<div class="row">
 			<div class="col-sm-4"> <img src="KUSig_Horz_Web_Blue.png" style="float:left; max-height: 5cm; max-width: 6cm;" ></div>
-			<h1 class="col-sm-4 text-center" style="color: rgb(0, 81, 186);">Gradplan Graphic</h1>
+			<h1 class="col-sm-4 text-sm-center" style="color: rgb(0, 81, 186);">Gradplan Graphic</h1>
 		</div>
 		<div class="row text-center">
 			<p class="col" style="color: rgb(0, 81, 186)">EECS 448 Team 13</p> 
 		</div>
 	</div>
 	  <!-- Navigation bar -->
-	  <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: rgb(0, 81, 186);"> <!--border:1px solid #0416bb-->
+	  <nav class="navbar navbar-expand-sm navbar-dark d-print-none" style="background-color: rgb(0, 81, 186);"> <!--border:1px solid #0416bb-->
 		<a class="navbar-brand" href="index.html">Home</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 		  <span class="navbar-toggler-icon"></span>
@@ -71,8 +50,16 @@
 			</li> 
 			<li class="nav-item">
 			  <a class="nav-link" href="members.html">Members</a>
-			</li>    
+			</li>	 
 		  </ul>
+
+		  <div class="d-flex justify-content-center ml-3">
+			<div class="searchbar">
+			  <input class="search_input" type="text" name="" placeholder="Search...">
+			  <a href="#" class="search_icon"><i class="fas fa-search"></i></a>
+			</div>
+		  </div>
+
 		</div>  
 	  </nav>
 	<div class="container-fluid">
@@ -121,7 +108,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-4">
+			<div class="col-sm-4 d-print-none">
 				<h1>Available Courses and stuff can go here</h1>
 				<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="max-width: 800px; max-height: 200px;"> <!--class="btn-toolbar"-->
 					
