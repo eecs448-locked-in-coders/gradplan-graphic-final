@@ -2,13 +2,17 @@
 class Semester {
 
   /*
-    course_semester = [bool,bool,bool]
-    year = int
-    semester_codes = [coures, course, ...]
+    semester_season = int => 0,1,2
+    semester_year = int
+    semester_courses = [courses, courses, ...]
   */
-  constructor(course_semester, year, semester_codes){
-    this.course_semester = course_semester;
-    this.year = year;
-    this.semester_codes = semester_codes;
+  constructor(semester_season, semester_year, semester_courses){
+    this.semester_season = semester_season;
+    this.semester_year = semester_year;
+    this.semester_courses = semester_courses;
   }
+  add_course(course, index){
+    this.semester_courses[index] = course;
+  }
+
 }
