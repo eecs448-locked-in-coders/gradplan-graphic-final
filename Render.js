@@ -12,6 +12,9 @@ const TD_HEIGHT = 80;
 const COURSE_WIDTH = 90;
 const COURSE_HEIGHT = 50;
 
+// The depth and half the width of an arrow head
+const ARROW_SIZE = 4;
+
 // The thickness of each individual channel (line drawn in middle)
 const HORIZ_CHANNEL_SIZE = (TD_HEIGHT-COURSE_HEIGHT)/NUM_CHANNELS;
 const VERT_CHANNEL_SIZE = (TD_WIDTH-COURSE_WIDTH)/NUM_CHANNELS;
@@ -23,22 +26,22 @@ class Render {
 		this.rows = 3;
 		this.cols = 4;
 		
-		// Test arrows from and to hard-coded course positions
-		this.arrows = [
-			new Arrow(1, 0, 1, 2, false), // EECS 168 to EECS 268
-			new Arrow(1, 0, 0, 2, false), // EECS 168 to EECS 388
-			new Arrow(2, 0, 0, 2, false), // EECS 140 to EECS 388
-			new Arrow(0, 0, 2, 1, true),  // MATH 126 to PHSX 210 (corequisite)
-			new Arrow(2, 1, 3, 2, true),  // PHSX 210 to PHSX 216
-		];
-		
 		// Initialize drag-and-drop (perhaps this should be moved to Executive.js)
 		REDIPS.drag.init();
 		REDIPS.drag.dropMode = "single";
 		
 		this.draw = SVG().addTo(document.getElementById("arrows"));
 		this.rescale();
-		this.renderArrows();
+		
+		// Test arrows from and to hard-coded course positions
+		let arrows = [
+			new Arrow(1, 0, 0, 2, false), // EECS 168 to EECS 268
+			new Arrow(1, 0, 2, 2, false), // EECS 168 to EECS 388
+			new Arrow(2, 0, 2, 2, false), // EECS 140 to EECS 388
+			new Arrow(1, 1, 1, 2, true),  // MATH 126 to PHSX 210 (corequisite)
+			new Arrow(1, 2, 3, 2, true),  // PHSX 210 to PHSX 216
+		];
+		this.renderArrows(arrows);
 	}
 	
 	rescale() {
@@ -48,7 +51,9 @@ class Render {
 		document.querySelector("#arrows svg").style.marginBottom = -document.getElementById("course-grid").offsetHeight;
 	}
 	
-	renderArrows() {
+	renderArrows(arrows) {
+		this.arrows = arrows;
+		
 		// Initialize all channels as unused (false)
 		// Note there is one more set of channels than the number of course rows/cols as the channels go between and around them
 		this.vertChannels = [];
@@ -67,58 +72,74 @@ class Render {
 		}
 		
 		for (let arrow of this.arrows) {
-			let path = [arrow.startPoint()]; // Start below middle of starting course
+			let path = [];
 			
 			if (arrow.fromSide) { // corequisite
 				// If the course is not in the adjacent column, will need 3 line segments through channels
 				if (arrow.xIn+1 != arrow.xOut) {
-					let firstChannelX = this.findVertChannel(...arrow.node1(), arrow.yIn);
-					let secondChannelY = this.findHorizChannel(arrow.node1()[0], ...arrow.node2());
-					let thirdChannelX = this.findVertChannel(...arrow.node2(), arrow.yOut);
+					let [firstChannelX, startOffset] = this.findVertChannel(...arrow.node1(), arrow.yIn);
+					let [secondChannelY] = this.findHorizChannel(arrow.node1()[0], ...arrow.node2());
+					let [thirdChannelX, endOffset] = this.findVertChannel(...arrow.node2(), arrow.yOut);
 					path.push(
-						[firstChannelX, arrow.startPoint()[1]], // Enter first channel
+						arrow.startPoint(startOffset), // Start right of starting course
+						[firstChannelX, arrow.startPoint(startOffset)[1]], // Enter first channel
 						[firstChannelX, secondChannelY], // Traverse down first channel to node1, the junction between channels 1 and 2
 						[thirdChannelX, secondChannelY], // Traverse along second channel to node2, the junction between channels 2 and 3
-						[thirdChannelX, arrow.endPoint()[1]] // Traverse down third channel to the point beside the ending course
+						[thirdChannelX, arrow.endPoint(endOffset)[1]], // Traverse down third channel to the point beside the ending course
+						...this.arrowHead(...arrow.endPoint(endOffset), RIGHT) // Connect to ending course with an arrowhead
 					);
 				}
 				// If the course is in the adjacent column, but not directly beside, will need 1 line segment through a channel
 				else if (arrow.yIn != arrow.yOut) {
-					let channelX = this.findVertChannel(arrow.xOut, arrow.yIn, arrow.yOut);
+					let [channelX, startEndOffset] = this.findVertChannel(arrow.xOut, arrow.yIn, arrow.yOut);
 					path.push(
-						[channelX, arrow.startPoint()[1]],
-						[channelX, arrow.endPoint()[1]]
+						arrow.startPoint(startOffset), // Start right of starting course
+						[channelX, arrow.startPoint(startEndOffset)[1]], // Enter channel
+						[channelX, arrow.endPoint(startEndOffset)[1]], // Traverse along channel to the point directly above the ending course
+						...this.arrowHead(...arrow.endPoint(startEndOffset), RIGHT) // Connect to ending course with an arrowhead
 					);
 				}
-				// else: Course directly right of current one - just draw the line straight to it
-				
-				path.push(...this.arrowHead(...arrow.endPoint(), RIGHT)); // Connect to ending course with an arrowhead
+				// Course directly right of current one - just draw the line straight to it
+				else {
+					path.push(
+						arrow.startPoint(), // Start at starting course
+						...this.arrowHead(...arrow.endPoint(), RIGHT) // Connect to ending course with an arrowhead
+					); 
+				}
 			}
 			else { // prerequisite
 				// If the course is not in the next semester, will need 3 line segments through channels
 				if (arrow.yIn+1 != arrow.yOut) {
 					// Find the coordinates of the channels the arrow will go through
-					let firstChannelY = this.findHorizChannel(arrow.xIn, ...arrow.node1());
-					let secondChannelX = this.findVertChannel(...arrow.node1(), arrow.node2()[1]);
-					let thirdChannelY = this.findHorizChannel(arrow.xOut, ...arrow.node2());
+					let [firstChannelY, startOffset] = this.findHorizChannel(arrow.xIn, ...arrow.node1());
+					let [secondChannelX] = this.findVertChannel(...arrow.node1(), arrow.node2()[1]);
+					let [thirdChannelY, endOffset] = this.findHorizChannel(arrow.xOut, ...arrow.node2());
 					path.push(
-						[arrow.startPoint()[0], firstChannelY], // Enter first channel
+						arrow.startPoint(startOffset), // Start below middle of starting course
+						[arrow.startPoint(startOffset)[0], firstChannelY], // Enter first channel
 						[secondChannelX, firstChannelY], // Traverse along first channel to node1, the junction between channels 1 and 2
 						[secondChannelX, thirdChannelY], // Traverse down second channel to node2, the junction between channels 2 and 3
-						[arrow.endPoint()[0], thirdChannelY], // Traverse along third channel to the point above the ending course
+						[arrow.endPoint(endOffset)[0], thirdChannelY], // Traverse along third channel to the point above the ending course
+						...this.arrowHead(...arrow.endPoint(endOffset), DOWN) // Connect to ending course with an arrowhead
 					);
 				}
 				// If the course is in the next semester, but not directly below, will need 1 line segment through a channel
 				else if (arrow.xIn != arrow.xOut) {
-					let channelY = this.findHorizChannel(arrow.xIn, arrow.xOut, arrow.yOut);
+					let [channelY, startEndOffset] = this.findHorizChannel(arrow.xIn, arrow.xOut, arrow.yOut);
 					path.push(
-						[arrow.startPoint()[0], channelY], // Enter channel
-						[arrow.endPoint()[0], channelY], // Traverse along channel to the point directly above the ending course
+						arrow.startPoint(startOffset), // Start below middle of starting course
+						[arrow.startPoint(startEndOffset)[0], channelY], // Enter channel
+						[arrow.endPoint(startEndOffset)[0], channelY], // Traverse along channel to the point directly above the ending course
+						...this.arrowHead(...arrow.endPoint(startEndOffset), DOWN) // Connect to ending course with an arrowhead
 					);
 				}
-				// else: Course directly below current one - just draw the line straight to it
-				
-				path.push(...this.arrowHead(...arrow.endPoint(), DOWN)); // Connect to ending course with an arrowhead
+				// Course directly below current one - just draw the line straight to it
+				else {
+					path.push(
+						arrow.startPoint(), // Start at starting course
+						...this.arrowHead(...arrow.endPoint(), DOWN) // Connect to ending course with an arrowhead
+					); 
+				}
 			}
 			
 			// Find the minimum x and y coordinates in the path (needed to properly offset the arrow)
@@ -156,8 +177,11 @@ class Render {
 			this.horizChannels[y][col][chan] = true;
 		}
 		
-		// Y coordinate pixel of the channel
-		return (chan - ((NUM_CHANNELS-1)/2)) * HORIZ_CHANNEL_SIZE + y*TD_HEIGHT;
+		// Channel number with 0 as center
+		let relChan = chan - ((NUM_CHANNELS-1)/2);
+		
+		// X coordinate pixel of the channel and Y offset of the start/end position (if applicable)
+		return [relChan * HORIZ_CHANNEL_SIZE + y*TD_HEIGHT, relChan * ARROW_SIZE*2.5];
 	}
 	
 	findVertChannel(x, startY, endY) {
@@ -181,11 +205,14 @@ class Render {
 			this.vertChannels[row][x][chan] = true;
 		}
 		
-		// X coordinate pixel of the channel
-		return (chan - ((NUM_CHANNELS-1)/2)) * VERT_CHANNEL_SIZE + x*TD_WIDTH;
+		// Channel number with 0 as center
+		let relChan = chan - ((NUM_CHANNELS-1)/2);
+		
+		// X coordinate pixel of the channel and Y offset of the start/end position (if applicable)
+		return [relChan * VERT_CHANNEL_SIZE + x*TD_WIDTH, relChan * ARROW_SIZE*2.5];
 	}
 	
-	arrowHead(x, y, dir = DOWN, length = 4) {
+	arrowHead(x, y, dir = DOWN, length = ARROW_SIZE) {
 		if (dir == UP)    return [[x, y], [x-length, y+length], [x, y], [x+length, y+length], [x, y]];
 		if (dir == DOWN)  return [[x, y], [x-length, y-length], [x, y], [x+length, y-length], [x, y]];
 		if (dir == LEFT)  return [[x, y], [x+length, y-length], [x, y], [x+length, y+length], [x, y]];
@@ -204,15 +231,15 @@ class Arrow {
 	}
 	
 	// Pixels of start point (out of the bottom or right of course)
-	startPoint() {
-		if (this.fromSide) return [(this.xIn+.5)*TD_WIDTH + COURSE_WIDTH/2, (this.yIn+.5)*TD_HEIGHT];
-		else return [(this.xIn+.5)*TD_WIDTH, (this.yIn+.5)*TD_HEIGHT + COURSE_HEIGHT/2];
+	startPoint(offset = 0) {
+		if (this.fromSide) return [(this.xIn+.5)*TD_WIDTH + COURSE_WIDTH/2, (this.yIn+.5)*TD_HEIGHT+offset];
+		else return [(this.xIn+.5)*TD_WIDTH+offset, (this.yIn+.5)*TD_HEIGHT + COURSE_HEIGHT/2];
 	}
 	
 	// Pixels of end point (into the top or left of course)
-	endPoint() {
-		if (this.fromSide) return [(this.xOut+.5)*TD_WIDTH - COURSE_WIDTH/2, (this.yOut+.5)*TD_HEIGHT];
-		else return [(this.xOut+.5)*TD_WIDTH, (this.yOut+.5)*TD_HEIGHT - COURSE_HEIGHT/2];
+	endPoint(offset = 0) {
+		if (this.fromSide) return [(this.xOut+.5)*TD_WIDTH - COURSE_WIDTH/2, (this.yOut+.5)*TD_HEIGHT+offset];
+		else return [(this.xOut+.5)*TD_WIDTH+offset, (this.yOut+.5)*TD_HEIGHT - COURSE_HEIGHT/2];
 	}
 	
 	// Grid coordinates of junction point between first and second channels (for !fromSide, diagonally down-left or down-right from starting course)
