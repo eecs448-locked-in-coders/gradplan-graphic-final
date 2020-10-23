@@ -62,80 +62,118 @@
 
 		</div>  
 	  </nav>
-	<div class="container-fluid">
-		<div class="row mt-2">
-			<div class="col-sm-4"><!--  border-right" > --> 
-				<h2>Student's name</h2>
-				<div class="row ml-2">
-					<img src="ku_jayhawk_2.jpg" style="max-height: 5cm; max-width: 6cm;">
-				</div>
-				<div class="row ml-2 mt-2">
-					<p style="font-weight: bold;">Major: </p>
-					<p> Computer Science</p>
-				</div>
-				<div class="row ml-2 mt-n3">
-					<p style="font-weight: bold;">Student ID: </p>
-					<p> 9999999</p>
-				</div>
-				
-			</div>
-			<div id="redips-drag" class="col-sm-8"> <!-- style="border:1px solid #cecece"> --> 
-				<div id="arrows"></div>
-				<table id="course-grid" class="mx-auto"> <!--border"> --> 
-					<colgroup><col width="120"/><col width="120"/><col width="120"/><col width="120"/><col width="120"/></colgroup>
-					<tr>
-						<td class="redips-mark">Fall 2018</td>
-						<td></td>
-						<td><div class="redips-drag">EECS 168</div></td>
-						<td><div class="redips-drag">EECS 140</div></td>
-						<td></td>
-					</tr>
-					<tr>
-						<td class="redips-mark">Spring 2019</td>
-						<td></td>
-						<td><div class="redips-drag">MATH 126</div></td>
-						<td></td>
-						<td><div class="redips-drag">COMS 130</div></td>
-					</tr>
-					<tr>
-						<td class="redips-mark">Fall 2019</td>
-						<td><div class="redips-drag">EECS 268</div></td>
-						<td><div class="redips-drag">PHSX 210</div></td>
-						<td><div class="redips-drag">EECS 388</div></td>
-						<td><div class="redips-drag">PHSX 216</div></td>
-					</tr>
-				</table>
-			</div>
-		</div>
+	<div class="container-fluid ml-5 mr-5">
 		<div class="row">
-			<div class="col-sm-4 d-print-none">
-				<h1>Available Courses and stuff can go here</h1>
-				<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="max-width: 800px; max-height: 200px;"> <!--class="btn-toolbar"-->
-					
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-					<input type="button" class="btn btn-primary" value="I am a button">	
-				
-					<tr>
-						<td class="redips-mark">Fall 2018</td>
-						<td><div class="redips-drag">MATH 126</div></td>
-						<td><div class="redips-drag">EECS 168</div></td>
-						<td><div class="redips-drag">EECS 140</div></td>
-						<td></td>
-					</tr>
+			<div class="col-sm-5">
+				<div class="row mt-3"> <!--Student--> 
+					<div class="col-sm-6">
+						<h2>Student's name</h2>
+						<div class="row ml-2">
+							<img src="ku_jayhawk_2.jpg" style="max-height: 5cm; max-width: 6cm;">
+						</div>
+						<div class="row ml-2 mt-2">
+							<p style="font-weight: bold;">Major: </p>
+							<p> Computer Science</p>
+						</div>
+						<div class="row ml-2 mt-n3">
+							<p style="font-weight: bold;">Student ID: </p>
+							<p> 9999999</p>
+						</div>
+						
+					</div>
 				</div>
+
+				<div class="row mb-4"> <!--Extra-->
+					<div class="col-sm-10 d-print-none"> 
+						<h3>Other courses available to you</h3>
+						<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="max-width: 800px; max-height: 200px;">
+							
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+							<input type="button" class="btn btn-primary" value="I am a button">	
+			
+						</div>
+					</div>
+				</div>
+
+			</div>
+		
+			<div class="col-sm-7 mt-5">
+				<div id="redips-drag" class="ml-n5"> <!--Schedule-->
+					<div id="arrows"></div>
+					<table id="course-grid" class="mx-auto">
+						<colgroup><col width="120"/><col width="120"/><col width="120"/><col width="120"/><col width="120"/></colgroup>
+						<tr>
+							<td class="redips-mark">Fall 2018</td>
+							<td></td>
+							<td><div class="redips-drag">EECS 168</div></td>
+							<td><div class="redips-drag">EECS 140</div></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td class="redips-mark">Spring 2019</td>
+							<td></td>
+							<td><div class="redips-drag">MATH 126</div></td>
+							<td></td>
+							<td><div class="redips-drag">COMS 130</div></td>
+						</tr>
+						<tr>
+							<td class="redips-mark">Fall 2019</td>
+							<td><div class="redips-drag">EECS 268</div></td>
+							<td><div class="redips-drag">PHSX 210</div></td>
+							<td><div class="redips-drag">EECS 388</div></td>
+							<td><div class="redips-drag">PHSX 216</div></td>
+						</tr>
+						<tr>
+							<td class="redips-mark">Spring 2020</td>
+							<td><div class="redips-drag">EECS 268</div></td>
+							<td><div class="redips-drag">PHSX 210</div></td>
+							<td><div class="redips-drag">EECS 388</div></td>
+							<td><div class="redips-drag">PHSX 216</div></td>
+						</tr>
+						<tr>
+							<td class="redips-mark">Fall 2021</td>
+							<td><div class="redips-drag">EECS 268</div></td>
+							<td><div class="redips-drag">PHSX 210</div></td>
+							<td><div class="redips-drag">EECS 388</div></td>
+							<td><div class="redips-drag">PHSX 216</div></td>
+						</tr>
+						<tr>
+							<td class="redips-mark">Spring 2021</td>
+							<td><div class="redips-drag">EECS 268</div></td>
+							<td><div class="redips-drag">PHSX 210</div></td>
+							<td><div class="redips-drag">EECS 388</div></td>
+							<td><div class="redips-drag">PHSX 216</div></td>
+						</tr>
+						<tr>
+							<td class="redips-mark">Fall 2022</td>
+							<td><div class="redips-drag">EECS 268</div></td>
+							<td><div class="redips-drag">PHSX 210</div></td>
+							<td><div class="redips-drag">EECS 388</div></td>
+							<td><div class="redips-drag">PHSX 216</div></td>
+						</tr>
+						<tr>
+							<td class="redips-mark">Spring 2022</td>
+							<td><div class="redips-drag">EECS 268</div></td>
+							<td><div class="redips-drag">PHSX 210</div></td>
+							<td><div class="redips-drag">EECS 388</div></td>
+							<td><div class="redips-drag">PHSX 216</div></td>
+						</tr>
+					</table>
+				</div>
+			
 			</div>
 		</div>
-		</div>
+
 	</div>
 </body>
 </html>
