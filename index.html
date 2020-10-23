@@ -25,14 +25,15 @@
 	<div class="jumbotron container-fluid pt-4" style="margin-bottom:0; max-height: 3cm;" >
 		<div class="row">
 			<div class="col-sm-4"> <img src="KUSig_Horz_Web_Blue.png" style="float:left; max-height: 5cm; max-width: 6cm;" ></div>
-			<h1 class="col-sm-4 text-sm-center" style="color: rgb(0, 81, 186);">Gradplan Graphic</h1>
+			<h1 class="col-sm-4 text-sm-center nonprintable" style="color: rgb(0, 81, 186);">Gradplan Graphic</h1>
+			<h1 class="col-sm-7 ml-n5 text-center only_print" style="color: rgb(0, 81, 186);">Graduation planner</h1>
 		</div>
-		<div class="row text-center">
+		<div class="row text-center nonprintable">
 			<p class="col" style="color: rgb(0, 81, 186)">EECS 448 Team 13</p> 
 		</div>
 	</div>
 	  <!-- Navigation bar -->
-	  <nav class="navbar navbar-expand-sm navbar-dark d-print-none" style="background-color: rgb(0, 81, 186);"> <!--border:1px solid #0416bb-->
+	  <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: rgb(0, 81, 186);"> <!--border:1px solid #0416bb-->
 		<a class="navbar-brand" href="index.html">Home</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
 		  <span class="navbar-toggler-icon"></span>
@@ -62,17 +63,43 @@
 
 		</div>  
 	  </nav>
+
+		<!--Printing-->
+	<div class="container only_print nonprintable">
+		<div class="row">
+			<div class="col">
+				<img src="ku_jayhawk_2.jpg" style="max-height: 5cm; max-width: 6cm; float: right">
+			</div>
+			<div class="col">
+				<div class="row">
+					<p style="font-weight: bold;">Name: </p>
+					<p>Jayhawk </p>
+				</div>
+				<div class="row">
+					<p style="font-weight: bold;">Major(s): </p>
+					<p>Computer Science </p>
+				</div>
+				<div class="row">
+					<p style="font-weight: bold;">Student ID: </p>
+					<p>9999999 </p>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+
+	<!--Content-->
 	<div class="container-fluid ml-5 mr-5">
 		<div class="row">
 			<div class="col-sm-5">
 				<div class="row mt-3"> <!--Student--> 
-					<div class="col-sm-6">
-						<h2>Student's name</h2>
-						<div class="row ml-2">
-							<img src="ku_jayhawk_2.jpg" style="max-height: 5cm; max-width: 6cm;">
+					<div class="col-sm-10">
+						<h2>Rodrigo Figueroa Justiniano</h2>
+						<div class="row ml-2 mt-3">
+							<img src="ku_jayhawk_2.jpg" style="max-height: 5cm; max-width: 6cm; border-radius: 20%;">
 						</div>
 						<div class="row ml-2 mt-2">
-							<p style="font-weight: bold;">Major: </p>
+							<p style="font-weight: bold;">Major(s): </p>
 							<p> Computer Science</p>
 						</div>
 						<div class="row ml-2 mt-n3">
@@ -100,7 +127,7 @@
 				</div>
 
 				<div class="row mb-4"> <!--Extra-->
-					<div class="col-sm-10 d-print-none"> 
+					<div class="col-sm-10 nonprintable"> 
 						<h3>Other courses available to you</h3>
 						<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="max-width: 800px; max-height: 200px;">
 							
@@ -126,7 +153,7 @@
 			<div class="col-sm-7 mt-5">
 				<div id="redips-drag" class="ml-n5"> <!--Schedule-->
 					<div id="arrows"></div>
-					<table id="course-grid" class="mx-auto">
+					<table id="course-grid" class="mx-auto bg-light border">
 						<colgroup><col width="120"/><col width="120"/><col width="120"/><col width="120"/><col width="120"/></colgroup>
 						<tr>
 							<td class="redips-mark">Fall 2018</td>
@@ -190,7 +217,7 @@
 			</div>
 		</div>
 
-		<div class="row mb-5">
+		<div class="row mb-5 nonprintable">
 			<div class="col-sm-4">
 				<h3>Course information</h3>
 				<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="max-width: 800px; max-height: 200px;">
@@ -205,7 +232,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </body>
 </html>
