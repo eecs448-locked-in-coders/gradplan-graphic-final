@@ -17,6 +17,23 @@ class Course {
 }
 
 //Has a course code, prerequisite, corequisites, course offering, credit hours
+class Course {
+  /*
+    course_code = string
+    prereq = [string]
+    coreq = [string]
+    course_semester = [Spring, Summer, Fall] => [bool,bool,bool] Semester
+                    Remember that winter doesn't exist, its just extended spring
+    credit_hour = int
+  */
+  constructor(course_code, prereq, coreq, course_semester, credit_hour){
+    this.course_code = course_code;
+    this.prereq = prereq;
+    this.coreq = coreq;
+    this.course_semester = course_semester;
+    this.credit_hour = credit_hour;
+  }
+}
 const COURSES = [
   new Course("EECS 101", [], ["Math 104"], [0,0,1], 1),
   new Course("EECS 140", [], ["Math 104"], [1,0,1], 4),
