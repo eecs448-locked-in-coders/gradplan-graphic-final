@@ -144,6 +144,30 @@
         display: none;
     }
 
+    .KU_image {
+        float:left; 
+        max-height: 5cm; 
+        max-width: 6cm;
+    }
+
+    .scrollable_box {
+        max-width: 800px; max-height: 200px;
+    }
+
+    .students_info {
+        font-weight: bold;
+    }
+
+    .profile_picture {
+        max-height: 5cm; 
+        max-width: 6cm; 
+        border-radius: 20%;
+    }
+    
+    .KU_color_text {
+        color: rgb(0, 81, 186);
+    }
+
     h1 {
         font-size: 60px;
     }
