@@ -25,11 +25,11 @@ class Plan {
 
   }
   remove_course(course){
-    for(var i=0; i<this.semesters.length(); i++){
+    for(var i=0; i<this.semesters.length; i++){
       this.semesters[i].semester_course.remove_course(course);
     }
     //check course bank
-    for(var i=0; i<this.course_bank.length(); i++){
+    for(var i=0; i<this.course_bank.length; i++){
       this.course_bank[i] = undefined;
     }
   }
@@ -43,26 +43,41 @@ class Plan {
   }
 
   fill_course_bank(){
-    for(var i=0; i<this.major.req_class.length(); i++){
+    for(var i=0; i<this.major.req_class.length; i++){
       this.course_bank.push(course_id_to_object(this.major.req_class[i]));
     }
   }
 
   add_semester(season, year){
     let duplicate = false;
-    for(var i=0; i<this.semesters.length(); i++){
-      duplicate = (season == this.semesters[i].semester_season() && year == this.semester[i].semeseter_year());
-      if(season > this.semesters[i].semester_season() && year > this.semesters[i].semester_year() && !duplicate){
+    for(var i=0; i<this.semesters.length; i++){
+      duplicate = (season == this.semesters[i].semester_season && year == this.semester[i].semeseter_year);
+      if(season > this.semesters[i].semester_season && year > this.semesters[i].semester_year && !duplicate){
         this.semesters.splice(i, 0, new Semester(season, year, []));
       }
     }
   }
 
   remove_semester(season, year){
-    for(var i=0; i<this.semesters.length(); i++){
-      if(season == this.semesters[i].semester_season() && year == this.semesters[i].semseter_year()){
+    for(var i=0; i<this.semesters.length; i++){
+      if(season == this.semesters[i].semester_season && year == this.semesters[i].semseter_year){
+        for(var j=0; j<this.semesters[i].semester_courses.length; j++){
+          if(this.semesters[i].semster_courses[j] != undefined){
+            return;
+          }
+        }
         this.semester.splice(i, 1);
       }
     }
+  }
+
+  get_longest(){
+    for(var i=0; i<this.semesters.length i++){
+      var longest = 0;
+      if(this.semesters[i].semester_courses.length > longest){
+        longest = this.semester[i].semester_courses.length;
+      }
+    }
+    return longest;
   }
 }
