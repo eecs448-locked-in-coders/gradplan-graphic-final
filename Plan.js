@@ -24,9 +24,20 @@ class Plan {
     }
 
   }
+
+  find_course(course_string){
+    for(var i=0; i<this.semesters.length; i++){
+      for(var j=0; j<this.semseters[i].semsester_courses.length; j++){
+        if(course_string == this.semesters[i].semester_courses[j].course_code){
+          return[i,j];
+        }
+      }
+    }
+  }
+
   remove_course(course){
     for(var i=0; i<this.semesters.length; i++){
-      this.semesters[i].semester_course.remove_course(course);
+      this.semesters[i].semester_courses.remove_course(course);
     }
     //check course bank
     for(var i=0; i<this.course_bank.length; i++){
@@ -72,12 +83,38 @@ class Plan {
   }
 
   get_longest(){
-    for(var i=0; i<this.semesters.length i++){
-      var longest = 0;
+    var longest = 0;
+    for(var i=0; i<this.semesters.length; i++){
       if(this.semesters[i].semester_courses.length > longest){
-        longest = this.semester[i].semester_courses.length;
+        longest = this.semesters[i].semester_courses.length;
       }
     }
     return longest;
+  }
+
+  generate_arrow(){
+    var arr_arrows = [];
+    var arr_course = [];
+    var arr_req = [];
+    var is_coreq = false;
+    /*
+      check each course
+      find course coordinate
+      look for course pre/co req
+      find req courses coordinate
+      create arrow
+    */
+    for(var i=0; i<this.semesters.length; i++){
+      for(var j=0; j<this.semesters[i].semester_courses.length; j++){
+        arr_course[0] = i;
+        arr_course[1] = j;
+        if(this.semesters[i].semester_courses[j].prereq.length != 0){
+          for(var x=0; x<this.semesters[i].semester_courses[j].prereq.length; x++){
+            var arr_req = find_course(this.semesters[i].semester_courses[j].prereq[x])[0]
+
+          }
+        }
+      }
+    }
   }
 }
