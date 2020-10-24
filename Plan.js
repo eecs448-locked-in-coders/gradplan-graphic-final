@@ -48,7 +48,13 @@ class Plan {
     }
   }
 
-  add_semester(){
-
+  add_semester(season, year){
+    let duplicate = false;
+    for(i=0; i<this.semesters.length(); i++){
+      duplicate = (season == this.semesters[i].semester_season() && year == this.semester[i].semeseter_year());
+      if(season > this.semesters[i].semester_season() && year > this.semesters[i].semester_year() && !duplicate){
+        this.semesters.splice(i, 0, new Semester(season, year, []));
+      }
+    }
   }
 }
