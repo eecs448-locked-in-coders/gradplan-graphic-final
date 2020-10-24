@@ -36,7 +36,7 @@ class Executive {
 		// Clear grid
 		while (grid.firstChild) grid.removeChild(grid.firstChild);
 		
-		let cols = this.plan.get_longest(); console.log(this.plan.get_longest());
+		let cols = this.plan.get_longest()+1; // +1 leaves an empty column to add another course to a semester
 		for (let i = 0; i < this.plan.semesters.length; i++) {
 			let semester = this.plan.semesters[i];
 			let tr = document.createElement("tr");
