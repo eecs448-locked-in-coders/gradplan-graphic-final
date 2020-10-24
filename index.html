@@ -72,27 +72,55 @@
 	<!--Printing   change the hardcoded entries when possible-->
 	<div class="container only_print ">
 		<div class="row mt-5">
-			<div class="col ml-5">
-				<div class="row ml-4 mt-5">
-					<img src="ku_jayhawk_2.jpg" class="profile_picture">
-				</div>
-				<div class="row ml-5 mt-3">
-					<p class="students_info">Name: </p>
-					<p> Jayhawk Jayhawk</p>
-				</div>
-				<div class="row ml-5 mt-n2">
-					<p class="students_info">Major(s): </p>
-					<p> Computer Science</p>
-				</div>
-				<div class="row ml-5 mt-n2">
-					<p class="students_info">Student ID: </p>
-					<p> 9999999</p>
-				</div>
+			<div class="col-sm-6">
+				<h2>Jayhawk Jayhawk</h2>
+				<img src="ku_jayhawk_2.jpg" class="mt-3 profile_picture">
+				<p class="mt-2">
+					<span class="students_info">Major(s):</span>
+					Computer Science
+				</p>
+				<p class="mt-n3">
+					<span class="students_info">Student ID:</span>
+					9999999
+				</p>
 			</div>
 
-			<div class="col-sm-6 mt-n2 mr-2">
+			<div class="col-sm-6 mt-n2">
 				<h3>Notifications</h3>
-					<div class="bg-light border p-3">
+				<div class="bg-light border p-3">
+					<p>error 1</p>
+					<p>error 2</p>
+					<p>error 3</p>
+					<p>error 4</p>
+					<p>error 5</p>
+					<p>error 6</p>
+					<p>error 7</p>
+					<p>error 8</p>
+				</div>	
+			</div>
+		</div>
+	</div>
+
+	<!--Content-->
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-4 nonprintable">
+				<div class="mt-3"> <!--Student--> 
+					<h2>Jayhawk Jayhawk</h2>
+					<img src="ku_jayhawk_2.jpg" class="mt-3 profile_picture">
+					<p class="mt-2">
+						<span class="students_info">Major(s):</span>
+						Computer Science
+					</p>
+					<p class="mt-n3">
+						<span class="students_info">Student ID:</span>
+						9999999
+					</p>
+				</div>
+
+				<div class="mb-4"> <!--Errors and notifications-->
+					<h3>Notifications</h3>
+					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
 						<p>error 1</p>
 						<p>error 2</p>
 						<p>error 3</p>
@@ -101,57 +129,13 @@
 						<p>error 6</p>
 						<p>error 7</p>
 						<p>error 8</p>
-					</div>	
-			</div>
-			
-		</div>
-
-	</div>
-
-	<!--Content-->
-	<div class="container-fluid ">
-		<div class="row ml-5">
-			<div class="col-sm-4 ml-5 mr-5 nonprintable">
-				<div class="row mt-3"> <!--Student--> 
-					<div class="col-sm-10">
-						<h2>Jayhawk Jayhawk</h2>
-						<div class="row ml-2 mt-3">
-							<img src="ku_jayhawk_2.jpg" class="profile_picture">
-						</div>
-						<div class="row ml-2 mt-2">
-							<p class="students_info">Major(s): </p>
-							<p> Computer Science</p>
-						</div>
-						<div class="row ml-2 mt-n3">
-							<p class="students_info">Student ID: </p>
-							<p> 9999999</p>
-						</div>
-
 					</div>
 				</div>
 
-				<div class="row mb-4"> <!--Errors and notifications-->
-					<div class="col-sm-10">
-						<h3>Notifications</h3>
-							<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
-								<p>error 1</p>
-								<p>error 2</p>
-								<p>error 3</p>
-								<p>error 4</p>
-								<p>error 5</p>
-								<p>error 6</p>
-								<p>error 7</p>
-								<p>error 8</p>
-							</div>
-					</div>
-				</div>
-
-				<div class="row mb-4"> <!--Extra-->
-					<div class="col-sm-10">
-						<h3>Course information</h3>
-						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
-							<p>Asdfghjkl</p>
-						</div>
+				<div class="mb-4"> <!--Extra-->
+					<h3>Course information</h3>
+					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
+						<p>Asdfghjkl</p>
 					</div>
 				</div>
 
@@ -177,11 +161,11 @@
 
 			</div>
 		
-			<div class="col-sm-6 mt-5 ml-4">
-				<div class="row printable_grid">
+			<div class="col-lg-8 mt-5">
+				<div class="d-flex printable_grid">
 					<div id="redips-drag" class="bg-light border"> <!--Schedule-->
 						<div id="arrows"></div><!--Will contain the SVG with the arrows-->
-						<table id="course-grid" class="mx-auto"></table><!--Will contain the drag-and-droppable courses-->
+						<table id="course-grid"></table><!--Will contain the drag-and-droppable courses-->
 					</div>
 				</div>
 
@@ -192,8 +176,8 @@
 							<p>Asdfghjkl</p>
 						</div>
 					</div>
-					<div class="col">
-						<h3 class="text-center">Useful links</h3>
+					<div class="col-sm-6">
+						<h3>Useful links</h3>
 						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
 							<ul>
 								<li><a href="http://eecs.ku.edu/eecs-courses">List of all EECS courses</a></li>
