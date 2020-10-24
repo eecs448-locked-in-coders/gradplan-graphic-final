@@ -35,7 +35,7 @@ class Plan {
   }
   //id is string
   course_id_to_object(id){
-    for(var i=0; i<COURSES.length(); i++){
+    for(var i=0; i<COURSES.length; i++){
       if(id == COURSES[i].course_code){
         return(COURSES[i]);
       }
