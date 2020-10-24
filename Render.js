@@ -39,6 +39,7 @@ class Render {
 		// Initialize drag-and-drop (perhaps this should be moved to Executive.js)
 		REDIPS.drag.init();
 		REDIPS.drag.dropMode = "single";
+		REDIPS.drag.event.dropped = targetCell => console.log(targetCell);
 		
 		this.draw = SVG().addTo(document.getElementById("arrows"));
 		this.rescale();
