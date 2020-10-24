@@ -10,15 +10,18 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.0.16/svg.min.js" integrity="sha512-p3Tp2zn+wApBreZCgRkmMwnfpN8MUPXzzOihXx7iGYXqE7t6m9drY8HeyMeeFuDWiTFKrGUrq3jpbT0vX6zY/Q==" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<script type="text/javascript" src="redips-drag-min.js"></script>
-	<script type="text/javascript" src="Render.js"></script>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<script type="text/javascript" src="redips-drag-min.js"></script>
+	<script type="text/javascript" src="Executive.js"></script>
+	<script type="text/javascript" src="Render.js"></script>
+	<script type="text/javascript" src="Plan.js"></script>
+	<script type="text/javascript" src="Semester.js"></script>
+	<script type="text/javascript" src="Course.js"></script>
+	<script type="text/javascript" src="Major.js"></script>
 	<link rel="stylesheet" href="style.css">
-
 	<script>
 		window.addEventListener('DOMContentLoaded', e => {
-			window.render = new Render();
+			window.executive = new Executive();
 		});
 	</script>
 </head>
@@ -30,7 +33,7 @@
 			<h1 class="col-sm-7 ml-n5 text-center only_print" style="color: rgb(0, 81, 186);">Graduation planner</h1>
 		</div>
 		<div class="row text-center nonprintable">
-			<p class="col" style="color: rgb(0, 81, 186)">EECS 448 Team 13</p> 
+			<p class="col" style="color: rgb(0, 81, 186)">EECS 448 Team 13</p>
 		</div>
 	</div>
 	  <!-- Navigation bar -->
@@ -49,10 +52,10 @@
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="https://my.ku.edu/uPortal/">myKU</a>
-				</li> 
+				</li>
 				<li class="nav-item">
 			  		<a class="nav-link" href="members.html">Members</a>
-				</li>	 
+				</li>
 		  	</ul>
 
 			<div class="d-flex justify-content-center ml-3">
@@ -61,9 +64,25 @@
 			  		<a href="#" class="search_icon"><i class="fas fa-search"></i></a>
 				</div>
 		  	</div>
+<<<<<<< HEAD
 		</div>  
 		<!--Print button-->
 		<a style="background: white;float: right;" href="javascript:window.print()" type="button" class="btn btn-default btn-sm navbar-btn">Print<i class="fa fa-print"></i></a>
+||||||| 5c9f04e
+		  	<!--Print button-->
+			<a id="" href="javascript:window.print()" type="button" class="btn btn-default btn-sm navbar-btn">
+				Print<i class="fa fa-print"></i>
+    		</a>
+		</div>  
+		
+=======
+		  	<!--Print button-->
+			<a id="" href="javascript:window.print()" type="button" class="btn btn-default btn-sm navbar-btn">
+				Print<i class="fa fa-print"></i>
+    		</a>
+		</div>
+
+>>>>>>> 06d0351ee7c6c15412ddeb93378096c6c706beef
 	</nav>
 
 	<!--Printing   change the hardcoded entries when possible-->
@@ -103,7 +122,7 @@
 					
 			</div>
 		</div>
-		
+
 	</div>
 
 	<!--Content-->
@@ -124,7 +143,7 @@
 							<p style="font-weight: bold;">Student ID: </p>
 							<p> 9999999</p>
 						</div>
-						
+
 					</div>
 				</div>
 
@@ -154,21 +173,21 @@
 				</div>
 
 				<div class="row mb-4">
-					<div class="col-sm-10"> 
+					<div class="col-sm-10">
 						<h3>Other courses available to you</h3>
-						<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="max-width: 800px; max-height: 200px;">			
-							<input type="button" class="btn btn-primary" value="EECS 601">	
-							<input type="button" class="btn btn-primary" value="EECS 602">	
-							<input type="button" class="btn btn-primary" value="EECS 603">	
-							<input type="button" class="btn btn-primary" value="EECS 604">	
-							<input type="button" class="btn btn-primary" value="EECS 605">	
-							<input type="button" class="btn btn-primary" value="EECS 606">	
-							<input type="button" class="btn btn-primary" value="EECS 607">	
-							<input type="button" class="btn btn-primary" value="EECS 608">	
-							<input type="button" class="btn btn-primary" value="EECS 609">	
-							<input type="button" class="btn btn-primary" value="EECS 610">	
-							<input type="button" class="btn btn-primary" value="EECS 611">	
-							<input type="button" class="btn btn-primary" value="EECS 612">	
+						<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="max-width: 800px; max-height: 200px;">
+							<input type="button" class="btn btn-primary" value="EECS 601">
+							<input type="button" class="btn btn-primary" value="EECS 602">
+							<input type="button" class="btn btn-primary" value="EECS 603">
+							<input type="button" class="btn btn-primary" value="EECS 604">
+							<input type="button" class="btn btn-primary" value="EECS 605">
+							<input type="button" class="btn btn-primary" value="EECS 606">
+							<input type="button" class="btn btn-primary" value="EECS 607">
+							<input type="button" class="btn btn-primary" value="EECS 608">
+							<input type="button" class="btn btn-primary" value="EECS 609">
+							<input type="button" class="btn btn-primary" value="EECS 610">
+							<input type="button" class="btn btn-primary" value="EECS 611">
+							<input type="button" class="btn btn-primary" value="EECS 612">
 						</div>
 					</div>
 				</div>
@@ -177,67 +196,9 @@
 		
 			<div class="col-sm-6 mt-5 ml-4">
 				<div class="row">
-					<div id="redips-drag" class="ml-n5"> <!--Schedule-->
-						<div id="arrows"></div>
-						<table id="course-grid" class="mx-auto bg-light border">
-							<colgroup><col width="120"/><col width="120"/><col width="120"/><col width="120"/><col width="120"/></colgroup>
-							<tr>
-								<td class="redips-mark">Fall 2018</td>
-								<td></td>
-								<td><div class="redips-drag">EECS 168</div></td>
-								<td><div class="redips-drag">EECS 140</div></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td class="redips-mark">Spring 2019</td>
-								<td></td>
-								<td><div class="redips-drag">MATH 126</div></td>
-								<td></td>
-								<td><div class="redips-drag">COMS 130</div></td>
-							</tr>
-							<tr>
-								<td class="redips-mark">Fall 2019</td>
-								<td><div class="redips-drag">EECS 268</div></td>
-								<td><div class="redips-drag">PHSX 210</div></td>
-								<td><div class="redips-drag">EECS 388</div></td>
-								<td><div class="redips-drag">PHSX 216</div></td>
-							</tr>
-							<tr>
-								<td class="redips-mark">Spring 2020</td>
-								<td><div class="redips-drag">EECS 268</div></td>
-								<td><div class="redips-drag">PHSX 210</div></td>
-								<td><div class="redips-drag">EECS 388</div></td>
-								<td><div class="redips-drag">PHSX 216</div></td>
-							</tr>
-							<tr>
-								<td class="redips-mark">Fall 2021</td>
-								<td><div class="redips-drag">EECS 268</div></td>
-								<td><div class="redips-drag">PHSX 210</div></td>
-								<td><div class="redips-drag">EECS 388</div></td>
-								<td><div class="redips-drag">PHSX 216</div></td>
-							</tr>
-							<tr>
-								<td class="redips-mark">Spring 2021</td>
-								<td><div class="redips-drag">EECS 268</div></td>
-								<td><div class="redips-drag">PHSX 210</div></td>
-								<td><div class="redips-drag">EECS 388</div></td>
-								<td><div class="redips-drag">PHSX 216</div></td>
-							</tr>
-							<tr>
-								<td class="redips-mark">Fall 2022</td>
-								<td><div class="redips-drag">EECS 268</div></td>
-								<td><div class="redips-drag">PHSX 210</div></td>
-								<td><div class="redips-drag">EECS 388</div></td>
-								<td><div class="redips-drag">PHSX 216</div></td>
-							</tr>
-							<tr>
-								<td class="redips-mark">Spring 2022</td>
-								<td><div class="redips-drag">EECS 268</div></td>
-								<td><div class="redips-drag">PHSX 210</div></td>
-								<td><div class="redips-drag">EECS 388</div></td>
-								<td><div class="redips-drag">PHSX 216</div></td>
-							</tr>
-						</table>
+					<div id="redips-drag" class="bg-light border ml-n5"> <!--Schedule-->
+						<div id="arrows"></div><!--Will contain the SVG with the arrows-->
+						<table id="course-grid" class="mx-auto"></table><!--Will contain the drag-and-droppable courses-->
 					</div>
 				</div>
 
