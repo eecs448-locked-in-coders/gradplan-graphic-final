@@ -30,31 +30,18 @@ const ARROWS_FOR_COLOR = 2; // Minimum number of arrows leaving a course before 
 const DEFAULT_COLOR = "black"; // Color of arrows that don't meet the minimum
 
 class Render {
-	constructor() {
-		// Rows and columns of courses in the grid (not counting column of semester names)
-		// TODO: These shouldn't be hard-coded and should change based on things like number of semesters
-		this.rows = 3;
-		this.cols = 4;
-		
-		// Initialize drag-and-drop (perhaps this should be moved to Executive.js)
-		REDIPS.drag.init();
-		REDIPS.drag.dropMode = "single";
-		REDIPS.drag.event.dropped = targetCell => console.log(targetCell);
-		
+	constructor(rows, cols) {
 		this.draw = SVG().addTo(document.getElementById("arrows"));
-		this.rescale();
 		
-		// Test arrows from and to hard-coded course positions
-		this.renderArrows([
-			new Arrow(1, 0, 0, 2, false), // EECS 168 to EECS 268
-			new Arrow(1, 0, 2, 2, false), // EECS 168 to EECS 388
-			new Arrow(2, 0, 2, 2, false), // EECS 140 to EECS 388
-			new Arrow(1, 1, 1, 2, true),  // MATH 126 to PHSX 210 (corequisite)
-			new Arrow(1, 2, 3, 2, true),  // PHSX 210 to PHSX 216
-		]);
+		// Rows and columns of courses in the grid (not counting column of semester names)
+		this.rows = rows;
+		this.cols = cols;
+		this.resize();
 	}
 	
-	rescale() {
+	resize(rows, cols) {
+		this.rows = rows;
+		this.cols = cols;
 		// Place svg behind the course-grid and make it the same size
 		document.querySelector("#arrows svg").style.width = document.getElementById("course-grid").offsetWidth;
 		document.querySelector("#arrows svg").style.height = document.getElementById("course-grid").offsetHeight;
