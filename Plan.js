@@ -47,4 +47,8 @@ class Plan {
       this.course_bank.push(course_id_to_object(this.major.req_class[i]));
     }
   }
+
+  add_semester(){
+
+  }
 }
