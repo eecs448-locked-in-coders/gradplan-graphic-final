@@ -34,9 +34,11 @@ class Render {
 		this.draw = SVG().addTo(document.getElementById("arrows"));
 		
 		// Rows and columns of courses in the grid (not counting column of semester names)
-		this.rows = rows;
-		this.cols = cols;
-		this.resize();
+		if (rows && cols) {
+			this.rows = rows;
+			this.cols = cols;
+			this.resize();
+		}
 	}
 	
 	resize(rows, cols) {
@@ -48,6 +50,7 @@ class Render {
 		document.querySelector("#arrows svg").style.marginBottom = -document.getElementById("course-grid").offsetHeight;
 	}
 	
+	// @pre: resize has already been called with correct size
 	renderArrows(arrows) {
 		this.arrows = arrows;
 		this.initChannels();
