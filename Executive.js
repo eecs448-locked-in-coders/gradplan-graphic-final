@@ -2,7 +2,15 @@ class Executive {
 	constructor() {
 		// Initialize drag-and-drop
 		REDIPS.drag.dropMode = "single";
-		REDIPS.drag.event.dropped = targetCell => console.log(targetCell);
+		REDIPS.drag.event.dropped = targetCell => {
+			console.log(targetCell);
+			let course = this.plan.course_id_to_object(targetCell.firstElementChild.dataset["course"]);
+			let new_x = targetCell.dataset["x"];
+			let new_y = targetCell.dataset["y"];
+			this.plan.remove_course(course);
+			this.plan.semesters[new_y].add_course(course, new_x);
+			this.renderArrows();
+		};
 		
 		this.render = new Render(3, 4); // TODO hard-coded rows/cols
 		this.createTestPlan();
@@ -28,28 +36,30 @@ class Executive {
 		// Clear grid
 		while (grid.firstChild) grid.removeChild(grid.firstChild);
 		
-		let longestRow = 0;
-		
-		for (let semester of this.plan.semesters) {
+		let cols = this.plan.get_longest()+1; // +1 leaves an empty column to add another course to a semester
+		for (let i = 0; i < this.plan.semesters.length; i++) {
+			let semester = this.plan.semesters[i];
 			let tr = document.createElement("tr");
+			
 			let th = document.createElement("th");
 			th.className = "redips-mark";
 			th.innerText = semester.semester_year + " " + semester.season_name();
 			tr.appendChild(th);
 			
-			for (let course of semester.semester_courses) {
-				longestRow++;
+			for (let j = 0; j < cols; j++) {
 				let td = document.createElement("td");
-				if (course != undefined) {
-					td.innerHTML = '<div class="redips-drag">' + course.course_code + "<br>(" + course.credit_hour + ")</div>";
+				if (semester.semester_courses[j] != undefined) {
+					td.innerHTML = semester.semester_courses[j].to_html();
 				}
+				td.dataset["x"] = j;
+				td.dataset["y"] = i;
 				tr.appendChild(td);
 			}
 			
 			grid.appendChild(tr);
 		}
 		REDIPS.drag.init(); // Updates which elements have drag-and-drop
-		this.render.resize(this.plan.semesters.length, longestRow); // Update position of SVG
+		this.render.resize(this.plan.semesters.length, cols);
 		
 		this.renderArrows(); // Will always need to render arrows after rendering course grid
 	}

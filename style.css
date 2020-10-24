@@ -53,6 +53,7 @@
 	}
 	#course-grid th, #course-grid td {
 		width: 120px;
+		min-width: 120px; /*not sure why, but this is needed or table cells could shrink*/
 	}
     .redips-drag {
         width: 90px;
@@ -209,15 +210,11 @@
         margin-right: auto;
     }
 
-    * {
-        -webkit-print-color-adjust: exact !important; 
-        color-adjust: exact !important;                 
-    }
-    
     /* all arrows black when printing */
 	polyline {
 		stroke: black !important;
 	}
-        
-}
 	
+	.bg-light { background: white !important; }
+	.border { border-color: black !important; }
+}

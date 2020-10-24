@@ -26,7 +26,7 @@ class Plan {
   }
   remove_course(course){
     for(var i=0; i<this.semesters.length; i++){
-      this.semesters[i].semester_course.remove_course(course);
+      this.semesters[i].remove_course(course);
     }
     //check course bank
     for(var i=0; i<this.course_bank.length; i++){
@@ -72,10 +72,10 @@ class Plan {
   }
 
   get_longest(){
-    for(var i=0; i<this.semesters.length i++){
-      var longest = 0;
+	var longest = 0;
+    for(var i=0; i<this.semesters.length; i++){
       if(this.semesters[i].semester_courses.length > longest){
-        longest = this.semester[i].semester_courses.length;
+        longest = this.semesters[i].semester_courses.length;
       }
     }
     return longest;
