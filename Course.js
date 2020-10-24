@@ -1,21 +1,3 @@
-class Course {
-  /*
-    course_code = string
-    prereq = [string]
-    coreq = [string]
-    course_semester = [Spring, Summer, Fall] => [bool,bool,bool] Semester
-                    Remember that winter doesn't exist, its just extended spring
-    credit_hour = int
-  */
-  constructor(course_code, prereq, coreq, course_semester, credit_hour){
-    this.course_code = course_code;
-    this.prereq = prereq;
-    this.coreq = coreq;
-    this.course_semester = course_semester;
-    this.credit_hour = credit_hour;
-  }
-}
-
 //Has a course code, prerequisite, corequisites, course offering, credit hours
 class Course {
   /*
