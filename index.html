@@ -30,7 +30,7 @@
 		<div class="row">
 			<div class="col-sm-4"> <img src="KUSig_Horz_Web_Blue.png" class="KU_image"></div>
 			<h1 class="col-sm-4 text-sm-center nonprintable KU_color_text">Gradplan Graphic</h1>
-			<h1 class="col-sm-7 ml-n5 text-center only_print KU_color_text">Graduation planner</h1>
+			<h1 class="col-sm-7 ml-n5 text-center print_only KU_color_text">Graduation planner</h1>
 		</div>
 		<div class="row text-center nonprintable">
 			<p class="col KU_color_text">EECS 448 Team 13</p>
@@ -70,37 +70,30 @@
 	</nav>
 
 	<!--Printing   change the hardcoded entries when possible-->
-	<div class="container only_print ">
+	<div class="container print_only ">
 		<div class="row mt-5">
 			<div class="col ml-5">
 				<div class="row ml-4 mt-5">
-					<img src="ku_jayhawk_2.jpg" class="profile_picture">
+					<img src="ku_jayhawk_2.jpg" class="profile_picture" id="students_photo">
 				</div>
 				<div class="row ml-5 mt-3">
 					<p class="students_info">Name: </p>
-					<p> Jayhawk Jayhawk</p>
+					<p id="name"> Jayhawk Jayhawk</p>
 				</div>
 				<div class="row ml-5 mt-n2">
 					<p class="students_info">Major(s): </p>
-					<p> Computer Science</p>
+					<p id="majors"> Computer Science</p>
 				</div>
 				<div class="row ml-5 mt-n2">
 					<p class="students_info">Student ID: </p>
-					<p> 9999999</p>
+					<p id="studentID"> 9999999</p>
 				</div>
 			</div>
 
 			<div class="col-sm-6 mt-n2 mr-2">
 				<h3>Notifications</h3>
 					<div class="bg-light border p-3">
-						<p>error 1</p>
-						<p>error 2</p>
-						<p>error 3</p>
-						<p>error 4</p>
-						<p>error 5</p>
-						<p>error 6</p>
-						<p>error 7</p>
-						<p>error 8</p>
+						<p id="notifications">errors</p>
 					</div>	
 			</div>
 			
@@ -114,17 +107,17 @@
 			<div class="col-sm-4 ml-5 mr-5 nonprintable">
 				<div class="row mt-3"> <!--Student--> 
 					<div class="col-sm-10">
-						<h2>Jayhawk Jayhawk</h2>
+						<h2 id="name">Jayhawk Jayhawk</h2>
 						<div class="row ml-2 mt-3">
-							<img src="ku_jayhawk_2.jpg" class="profile_picture">
+							<img src="ku_jayhawk_2.jpg" class="profile_picture" id="students_photo">
 						</div>
 						<div class="row ml-2 mt-2">
 							<p class="students_info">Major(s): </p>
-							<p> Computer Science</p>
+							<p id="majors"> Computer Science</p>
 						</div>
 						<div class="row ml-2 mt-n3">
 							<p class="students_info">Student ID: </p>
-							<p> 9999999</p>
+							<p id="studentID"> 9999999</p>
 						</div>
 
 					</div>
@@ -134,14 +127,7 @@
 					<div class="col-sm-10">
 						<h3>Notifications</h3>
 							<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
-								<p>error 1</p>
-								<p>error 2</p>
-								<p>error 3</p>
-								<p>error 4</p>
-								<p>error 5</p>
-								<p>error 6</p>
-								<p>error 7</p>
-								<p>error 8</p>
+								<p id="notifications">errors</p>
 							</div>
 					</div>
 				</div>
@@ -150,7 +136,12 @@
 					<div class="col-sm-10">
 						<h3>Course information</h3>
 						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
-							<p>Asdfghjkl</p>
+							<p id="course_info">This course is an introduction to software engineering, 
+								and it covers the systematic development of software products. It outlines the scope of software engineering,
+							 	including life-cycle models, software process, teams, tools, testing, planning, and estimating. It concentrates 
+								on requirements, analysis, design, implementation, and maintenance of software products. The laboratory covers CASE tools,
+							  	configuration control tools, UML diagrams, integrated development environments, and project specific components. 
+							  	Prerequisite: EECS 268 and upper-level EECS eligibility. LEC.</p>
 						</div>
 					</div>
 				</div>
@@ -158,7 +149,7 @@
 				<div class="row mb-4">
 					<div class="col-sm-10">
 						<h3>Other courses available to you</h3>
-						<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
+						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box" id="extra_courses">
 							<input type="button" class="btn btn-primary" value="EECS 601">
 							<input type="button" class="btn btn-primary" value="EECS 602">
 							<input type="button" class="btn btn-primary" value="EECS 603">
@@ -189,15 +180,15 @@
 					<div class="col-sm-6">
 						<h3>KU Core information</h3>
 						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
-							<p>Asdfghjkl</p>
+							<p id="ku_core_info">Core Goal 1, Core Goal 2, Core Goal 3,</p>
 						</div>
 					</div>
 					<div class="col">
 						<h3 class="text-center">Useful links</h3>
 						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
-							<ul>
+							<ul id="extra_links">
 								<li><a href="http://eecs.ku.edu/eecs-courses">List of all EECS courses</a></li>
-								<li><a href="https://catalog.ku.edu/engineering/electrical-engineering-computer-science/bs-computer-science/">Description of the Bachelor of Science in Computer Science </a></li>
+								<li><a href="http://catalog.ku.edu/engineering/electrical-engineering-computer-science/bs-computer-science/">Description of the Bachelor of Science in Computer Science </a></li>
 							</ul>
 						</div>
 					</div>
