@@ -34,10 +34,11 @@ class Executive {
 		};
 		
 		// Test plan
-		//this.createTestPlan();
+		this.createTestPlan();
 	}
 
 	createTestPlan() {
+		document.getElementById("welcome").style.display = "none";
 		this.plan = new Plan("Computer Science", FALL, 2018);
 		this.plan.semesters[0].semester_courses[1] = this.plan.course_id_to_object("EECS 168");
 		this.plan.semesters[0].semester_courses[2] = this.plan.course_id_to_object("EECS 140");

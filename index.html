@@ -1,10 +1,11 @@
  <!DOCTYPE html>
 <html>
 <head>
-	<title>Gradplan Graphic</title>
-	<!-- Bootstrap -->
 	<meta charset="utf-8">
+	<title>Gradplan Graphic</title>
   	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<!-- Libraries -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
@@ -12,13 +13,15 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.0.16/svg.min.js" integrity="sha512-p3Tp2zn+wApBreZCgRkmMwnfpN8MUPXzzOihXx7iGYXqE7t6m9drY8HeyMeeFuDWiTFKrGUrq3jpbT0vX6zY/Q==" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 	<script type="text/javascript" src="redips-drag-min.js"></script>
+	
+	<!-- Application code and style -->
+	<link rel="stylesheet" href="style.css">
 	<script type="text/javascript" src="Executive.js"></script>
 	<script type="text/javascript" src="Render.js"></script>
 	<script type="text/javascript" src="Plan.js"></script>
 	<script type="text/javascript" src="Semester.js"></script>
 	<script type="text/javascript" src="Course.js"></script>
 	<script type="text/javascript" src="Major.js"></script>
-	<link rel="stylesheet" href="style.css">
 	<script>
 		window.addEventListener('DOMContentLoaded', e => {
 			window.executive = new Executive();
@@ -26,26 +29,28 @@
 	</script>
 </head>
 <body>
-	<div class="header jumbotron container-fluid pt-4">
+	<header class="container-fluid py-3">
 		<div class="row">
-			<div class="col-sm-4"> <img src="KUSig_Horz_Web_Blue.png" class="KU_image"></div>
-			<div class="col-sm-4 text-sm-center nonprintable KU_color_text">
-				<h1>Gradplan Graphic</h1>
-				<p>EECS 448 Team 13</p>
+			<div class="col-sm-4">
+				<a href="https://ku.edu/"><img src="KUSig_Horz_Web_Blue.png" class="KU_image pt-2 ml-2"></a>
 			</div>
-			<h1 class="col-sm-7 ml-n5 text-center only_print KU_color_text">Graduation planner</h1>
-			<div class="col-sm-4 text-right nonprintable">
+			<div class="col-sm-4 text-sm-center KU_color_text">
+				<h1>Gradplan Graphic</h1>
+				EECS 448 Team 13
+			</div>
+			<div class="col-sm-4 text-right">
 				<!--Student info-->
 				<div class="d-inline-block text-left">
 					<span class="students_info">Jayhawk Jayhawk</span><br>
 					<span class="students_info">Major:</span> Computer Science<br>
 					<span class="students_info">Student ID:</span> 9999999
 				</div>
-				<img src="ku_jayhawk_2.jpg" class="profile_picture align-top">
+				<img src="ku_jayhawk_2.jpg" class="profile_picture align-top no-print">
 			</div>
 		</div>
-	</div>
-	  <!-- Navigation bar -->
+	</header>
+	
+	<!-- Navigation bar -->
 	<nav class="navbar navbar-expand-sm navbar-dark KU_color_background">
 		<a class="navbar-brand" href="index.html">Home</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -82,37 +87,27 @@
 			-->
 		</div>  
 		<!--Print button-->
-		<a href="javascript:window.print()" type="button" class="btn btn-default btn-sm navbar-btn print_button">Print  <i class="fa fa-print"></i></a>
+		<a href="javascript:window.print()" type="button" class="btn btn-light btn-sm float-right">Print  <i class="fa fa-print"></i></a>
 	</nav>
 
-	<!--Printing: change the hardcoded entries when possible-->
+	<!--Printing only content (reformatted notifications and other courses)-->
 	<div class="container only_print">
-		<div class="row mt-5">
+		<div class="row mt-3">
 			<div class="col-sm-6">
-				<h2>Jayhawk Jayhawk</h2>
-				<img src="ku_jayhawk_2.jpg" class="mt-3 profile_picture">
-				<p class="mt-2">
-					<span class="students_info">Major(s):</span>
-					Computer Science
-				</p>
-				<p class="mt-n3">
-					<span class="students_info">Student ID:</span>
-					9999999
-				</p>
-			</div>
-
-			<div class="col-sm-6 mt-n2">
 				<h3>Notifications</h3>
 				<div class="bg-light border p-3">
 					<p>error 1</p>
 					<p>error 2</p>
 					<p>error 3</p>
 					<p>error 4</p>
-					<p>error 5</p>
-					<p>error 6</p>
-					<p>error 7</p>
-					<p>error 8</p>
 				</div>
+			</div>
+			<div class="col-sm-6">
+				<h3>Excluded courses</h3>
+				None
+				
+				<h3>Transferred courses</h3>
+				MATH 125, EECS 168, AE 4.1
 			</div>
 		</div>
 	</div>
@@ -120,7 +115,7 @@
 	<!--Content-->
 	<div class="container">
 		<div id="redips-drag" class="row">
-			<div class="col-lg-4 nonprintable">
+			<div class="col-lg-4 no-print">
 				<div class="my-4">
 					<h3>Course Bank</h3>			
 					<table id="course-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 250px; min-height: 100px;">
@@ -141,10 +136,6 @@
 						<p>error 2</p>
 						<p>error 3</p>
 						<p>error 4</p>
-						<p>error 5</p>
-						<p>error 6</p>
-						<p>error 7</p>
-						<p>error 8</p>
 					</div>
 				</div>
 
@@ -160,8 +151,8 @@
 			</div>
 		
 			<div class="col-lg-8 mt-4">
-				<div class="d-flex printable_grid">
-					<div class="bg-light border"> <!--Schedule-->
+				<div class="d-flex">
+					<div id="schedule-container" class="bg-light border"> <!--Schedule-->
 						<div id="arrows"></div><!--Will contain the SVG with the arrows-->
 						<table id="course-grid"></table><!--Will contain the drag-and-droppable courses-->
 						<div id="welcome" class="p-3">
@@ -189,7 +180,7 @@
 					</div>
 				</div>
 
-				<div class="row mt-5 nonprintable">
+				<div class="row mt-5 no-print">
 					<div class="col-sm-6">
 						<h3>KU Core links</h3>
 						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
