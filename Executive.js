@@ -17,10 +17,12 @@ class Executive {
 			const year = value.substring(0,4);
 			const season = value.substring(4,5) == "S" ? SPRING : FALL;
 			const id = year.substring(2)+  value.substring(4,5);
-			const item = {
+			const majorSelect = document.getElementById('majorSelect').value+"";
+				const item = {
 				id: id,
 				season: season,
 				year: year,
+				majorSelect: "Computer Science",
 				
 			};
 
@@ -31,7 +33,7 @@ class Executive {
 	}
 
 	createTestPlan(item) {
-		this.plan = new Plan("Computer Science", item.season, item.year);
+		this.plan = new Plan(item.majorSelect, item.season, item.year);
 		this.plan.semesters[0].semester_courses[1] = this.plan.course_id_to_object("EECS 168");
 		this.plan.semesters[0].semester_courses[2] = this.plan.course_id_to_object("EECS 140");
 		this.plan.semesters[1].semester_courses[1] = this.plan.course_id_to_object("MATH 526");
