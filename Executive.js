@@ -13,7 +13,8 @@ class Executive {
 		};
 		
 		this.render = new Render(3, 4); // TODO hard-coded rows/cols
-		this.createTestPlan();
+        this.createTestPlan();
+        this.renderCourseBank();
 		this.renderCourseGrid();
 	}
 	
@@ -28,7 +29,27 @@ class Executive {
 		this.plan.semesters[2].semester_courses[2] = this.plan.course_id_to_object("EECS 388");
 		this.plan.semesters[2].semester_courses[3] = this.plan.course_id_to_object("PHSX 216");
 	}
-	
+    
+    renderCourseBank()
+    {
+        let grid= document.getElementById("course-bank");
+        let numofcoursesincurrentrow =3;
+        let tr;
+        for (let course of this.plan.course_bank)
+        {
+                if (numofcoursesincurrentrow == 3) //Limits the number of courses in a row to 4
+                {
+                    tr = document.createElement("tr");
+                    grid.appendChild(tr);
+                    numofcoursesincurrentrow = 0;
+                }
+                let td = document.createElement("td");
+                td.innerHTML = '<div class="redips-drag">' + course.course_code + "<br>(" + course.credit_hour + ")</div>";
+                tr.appendChild(td);
+                numofcoursesincurrentrow++;
+        }
+    }
+
 	// Redrawing the course grid should only be needed after drastic changes (e.g. removing a semester)
 	// The rest of the time, the users takes care of these steps by moving courses around
 	renderCourseGrid() {

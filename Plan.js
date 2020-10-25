@@ -10,9 +10,10 @@ class Plan {
     course_bank = [course, course, ...]
   */
   constructor(major, start_season, start_year){
-    this.major = major;
+    this.major = MAJORS[0]; //TEMP FIX. this.major was pulling the major name only instead of the major object. This sets this.major = the first major object in the array of majors.
     this.semesters = [];
     this.course_bank = [];
+    this.fill_course_bank();
     for(var i=0; i<4; i++)
     {
       //Makes 8 semester of fall/spring, flips between fall and spring
@@ -44,7 +45,7 @@ class Plan {
 
   fill_course_bank(){
     for(var i=0; i<this.major.req_class.length; i++){
-      this.course_bank.push(course_id_to_object(this.major.req_class[i]));
+      this.course_bank.push(this.course_id_to_object(this.major.req_class[i]));
     }
   }
 

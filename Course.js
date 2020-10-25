@@ -49,7 +49,7 @@ const COURSES = [
   new Course("MATH 526", ["MATH 127"], [], [1,1,1], 3),
   new Course("PHSX 210", ["MATH 125"], ["MATH 126"], [1,0,1], 3),
   new Course("PHSX 216", [], ["PHSX 210"], [1,1,1], 1),
-  new Course("PHSX 212", ["PHSX 210", "MATH 126"], [1,1,1], 3),
+  new Course("PHSX 212", ["PHSX 210", "MATH 126"],[], [1,1,1], 3),
   new Course("PHSX 236", [], ["PHSX 212"], [1,1,1], 1),
   new Course("GE 3N", [], [], [1,1,1], 3),
   new Course("Prof Elec", [], [], [1,1,1], 3),

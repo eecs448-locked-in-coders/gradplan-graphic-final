@@ -42,7 +42,11 @@
     }
 
     .scrollable_box {
-        max-width: 800px; max-height: 200px;
+        max-width: 800px; max-height: 300px;
+    }
+
+    .roundBorders {
+        border-radius: 3%;
     }
 
     #course-grid tr {
@@ -130,6 +134,11 @@
 
     body {
         font-family: Raleway,sans-serif;
+        text-align: center;
+        filter: Gray();
+        filter: url('#grayscale'); 
+        -webkit-filter: grayscale(100%); 
+        filter: grayscale(100%);
     }
 
     .header {
@@ -152,7 +161,7 @@
     }
 
     .scrollable_box {
-        max-width: 800px; max-height: 200px;
+        max-width: 800px; max-height: 300px;
     }
 
     .students_info {
@@ -163,10 +172,6 @@
         max-height: 5cm; 
         max-width: 6cm; 
         border-radius: 20%;
-    }
-    
-    .KU_color_text {
-        color: rgb(0, 81, 186);
     }
 
     h1 {

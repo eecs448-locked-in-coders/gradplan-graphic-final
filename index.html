@@ -69,10 +69,10 @@
 		<a href="javascript:window.print()" type="button" class="btn btn-default btn-sm navbar-btn print_button">Print  <i class="fa fa-print"></i></a>
 	</nav>
 
-	<!--Printing   change the hardcoded entries when possible-->
+	<!--Printing-->
 	<div class="container print_only ">
 		<div class="row mt-5">
-			<div class="col-sm-6">
+			<div class="col-sm-6 x">
 				<img src="ku_jayhawk_2.jpg" class="mt-3 profile_picture" id="students_photo">
 				<p class="mt-2" id="name">
 					<span class="students_info">Name: </span>
@@ -90,7 +90,7 @@
 
 			<div class="col-sm-6 mt-n2">
 				<h3>Notifications</h3>
-				<div class="bg-light border p-3">
+				<div class="bg-light border p-3 roundBorders">
 					<p id="notifications">errors</p>
 				</div>	
 			</div>
@@ -99,7 +99,7 @@
 
 	<!--Content-->
 	<div class="container">
-		<div class="row">
+		<div id= "redips-drag"class="row">
 			<div class="col-lg-4 nonprintable">
 				<div class="mt-3"> <!--Student--> 
 					<h2 id="name">Jayhawk Jayhawk</h2>
@@ -116,14 +116,14 @@
 
 				<div class="mb-4"> <!--Errors and notifications-->
 					<h3>Notifications</h3>
-					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
+					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box roundBorders">
 						<p id="notifications">errors</p>
 					</div>
 				</div>
 
 				<div class="mb-4"> <!--Extra-->
 					<h3>Course information</h3>
-					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
+					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box roundBorders">
 						<p id="course_info">This course is an introduction to software engineering, 
 								and it covers the systematic development of software products. It outlines the scope of software engineering,
 							 	including life-cycle models, software process, teams, tools, testing, planning, and estimating. It concentrates 
@@ -134,22 +134,10 @@
 				</div>
 
 				<div class="row mb-4">
-					<div class="col-sm-10">
-						<h3>Other courses available to you</h3>
-						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box" id="extra_courses">
-							<input type="button" class="btn btn-primary" value="EECS 601">
-							<input type="button" class="btn btn-primary" value="EECS 602">
-							<input type="button" class="btn btn-primary" value="EECS 603">
-							<input type="button" class="btn btn-primary" value="EECS 604">
-							<input type="button" class="btn btn-primary" value="EECS 605">
-							<input type="button" class="btn btn-primary" value="EECS 606">
-							<input type="button" class="btn btn-primary" value="EECS 607">
-							<input type="button" class="btn btn-primary" value="EECS 608">
-							<input type="button" class="btn btn-primary" value="EECS 609">
-							<input type="button" class="btn btn-primary" value="EECS 610">
-							<input type="button" class="btn btn-primary" value="EECS 611">
-							<input type="button" class="btn btn-primary" value="EECS 612">
-						</div>
+					<div class="col-sm-10"> 
+						<h3>Other courses available to you</h3>			
+							<table id="course-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border roundBorders" style="min-width: 100px; min-height: 200px;">
+							</table>
 					</div>
 				</div>
 
@@ -157,7 +145,7 @@
 		
 			<div class="col-lg-8 mt-5">
 				<div class="d-flex printable_grid">
-					<div id="redips-drag" class="bg-light border"> <!--Schedule-->
+					<div class="bg-light border"> <!--Schedule-->
 						<div id="arrows"></div><!--Will contain the SVG with the arrows-->
 						<table id="course-grid"></table><!--Will contain the drag-and-droppable courses-->
 					</div>
@@ -166,13 +154,13 @@
 				<div class="row mt-5 nonprintable">
 					<div class="col-sm-6">
 						<h3>KU Core information</h3>
-						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
+						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box roundBorders">
 							<p id="ku_core_info">Core Goal 1, Core Goal 2, Core Goal 3,</p>
 						</div>
 					</div>
 					<div class="col-sm-6">
 						<h3>Useful links</h3>
-						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
+						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box roundBorders">
 							<ul id="extra_links">
 								<li><a href="http://eecs.ku.edu/eecs-courses">List of all EECS courses</a></li>
 								<li><a href="http://catalog.ku.edu/engineering/electrical-engineering-computer-science/bs-computer-science/">Description of the Bachelor of Science in Computer Science </a></li>
