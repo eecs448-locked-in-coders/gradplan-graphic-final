@@ -4,11 +4,11 @@ const UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
 const LEFT_OFFSET = 120; // Offset due to the column of the chart with the semester names
 const TOP_OFFSET = 0; // Currently zero, but of padding is added for outside channels may increase
 
-const CHANNELS = [2, 1, 3, 0, 4]; // Order channels will be filled
-const NUM_CHANNELS = CHANNELS.length; //5
+const VERT_CHANNELS = [1, 3, 0, 4, 2]; // Order channels will be filled (5 vert channels)
+const HORIZ_CHANNELS = [1, 5, 2, 4, 0, 6, 3]; // Order channels will be filled (7 horiz channels)
 
 const TD_WIDTH = 120;
-const TD_HEIGHT = 80;
+const TD_HEIGHT = 95;
 const COURSE_WIDTH = 90;
 const COURSE_HEIGHT = 50;
 
@@ -16,8 +16,8 @@ const COURSE_HEIGHT = 50;
 const ARROW_SIZE = 4;
 
 // The thickness of each individual channel (line drawn in middle)
-const HORIZ_CHANNEL_SIZE = (TD_HEIGHT-COURSE_HEIGHT)/NUM_CHANNELS;
-const VERT_CHANNEL_SIZE = (TD_WIDTH-COURSE_WIDTH)/NUM_CHANNELS;
+const HORIZ_CHANNEL_SIZE = (TD_HEIGHT-COURSE_HEIGHT)/HORIZ_CHANNELS.length;
+const VERT_CHANNEL_SIZE = (TD_WIDTH-COURSE_WIDTH)/VERT_CHANNELS.length;
 
 // Colors to use on courses with the most arrows (from https://www.materialpalette.com/)
 // Red is deliberately not included as it is intended to be used when hovering over a course
@@ -142,7 +142,7 @@ class Render {
 	findHorizChannel(startX, endX, y) {
 		// Find an available channel (all segments along length of line available)
 		var chan;
-		for (chan of CHANNELS) {
+		for (chan of HORIZ_CHANNELS) {
 			var channelValid = true;
 			for (var col = Math.min(startX, endX); col <= Math.max(startX, endX); col++) {
 				// if this segment of the channel is already taken
@@ -161,7 +161,7 @@ class Render {
 		}
 
 		// Channel number with 0 as center
-		let relChan = chan - ((NUM_CHANNELS-1)/2);
+		let relChan = chan - ((HORIZ_CHANNELS.length-1)/2);
 
 		// X coordinate pixel of the channel and Y offset of the start/end position (if applicable)
 		return [relChan * HORIZ_CHANNEL_SIZE + y*TD_HEIGHT, relChan * ARROW_SIZE*2.5];
@@ -170,7 +170,7 @@ class Render {
 	findVertChannel(x, startY, endY) {
 		// Find an available channel (all segments along length of line available)
 		var chan;
-		for (chan of CHANNELS) {
+		for (chan of VERT_CHANNELS) {
 			var channelValid = true;
 			for (var row = Math.min(startY, endY); row <= Math.max(startY, endY); row++) {
 				// if this segment of the channel is already taken
@@ -189,7 +189,7 @@ class Render {
 		}
 
 		// Channel number with 0 as center
-		let relChan = chan - ((NUM_CHANNELS-1)/2);
+		let relChan = chan - ((VERT_CHANNELS.length-1)/2);
 
 		// X coordinate pixel of the channel and Y offset of the start/end position (if applicable)
 		return [relChan * VERT_CHANNEL_SIZE + x*TD_WIDTH, relChan * ARROW_SIZE*2.5];
@@ -214,9 +214,12 @@ class Render {
 			for (var col = 0; col <= this.cols; col++) {
 				this.vertChannels[row][col] = [];
 				this.horizChannels[row][col] = [];
-				for (var chan = 0; chan < NUM_CHANNELS; chan++) {
+				for (var chan = 0; chan < VERT_CHANNELS.length; chan++) {
 					this.vertChannels[row][col][chan] = false;
+				}
+				for (var chan = 0; chan < HORIZ_CHANNELS.length; chan++) {
 					this.horizChannels[row][col][chan] = false;
+					
 				}
 			}
 		}

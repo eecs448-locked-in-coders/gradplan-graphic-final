@@ -34,7 +34,7 @@ class Executive {
 		};
 		
 		// Test plan
-		this.createTestPlan();
+		//this.createTestPlan();
 	}
 
 	createTestPlan() {
