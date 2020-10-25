@@ -5,10 +5,13 @@ class Executive {
 		REDIPS.drag.event.dropped = targetCell => {
 			console.log(targetCell);
 			let course = this.plan.course_id_to_object(targetCell.firstElementChild.dataset["course"]);
+			alert(course);
 			let new_x = targetCell.dataset["x"];
 			let new_y = targetCell.dataset["y"];
 			this.plan.remove_course(course);
 			this.plan.semesters[new_y].add_course(course, new_x);
+			alert(this.plan.semesters[new_y].get_credit_hour());
+			
 			this.renderArrows();
 		};
 		document.getElementById('done').addEventListener('click', () => {
