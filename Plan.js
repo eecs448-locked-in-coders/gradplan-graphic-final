@@ -25,6 +25,19 @@ class Plan {
     }
 
   }
+
+  find_course(course_string){
+    for(var i=0; i<this.semesters.length; i++){
+      for(var j=0; j<this.semesters[i].semester_courses.length; j++){
+        if(this.semesters[i].semester_courses[j] != undefined){
+          if(course_string == this.semesters[i].semester_courses[j].course_code){
+            return[i,j];
+          }
+        }
+      }
+    }
+  }
+
   remove_course(course){
     for(var i=0; i<this.semesters.length; i++){
       this.semesters[i].remove_course(course);
@@ -52,7 +65,7 @@ class Plan {
   add_semester(season, year){
     let duplicate = false;
     for(var i=0; i<this.semesters.length; i++){
-      duplicate = (season == this.semesters[i].semester_season && year == this.semester[i].semeseter_year);
+      duplicate = (season == this.semesters[i].semester_season && year == this.semester[i].semester_year);
       if(season > this.semesters[i].semester_season && year > this.semesters[i].semester_year && !duplicate){
         this.semesters.splice(i, 0, new Semester(season, year, []));
       }
@@ -73,12 +86,50 @@ class Plan {
   }
 
   get_longest(){
-	var longest = 0;
+  	var longest = 0;
+      for(var i=0; i<this.semesters.length; i++){
+        if(this.semesters[i].semester_courses.length > longest){
+          longest = this.semesters[i].semester_courses.length;
+        }
+      }
+      return longest;
+  }
+
+  /*
+    check each course
+    find course coordinate
+    look for course pre/co req
+    find req courses coordinate
+    create arrow
+  */
+  generate_arrows(){
+    var arr_arrows = [];
+    var cord_req = [];
     for(var i=0; i<this.semesters.length; i++){
-      if(this.semesters[i].semester_courses.length > longest){
-        longest = this.semesters[i].semester_courses.length;
+      for(var j=0; j<this.semesters[i].semester_courses.length; j++){
+
+        if(this.semesters[i].semester_courses[j] != undefined){
+
+          for(var x=0; x<this.semesters[i].semester_courses[j].prereq.length; x++){
+            console.log(this.semesters[i].semester_courses[j].prereq[x]);
+            cord_req = this.find_course(this.semesters[i].semester_courses[j].prereq[x]);
+            if(cord_req != undefined){
+              arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, false));
+            }
+            console.log(cord_req);
+            cord_req = [];
+          }
+          for(var y=0; y<this.semesters[i].semester_courses[j].coreq.length; y++){
+            cord_req = this.find_course(this.semesters[i].semester_courses[j].coreq[y]);
+            if(cord_req != undefined){
+              arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, true));
+            }
+            cord_req = [];
+          }
+        }
       }
     }
-    return longest;
+    console.log(arr_arrows);
+    return (arr_arrows);
   }
 }
