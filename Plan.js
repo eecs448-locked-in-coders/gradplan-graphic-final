@@ -1,5 +1,6 @@
 //Major, list of semester objects, list of transfer/exempt courses
 const SPRING = 0, SUMMER = 1, FALL = 2;
+const MIN_COLS = 3; // Minimum number of columns to put courses in
 class Plan {
 
   /*
@@ -86,10 +87,16 @@ class Plan {
   }
 
   get_longest(){
-  	var longest = 0;
+  	var longest = MIN_COLS;
       for(var i=0; i<this.semesters.length; i++){
         if(this.semesters[i].semester_courses.length > longest){
-          longest = this.semesters[i].semester_courses.length;
+		  // Make sure undefineds as the end of the array are not counted in the length
+		  for (var j = this.semesters[i].semester_courses.length-1; j >= longest; j--) {
+			if (this.semesters[i].semester_courses[j] != undefined) {
+			  longest = j+1;
+			  break;
+			}
+		  }
         }
       }
       return longest;
@@ -107,29 +114,23 @@ class Plan {
     var cord_req = [];
     for(var i=0; i<this.semesters.length; i++){
       for(var j=0; j<this.semesters[i].semester_courses.length; j++){
-
         if(this.semesters[i].semester_courses[j] != undefined){
-
           for(var x=0; x<this.semesters[i].semester_courses[j].prereq.length; x++){
             console.log(this.semesters[i].semester_courses[j].prereq[x]);
             cord_req = this.find_course(this.semesters[i].semester_courses[j].prereq[x]);
             if(cord_req != undefined){
               arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, false));
             }
-            console.log(cord_req);
-            cord_req = [];
           }
           for(var y=0; y<this.semesters[i].semester_courses[j].coreq.length; y++){
             cord_req = this.find_course(this.semesters[i].semester_courses[j].coreq[y]);
             if(cord_req != undefined){
               arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, true));
             }
-            cord_req = [];
           }
         }
       }
     }
-    console.log(arr_arrows);
     return (arr_arrows);
   }
 }
