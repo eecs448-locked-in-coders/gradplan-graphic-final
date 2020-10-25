@@ -52,6 +52,7 @@ class Render {
 
 	// @pre: resize has already been called with correct size
 	renderArrows(arrows) {
+		this.draw.clear(); // Remove any existing arrows
 		this.arrows = arrows;
 		this.initChannels();
 		let courseColors = this.findColors();

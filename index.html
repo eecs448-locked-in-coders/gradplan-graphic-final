@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <head>
 	<title>Gradplan Graphic</title>
@@ -103,7 +103,7 @@
 
 	<!--Content-->
 	<div class="container">
-		<div class="row">
+		<div id= "redips-drag"class="row">
 			<div class="col-lg-4 nonprintable">
 				<div class="mt-3"> <!--Student--> 
 					<h2>Jayhawk Jayhawk</h2>
@@ -117,6 +117,23 @@
 						9999999
 					</p>
 				</div>
+				<h2>Season and Year:</h2>
+						<select id="yearSelect"  name="year">
+			    			<option value="2020F">Fall 2020</option>
+							<option value="2020S">Spring 2020</option>  
+							<option value="2019F">Fall 2019</option>
+							<option value="2019S">Spring 2019</option>  
+							<option value="2018F">Fall 2018</option> 
+							<option value="2018S">Spring 2018</option> 
+							<option value="2017F">Fall 2017</option> 
+							<option value="2017S">Spring 2017</option>
+						</select>
+						<h2>Major:</h2>
+						<select id="majorSelect" name="Major">
+							<option value="CS">Computer Science</option>
+						</select>
+						<button id="done">Done</button>
+
 
 				<div class="mb-4"> <!--Errors and notifications-->
 					<h3>Notifications</h3>
@@ -140,22 +157,37 @@
 				</div>
 
 				<div class="row mb-4">
-					<div class="col-sm-10">
-						<h3>Other courses available to you</h3>
-						<div  class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
-							<input type="button" class="btn btn-primary" value="EECS 601">
-							<input type="button" class="btn btn-primary" value="EECS 602">
-							<input type="button" class="btn btn-primary" value="EECS 603">
-							<input type="button" class="btn btn-primary" value="EECS 604">
-							<input type="button" class="btn btn-primary" value="EECS 605">
-							<input type="button" class="btn btn-primary" value="EECS 606">
-							<input type="button" class="btn btn-primary" value="EECS 607">
-							<input type="button" class="btn btn-primary" value="EECS 608">
-							<input type="button" class="btn btn-primary" value="EECS 609">
-							<input type="button" class="btn btn-primary" value="EECS 610">
-							<input type="button" class="btn btn-primary" value="EECS 611">
-							<input type="button" class="btn btn-primary" value="EECS 612">
-						</div>
+					<div class="col-sm-10"> 
+						<h3>Major Specific Course Bank</h3>			
+							<table id="course-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 100px; min-height: 200px;">
+							</table>
+					</div>
+				</div>
+				<div class="row mb-4">
+					<div class="col-sm-10"> 
+						<h3>Transfer Credits</h3>			
+							<table id="course-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 100px; min-height: 200px;">
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</table>
 					</div>
 				</div>
 
@@ -163,7 +195,7 @@
 		
 			<div class="col-lg-8 mt-5">
 				<div class="d-flex printable_grid">
-					<div id="redips-drag" class="bg-light border"> <!--Schedule-->
+					<div class="bg-light border"> <!--Schedule-->
 						<div id="arrows"></div><!--Will contain the SVG with the arrows-->
 						<table id="course-grid"></table><!--Will contain the drag-and-droppable courses-->
 					</div>
@@ -192,3 +224,4 @@
 	</div>
 </body>
 </html>
+
