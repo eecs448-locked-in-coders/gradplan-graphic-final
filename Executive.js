@@ -52,9 +52,6 @@ class Executive {
 		let tr;
 		let maxnumofcols = 3;
 		let numofcoursesincurrentrow =3;
-		//let setcolspacing = document.createElement("colgroup")
-		//setcolspacing.innerHTML = '<col span='+maxnumofcols+'> '
-		//grid.appendChild (setcolspacing);
         for (let course of this.plan.course_bank)
         {
                 if (numofcoursesincurrentrow == maxnumofcols) //Limits the number of courses in a row to 4
