@@ -48,19 +48,23 @@ class Executive {
     
     renderCourseBank()
     {
-        let grid= document.getElementById("course-bank");
-        let numofcoursesincurrentrow =3;
-        let tr;
+		let grid= document.getElementById("course-bank");
+		let tr;
+		let maxnumofcols = 3;
+		let numofcoursesincurrentrow =3;
+		//let setcolspacing = document.createElement("colgroup")
+		//setcolspacing.innerHTML = '<col span='+maxnumofcols+'> '
+		//grid.appendChild (setcolspacing);
         for (let course of this.plan.course_bank)
         {
-                if (numofcoursesincurrentrow == 3) //Limits the number of courses in a row to 4
+                if (numofcoursesincurrentrow == maxnumofcols) //Limits the number of courses in a row to 4
                 {
-                    tr = document.createElement("tr");
+					tr = document.createElement("tr");
                     grid.appendChild(tr);
                     numofcoursesincurrentrow = 0;
                 }
                 let td = document.createElement("td");
-                td.innerHTML = '<div class="redips-drag">' + course.course_code + "<br>(" + course.credit_hour + ")</div>";
+                td.innerHTML = course.to_html();
                 tr.appendChild(td);
                 numofcoursesincurrentrow++;
         }
