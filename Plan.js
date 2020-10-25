@@ -27,9 +27,11 @@ class Plan {
 
   find_course(course_string){
     for(var i=0; i<this.semesters.length; i++){
-      for(var j=0; j<this.semseters[i].semsester_courses.length; j++){
-        if(course_string == this.semesters[i].semester_courses[j].course_code){
-          return[i,j];
+      if(this.semesters[i].semester_course != undefined){
+        for(var j=0; j<this.semseters[i].semsester_courses.length; j++){
+          if(course_string == this.semesters[i].semester_courses[j].course_code){
+            return[i,j];
+          }
         }
       }
     }
@@ -62,7 +64,7 @@ class Plan {
   add_semester(season, year){
     let duplicate = false;
     for(var i=0; i<this.semesters.length; i++){
-      duplicate = (season == this.semesters[i].semester_season && year == this.semester[i].semeseter_year);
+      duplicate = (season == this.semesters[i].semester_season && year == this.semester[i].semester_year);
       if(season > this.semesters[i].semester_season && year > this.semesters[i].semester_year && !duplicate){
         this.semesters.splice(i, 0, new Semester(season, year, []));
       }
@@ -82,21 +84,21 @@ class Plan {
     }
   }
 
-get_longest(){
-	var longest = 0;
-    for(var i=0; i<this.semesters.length; i++){
-      if(this.semesters[i].semester_courses.length > longest){
-        longest = this.semesters[i].semester_courses.length;
+  get_longest(){
+  	var longest = 0;
+      for(var i=0; i<this.semesters.length; i++){
+        if(this.semesters[i].semester_courses.length > longest){
+          longest = this.semesters[i].semester_courses.length;
+        }
       }
-    }
-    return longest;
+      return longest;
   }
 
-  generate_arrow(){
+  generate_arrows(){
     var arr_arrows = [];
-    var arr_course = [];
-    var arr_req = [];
-    var is_coreq = false;
+    //rename to cord_course
+    var cord_course = [];
+    var cord_req = [];
     /*
       check each course
       find course coordinate
@@ -106,15 +108,24 @@ get_longest(){
     */
     for(var i=0; i<this.semesters.length; i++){
       for(var j=0; j<this.semesters[i].semester_courses.length; j++){
-        arr_course[0] = i;
-        arr_course[1] = j;
-        if(this.semesters[i].semester_courses[j].prereq.length != 0){
+        cord_course[0] = i;//x and y coordinates
+        cord_course[1] = j;
+        if(this.semesters[i].semester_courses[j] != undefined){
           for(var x=0; x<this.semesters[i].semester_courses[j].prereq.length; x++){
-            var arr_req = find_course(this.semesters[i].semester_courses[j].prereq[x])[0]
-
+            cord_req = this.find_course(this.semesters[i].semester_courses[j].prereq[x]);
+            if(cord_req != undefined){
+              arr_arrows.push(new Arrow(cord_req[0], cord_req[1], cord_course[0], cord_course[1], false));
+            }
+          }
+          for(var y=0; y<this.semesters[i].semester_courses[j].coreq.length; y++){
+            cord_req = this.find_course(this.semesters[i].semester_courses[j].coreq[y]);
+            if(cord_req){
+              arr_arrows.push(new Arrow(cord_req[0], cord_req[1], cord_course[0], cord_course[1], true));
+            }
           }
         }
       }
     }
+    return (arr_arrows);
   }
 }
