@@ -117,23 +117,6 @@
 						9999999
 					</p>
 				</div>
-				<h2>Season and Year:</h2>
-						<select id="yearSelect"  name="year">
-			    			<option value="2020F">Fall 2020</option>
-							<option value="2020S">Spring 2020</option>  
-							<option value="2019F">Fall 2019</option>
-							<option value="2019S">Spring 2019</option>  
-							<option value="2018F">Fall 2018</option> 
-							<option value="2018S">Spring 2018</option> 
-							<option value="2017F">Fall 2017</option> 
-							<option value="2017S">Spring 2017</option>
-						</select>
-						<h2>Major:</h2>
-						<select id="majorSelect" name="Major">
-							<option value="Computer Science">Computer Science</option>
-						</select>
-						<button id="done">Done</button>
-
 
 				<div class="mb-4"> <!--Errors and notifications-->
 					<h3>Notifications</h3>
@@ -198,6 +181,28 @@
 					<div class="bg-light border"> <!--Schedule-->
 						<div id="arrows"></div><!--Will contain the SVG with the arrows-->
 						<table id="course-grid"></table><!--Will contain the drag-and-droppable courses-->
+						<div id="welcome" class="p-4">
+							<h1>Welcome!</h1>
+							<h4>Select your major and first semester at KU semester to begin.</h4>
+							<div class="input-group">
+								<select id="majorSelect" class="form-control">
+									<option value="Computer Science">Computer Science</option>
+								</select>
+								<select id="yearSelect" class="form-control">
+									<option value="2020F">Fall 2020</option>
+									<option value="2020S">Spring 2020</option>  
+									<option value="2019F">Fall 2019</option>
+									<option value="2019S">Spring 2019</option>  
+									<option value="2018F">Fall 2018</option> 
+									<option value="2018S">Spring 2018</option> 
+									<option value="2017F">Fall 2017</option> 
+									<option value="2017S">Spring 2017</option>
+								</select>
+								<div class="input-group-append">
+									<button type="button" class="btn btn-primary" id="done">Start Planning</button>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 

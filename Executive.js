@@ -11,6 +11,7 @@ class Executive {
 			const season = value.substring(4,5) == "S" ? SPRING : FALL;
 			const major = document.getElementById('majorSelect').value;
 
+			document.getElementById("welcome").style.display = "none";
 			this.plan = new Plan(major, season, year);
 			this.renderCourseBank();
 			this.renderCourseGrid();
