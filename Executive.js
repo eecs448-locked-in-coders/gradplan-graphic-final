@@ -2,23 +2,19 @@ class Executive {
 	constructor() {
 		// Initialize drag-and-drop
 		REDIPS.drag.dropMode = "single";
-		REDIPS.drag.event.dropped = targetCell => {
-			console.log(targetCell);
-			let course = this.plan.course_id_to_object(targetCell.firstElementChild.dataset["course"]);
-			let new_x = targetCell.dataset["x"];
-			let new_y = targetCell.dataset["y"];
-			this.plan.remove_course(course);
-			this.plan.semesters[new_y].add_course(course, new_x);
-			this.renderArrows();
-		};
+		REDIPS.drag.event.dropped = targetCell => console.log(targetCell);
+		const t = {
+			id: '19S',
+			season: 2,
+			year: '2018'
+		}
 		
 		this.render = new Render(3, 4); // TODO hard-coded rows/cols
-		this.createTestPlan();
-		this.renderCourseGrid();
+		this.createTestPlan(t);
 	}
 	
-	createTestPlan() {
-		this.plan = new Plan("Computer Science", FALL, 2018);
+	createTestPlan(item) {
+		this.plan = new Plan("Computer Science", item.season, item.year);
 		this.plan.semesters[0].semester_courses[1] = this.plan.course_id_to_object("EECS 168");
 		this.plan.semesters[0].semester_courses[2] = this.plan.course_id_to_object("EECS 140");
 		this.plan.semesters[1].semester_courses[1] = this.plan.course_id_to_object("MATH 526");
@@ -27,6 +23,7 @@ class Executive {
 		this.plan.semesters[2].semester_courses[1] = this.plan.course_id_to_object("PHSX 210");
 		this.plan.semesters[2].semester_courses[2] = this.plan.course_id_to_object("EECS 388");
 		this.plan.semesters[2].semester_courses[3] = this.plan.course_id_to_object("PHSX 216");
+		this.renderCourseGrid();
 	}
 	
 	// Redrawing the course grid should only be needed after drastic changes (e.g. removing a semester)
@@ -36,30 +33,28 @@ class Executive {
 		// Clear grid
 		while (grid.firstChild) grid.removeChild(grid.firstChild);
 		
-		let cols = this.plan.get_longest()+1; // +1 leaves an empty column to add another course to a semester
-		for (let i = 0; i < this.plan.semesters.length; i++) {
-			let semester = this.plan.semesters[i];
+		let longestRow = 0;
+		
+		for (let semester of this.plan.semesters) {
 			let tr = document.createElement("tr");
-			
 			let th = document.createElement("th");
 			th.className = "redips-mark";
 			th.innerText = semester.semester_year + " " + semester.season_name();
 			tr.appendChild(th);
 			
-			for (let j = 0; j < cols; j++) {
+			for (let course of semester.semester_courses) {
+				longestRow++;
 				let td = document.createElement("td");
-				if (semester.semester_courses[j] != undefined) {
-					td.innerHTML = semester.semester_courses[j].to_html();
+				if (course != undefined) {
+					td.innerHTML = '<div class="redips-drag">' + course.course_code + "<br>(" + course.credit_hour + ")</div>";
 				}
-				td.dataset["x"] = j;
-				td.dataset["y"] = i;
 				tr.appendChild(td);
 			}
 			
 			grid.appendChild(tr);
 		}
 		REDIPS.drag.init(); // Updates which elements have drag-and-drop
-		this.render.resize(this.plan.semesters.length, cols);
+		this.render.resize(this.plan.semesters.length, longestRow); // Update position of SVG
 		
 		this.renderArrows(); // Will always need to render arrows after rendering course grid
 	}
@@ -75,5 +70,28 @@ class Executive {
 			new Arrow(1, 1, 1, 2, true),  // MATH 126 to PHSX 210 (corequisite)
 			new Arrow(1, 2, 3, 2, true),  // PHSX 210 to PHSX 216
 		]);
+	}
+}
+
+window.onload = () => {
+	var test = new Executive();
+	
+	document.getElementById('done').addEventListener('click', function() {
+		update();
+	});
+
+
+	function update(){
+		const value = document.getElementById('yearSelect').value+"";
+		const year = value.substring(0,4)
+		const season = value.substring(4,5) == "S" ? SPRING : FALL;
+		const id = year.substring(2)+  value.substring(4,5)
+		const item = {
+			id: id,
+			season: season,
+			year: year
+		}
+
+		test.createTestPlan(item);
 	}
 }
