@@ -11,16 +11,28 @@ class Executive {
 			this.plan.semesters[new_y].add_course(course, new_x);
 			this.renderArrows();
 		};
-		const t = {
-			id: '19S',
-			season: 2,
-			year: '2018'
-		}
-		
+
+		document.getElementById('done').addEventListener('click', () => {
+			//update();
+			const value = document.getElementById('yearSelect').value+"";
+			const year = value.substring(0,4);
+			const season = value.substring(4,5) == "S" ? SPRING : FALL;
+			const id = year.substring(2)+  value.substring(4,5);
+			const item = {
+				id: id,
+				season: season,
+				year: year,
+				
+			};
+
+			console.log(item);
+			this.createTestPlan(item);
+
+		});
 		this.render = new Render(3, 4); // TODO hard-coded rows/cols
-		this.createTestPlan(t);
 	}
-	
+
+
 	createTestPlan(item) {
 		this.plan = new Plan("Computer Science", item.season, item.year);
 		this.plan.semesters[0].semester_courses[1] = this.plan.course_id_to_object("EECS 168");
@@ -31,9 +43,32 @@ class Executive {
 		this.plan.semesters[2].semester_courses[1] = this.plan.course_id_to_object("PHSX 210");
 		this.plan.semesters[2].semester_courses[2] = this.plan.course_id_to_object("EECS 388");
 		this.plan.semesters[2].semester_courses[3] = this.plan.course_id_to_object("PHSX 216");
+		this.renderCourseBank();
 		this.renderCourseGrid();
+	
+	
 	}
 	
+	renderCourseBank()
+    {
+        let grid= document.getElementById("course-bank");
+        let numofcoursesincurrentrow =3;
+        let tr;
+        for (let course of this.plan.course_bank)
+        {
+                if (numofcoursesincurrentrow == 3) //Limits the number of courses in a row to 4
+                {
+                    tr = document.createElement("tr");
+                    grid.appendChild(tr);
+                    numofcoursesincurrentrow = 0;
+                }
+                let td = document.createElement("td");
+                td.innerHTML = '<div class="redips-drag">' + course.course_code + "<br>(" + course.credit_hour + ")</div>";
+                tr.appendChild(td);
+                numofcoursesincurrentrow++;
+        }
+    }
+
 	// Redrawing the course grid should only be needed after drastic changes (e.g. removing a semester)
 	// The rest of the time, the users takes care of these steps by moving courses around
 	renderCourseGrid() {
@@ -83,25 +118,4 @@ class Executive {
 	}
 }
 
-window.onload = () => {
-	var test = new Executive();
 	
-	document.getElementById('done').addEventListener('click', function() {
-		update();
-	});
-
-
-	function update(){
-		const value = document.getElementById('yearSelect').value+"";
-		const year = value.substring(0,4)
-		const season = value.substring(4,5) == "S" ? SPRING : FALL;
-		const id = year.substring(2)+  value.substring(4,5)
-		const item = {
-			id: id,
-			season: season,
-			year: year
-		}
-
-		test.createTestPlan(item);
-	}
-}
