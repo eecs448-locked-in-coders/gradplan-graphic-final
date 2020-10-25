@@ -27,7 +27,7 @@ class Plan {
   }
   remove_course(course){
     for(var i=0; i<this.semesters.length; i++){
-      this.semesters[i].semester_course.remove_course(course);
+      this.semesters[i].remove_course(course);
     }
     //check course bank
     for(var i=0; i<this.course_bank.length; i++){
@@ -52,8 +52,8 @@ class Plan {
   add_semester(season, year){
     let duplicate = false;
     for(var i=0; i<this.semesters.length; i++){
-      duplicate = (season == this.semesters[i].semester_season() && year == this.semester[i].semeseter_year());
-      if(season > this.semesters[i].semester_season() && year > this.semesters[i].semester_year() && !duplicate){
+      duplicate = (season == this.semesters[i].semester_season && year == this.semester[i].semeseter_year);
+      if(season > this.semesters[i].semester_season && year > this.semesters[i].semester_year && !duplicate){
         this.semesters.splice(i, 0, new Semester(season, year, []));
       }
     }
@@ -61,9 +61,24 @@ class Plan {
 
   remove_semester(season, year){
     for(var i=0; i<this.semesters.length; i++){
-      if(season == this.semesters[i].semester_season() && year == this.semesters[i].semseter_year()){
+      if(season == this.semesters[i].semester_season && year == this.semesters[i].semseter_year){
+        for(var j=0; j<this.semesters[i].semester_courses.length; j++){
+          if(this.semesters[i].semster_courses[j] != undefined){
+            return;
+          }
+        }
         this.semester.splice(i, 1);
       }
     }
+  }
+
+  get_longest(){
+	var longest = 0;
+    for(var i=0; i<this.semesters.length; i++){
+      if(this.semesters[i].semester_courses.length > longest){
+        longest = this.semesters[i].semester_courses.length;
+      }
+    }
+    return longest;
   }
 }

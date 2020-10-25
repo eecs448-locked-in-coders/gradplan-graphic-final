@@ -15,6 +15,10 @@ class Course {
     this.course_semester = course_semester;
     this.credit_hour = credit_hour;
   }
+  
+  to_html() {
+	return '<div class="redips-drag" data-course="' + this.course_code + '">' + this.course_code + "<br>(" + this.credit_hour + ")</div>";
+  }
 }
 const COURSES = [
   new Course("EECS 101", [], ["Math 104"], [0,0,1], 1),

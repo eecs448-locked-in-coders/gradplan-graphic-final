@@ -20,7 +20,7 @@ class Semester {
     this.semester_courses[index] = course;
   }
   remove_course(course){
-    for(var i=0; i<this.semester_courses.length(); i++){
+    for(var i=0; i<this.semester_courses.length; i++){
       if(this.semester_courses[i] == course){
         this.semester_courses[i] = undefined;
       }
