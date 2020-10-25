@@ -23,7 +23,7 @@ class Executive {
 				season: season,
 				year: year,
 				majorSelect: "Computer Science",
-				
+
 			};
 
 			this.createTestPlan(item);
@@ -31,6 +31,7 @@ class Executive {
 		});
 		this.render = new Render(3, 4); // TODO hard-coded rows/cols
 	}
+
 
 	createTestPlan(item) {
 		this.plan = new Plan(item.majorSelect, item.season, item.year);
@@ -45,7 +46,7 @@ class Executive {
 		this.renderCourseBank();
 		this.renderCourseGrid();
 	}
-    
+
     renderCourseBank()
     {
 		let grid= document.getElementById("course-bank");
@@ -73,17 +74,17 @@ class Executive {
 		let grid = document.getElementById("course-grid");
 		// Clear grid
 		while (grid.firstChild) grid.removeChild(grid.firstChild);
-		
+
 		let cols = this.plan.get_longest()+1; // +1 leaves an empty column to add another course to a semester
 		for (let i = 0; i < this.plan.semesters.length; i++) {
 			let semester = this.plan.semesters[i];
 			let tr = document.createElement("tr");
-			
+
 			let th = document.createElement("th");
 			th.className = "redips-mark";
 			th.innerText = semester.semester_year + " " + semester.season_name();
 			tr.appendChild(th);
-			
+
 			for (let j = 0; j < cols; j++) {
 				let td = document.createElement("td");
 				if (semester.semester_courses[j] != undefined) {
@@ -93,25 +94,19 @@ class Executive {
 				td.dataset["y"] = i;
 				tr.appendChild(td);
 			}
-			
+
 			grid.appendChild(tr);
 		}
 		REDIPS.drag.init(); // Updates which elements have drag-and-drop
 		this.render.resize(this.plan.semesters.length, cols);
-		
+
 		this.renderArrows(); // Will always need to render arrows after rendering course grid
 	}
-	
+
 	renderArrows() {
 		// TODO: Create list of arrows to draw either here or from a function in Plan.js
-		
+
 		// Test arrows from and to hard-coded course positions
-		this.render.renderArrows([
-			new Arrow(1, 0, 0, 2, false), // EECS 168 to EECS 268
-			new Arrow(1, 0, 2, 2, false), // EECS 168 to EECS 388
-			new Arrow(2, 0, 2, 2, false), // EECS 140 to EECS 388
-			new Arrow(1, 1, 1, 2, true),  // MATH 126 to PHSX 210 (corequisite)
-			new Arrow(1, 2, 3, 2, true),  // PHSX 210 to PHSX 216
-		]);
+		this.render.renderArrows(this.plan.generate_arrows());
 	}
 }
