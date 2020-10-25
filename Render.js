@@ -21,7 +21,7 @@ const VERT_CHANNEL_SIZE = (TD_WIDTH-COURSE_WIDTH)/NUM_CHANNELS;
 
 // Colors to use on courses with the most arrows (from https://www.materialpalette.com/)
 // Red is deliberately not included as it is intended to be used when hovering over a course
-const COLORS = ["#2196F3" /*blue*/, "#4CAF50" /*green*/, "#9C27B0" /*purple*/, 
+const COLORS = ["#2196F3" /*blue*/, "#4CAF50" /*green*/, "#9C27B0" /*purple*/,
 	"#FF5722" /*deep orange*/, "#00BCD4" /*cyan*/, "#3F51B5" /*indigo*/,
 	"#FFC107" /*amber*/, "#CDDC39" /*lime*/, "#673AB7" /*deep purple*/,
 	"#FF9800" /*orange*/, "#FFEB3B" /*yellow*/, "#009688" /*teal*/,
@@ -32,7 +32,7 @@ const DEFAULT_COLOR = "black"; // Color of arrows that don't meet the minimum
 class Render {
 	constructor(rows, cols) {
 		this.draw = SVG().addTo(document.getElementById("arrows"));
-		
+
 		// Rows and columns of courses in the grid (not counting column of semester names)
 		if (rows && cols) {
 			this.rows = rows;
@@ -40,7 +40,7 @@ class Render {
 			this.resize();
 		}
 	}
-	
+
 	resize(rows, cols) {
 		this.rows = rows;
 		this.cols = cols;
@@ -49,16 +49,16 @@ class Render {
 		document.querySelector("#arrows svg").style.height = document.getElementById("course-grid").offsetHeight;
 		document.querySelector("#arrows svg").style.marginBottom = -document.getElementById("course-grid").offsetHeight;
 	}
-	
+
 	// @pre: resize has already been called with correct size
 	renderArrows(arrows) {
 		this.arrows = arrows;
 		this.initChannels();
 		let courseColors = this.findColors();
-		
+
 		for (let arrow of this.arrows) {
 			let path = [];
-			
+
 			if (arrow.fromSide) { // corequisite
 				// If the course is not in the adjacent column, will need 3 line segments through channels
 				if (arrow.xIn+1 != arrow.xOut) {
@@ -78,7 +78,7 @@ class Render {
 				else if (arrow.yIn != arrow.yOut) {
 					let [channelX, startEndOffset] = this.findVertChannel(arrow.xOut, arrow.yIn, arrow.yOut);
 					path.push(
-						arrow.startPoint(startOffset), // Start right of starting course
+						arrow.startPoint(startEndOffset), // Start right of starting course
 						[channelX, arrow.startPoint(startEndOffset)[1]], // Enter channel
 						[channelX, arrow.endPoint(startEndOffset)[1]], // Traverse along channel to the point directly above the ending course
 						...this.arrowHead(...arrow.endPoint(startEndOffset), RIGHT) // Connect to ending course with an arrowhead
@@ -89,7 +89,7 @@ class Render {
 					path.push(
 						arrow.startPoint(), // Start at starting course
 						...this.arrowHead(...arrow.endPoint(), RIGHT) // Connect to ending course with an arrowhead
-					); 
+					);
 				}
 			}
 			else { // prerequisite
@@ -112,7 +112,7 @@ class Render {
 				else if (arrow.xIn != arrow.xOut) {
 					let [channelY, startEndOffset] = this.findHorizChannel(arrow.xIn, arrow.xOut, arrow.yOut);
 					path.push(
-						arrow.startPoint(startOffset), // Start below middle of starting course
+						arrow.startPoint(startEndOffset), // Start below middle of starting course
 						[arrow.startPoint(startEndOffset)[0], channelY], // Enter channel
 						[arrow.endPoint(startEndOffset)[0], channelY], // Traverse along channel to the point directly above the ending course
 						...this.arrowHead(...arrow.endPoint(startEndOffset), DOWN) // Connect to ending course with an arrowhead
@@ -123,21 +123,21 @@ class Render {
 					path.push(
 						arrow.startPoint(), // Start at starting course
 						...this.arrowHead(...arrow.endPoint(), DOWN) // Connect to ending course with an arrowhead
-					); 
+					);
 				}
 			}
-			
+
 			// Find the minimum x and y coordinates in the path (needed to properly offset the arrow)
 			let mins = path.reduce((acc, val) => [
-				val[0] < acc[0] ? val[0] : acc[0], 
+				val[0] < acc[0] ? val[0] : acc[0],
 				val[1] < acc[1] ? val[1] : acc[1]
 			], [Number.MAX_VALUE, Number.MAX_VALUE]);
-			
+
 			let color = courseColors[arrow.yIn][arrow.xIn];
 			this.draw.polyline(path).fill('none').move(LEFT_OFFSET+mins[0], TOP_OFFSET+mins[1]).stroke({color: color, width: 2, linecap: 'round', linejoin: 'round'});
 		}
 	}
-	
+
 	// Return the y coordinate (pixel) to draw the channel at
 	// startX and endX can be in either order
 	findHorizChannel(startX, endX, y) {
@@ -147,7 +147,7 @@ class Render {
 			var channelValid = true;
 			for (var col = Math.min(startX, endX); col <= Math.max(startX, endX); col++) {
 				// if this segment of the channel is already taken
-				if (this.horizChannels[y][col][chan]) { 
+				if (this.horizChannels[y][col][chan]) {
 					channelValid = false;
 					break;
 				}
@@ -155,19 +155,19 @@ class Render {
 			// Available channel found
 			if (channelValid) break;
 		}
-		
+
 		// Mark channel as unavailable
 		for (var col = Math.min(startX, endX); col <= Math.max(startX, endX); col++) {
 			this.horizChannels[y][col][chan] = true;
 		}
-		
+
 		// Channel number with 0 as center
 		let relChan = chan - ((NUM_CHANNELS-1)/2);
-		
+
 		// X coordinate pixel of the channel and Y offset of the start/end position (if applicable)
 		return [relChan * HORIZ_CHANNEL_SIZE + y*TD_HEIGHT, relChan * ARROW_SIZE*2.5];
 	}
-	
+
 	findVertChannel(x, startY, endY) {
 		// Find an available channel (all segments along length of line available)
 		var chan;
@@ -175,7 +175,7 @@ class Render {
 			var channelValid = true;
 			for (var row = Math.min(startY, endY); row <= Math.max(startY, endY); row++) {
 				// if this segment of the channel is already taken
-				if (this.vertChannels[row][x][chan]) { 
+				if (this.vertChannels[row][x][chan]) {
 					channelValid = false;
 					break;
 				}
@@ -183,33 +183,33 @@ class Render {
 			// Available channel found
 			if (channelValid) break;
 		}
-		
+
 		// Mark channel as unavailable
 		for (var row = Math.min(startY, endY); row <= Math.max(startY, endY); row++) {
 			this.vertChannels[row][x][chan] = true;
 		}
-		
+
 		// Channel number with 0 as center
 		let relChan = chan - ((NUM_CHANNELS-1)/2);
-		
+
 		// X coordinate pixel of the channel and Y offset of the start/end position (if applicable)
 		return [relChan * VERT_CHANNEL_SIZE + x*TD_WIDTH, relChan * ARROW_SIZE*2.5];
 	}
-	
+
 	arrowHead(x, y, dir = DOWN, length = ARROW_SIZE) {
 		if (dir == UP)    return [[x, y], [x-length, y+length], [x, y], [x+length, y+length], [x, y]];
 		if (dir == DOWN)  return [[x, y], [x-length, y-length], [x, y], [x+length, y-length], [x, y]];
 		if (dir == LEFT)  return [[x, y], [x+length, y-length], [x, y], [x+length, y+length], [x, y]];
 		if (dir == RIGHT) return [[x, y], [x-length, y-length], [x, y], [x-length, y+length], [x, y]];
 	}
-	
+
 	initChannels() {
 		// Initialize all channels as unused (false)
 		// Note there is one more set of channels than the number of course rows/cols as the channels go between and around them
 		this.vertChannels = [];
 		this.horizChannels = [];
 		// Note the bounds: one more vert/horiz channel than number of rows/cols as channels go around them
-		for (var row = 0; row <= this.rows; row++) { 
+		for (var row = 0; row <= this.rows; row++) {
 			this.vertChannels[row] = [];
 			this.horizChannels[row] = [];
 			for (var col = 0; col <= this.cols; col++) {
@@ -222,7 +222,7 @@ class Render {
 			}
 		}
 	}
-	
+
 	findColors() {
 		// Find which starting points will have the most arrows coming out of them
 		let courseCounts = [];
@@ -235,7 +235,7 @@ class Render {
 		for (let arrow of this.arrows) {
 			courseCounts[arrow.yIn][arrow.xIn]++;
 		}
-		
+
 		// Apply colors to the courses with more than 2 arrows (default otherwise
 		let courseColors = [];
 		let curColor = 0;
@@ -246,13 +246,13 @@ class Render {
 				if (curColor < COLORS.length && courseCounts[row][col] >= ARROWS_FOR_COLOR) {
 					courseColors[row][col] = COLORS[curColor];
 					curColor++;
-				} 
+				}
 				else {
 					courseColors[row][col] = DEFAULT_COLOR;
 				}
 			}
 		}
-		
+
 		return courseColors;
 	}
 }
@@ -266,25 +266,25 @@ class Arrow {
 		this.yOut = yOut;
 		this.fromSide = fromSide;
 	}
-	
+
 	// Pixels of start point (out of the bottom or right of course)
 	startPoint(offset = 0) {
 		if (this.fromSide) return [(this.xIn+.5)*TD_WIDTH + COURSE_WIDTH/2, (this.yIn+.5)*TD_HEIGHT+offset];
 		else return [(this.xIn+.5)*TD_WIDTH+offset, (this.yIn+.5)*TD_HEIGHT + COURSE_HEIGHT/2];
 	}
-	
+
 	// Pixels of end point (into the top or left of course)
 	endPoint(offset = 0) {
 		if (this.fromSide) return [(this.xOut+.5)*TD_WIDTH - COURSE_WIDTH/2, (this.yOut+.5)*TD_HEIGHT+offset];
 		else return [(this.xOut+.5)*TD_WIDTH+offset, (this.yOut+.5)*TD_HEIGHT - COURSE_HEIGHT/2];
 	}
-	
+
 	// Grid coordinates of junction point between first and second channels (for !fromSide, diagonally down-left or down-right from starting course)
 	node1() {
 		if (this.fromSide) return [this.xIn+1, (this.yOut > this.yIn) ? this.yIn+1 : this.yIn];
 		else return [(this.xOut > this.xIn) ? this.xIn+1 : this.xIn, this.yIn+1];
 	}
-	
+
 	// Grid coordinates of the junction point between the second and third channels (for !fromSide, below node1)
 	node2() {
 		if (this.fromSide) return [this.xOut, (this.yOut > this.yIn) ? this.yIn+1 : this.yIn];
@@ -294,7 +294,7 @@ class Arrow {
 
 /*
 	Line positioning logic:
-	 - "Channels" exist in between the courses 
+	 - "Channels" exist in between the courses
 	 - Each channel is the length/width of a single course, i.e. not the full size of the chart
 	 - There is a fixed number of channels available (5)
 	 - When drawing a line, the middle channel is used if available, if not it works its way outward

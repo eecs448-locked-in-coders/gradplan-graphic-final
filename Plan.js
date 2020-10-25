@@ -27,8 +27,8 @@ class Plan {
 
   find_course(course_string){
     for(var i=0; i<this.semesters.length; i++){
-      if(this.semesters[i].semester_course != undefined){
-        for(var j=0; j<this.semseters[i].semsester_courses.length; j++){
+      for(var j=0; j<this.semesters[i].semester_courses.length; j++){
+        if(this.semesters[i].semester_courses[j] != undefined){
           if(course_string == this.semesters[i].semester_courses[j].course_code){
             return[i,j];
           }
@@ -94,38 +94,41 @@ class Plan {
       return longest;
   }
 
+  /*
+    check each course
+    find course coordinate
+    look for course pre/co req
+    find req courses coordinate
+    create arrow
+  */
   generate_arrows(){
     var arr_arrows = [];
-    //rename to cord_course
-    var cord_course = [];
     var cord_req = [];
-    /*
-      check each course
-      find course coordinate
-      look for course pre/co req
-      find req courses coordinate
-      create arrow
-    */
     for(var i=0; i<this.semesters.length; i++){
       for(var j=0; j<this.semesters[i].semester_courses.length; j++){
-        cord_course[0] = i;//x and y coordinates
-        cord_course[1] = j;
+
         if(this.semesters[i].semester_courses[j] != undefined){
+
           for(var x=0; x<this.semesters[i].semester_courses[j].prereq.length; x++){
+            console.log(this.semesters[i].semester_courses[j].prereq[x]);
             cord_req = this.find_course(this.semesters[i].semester_courses[j].prereq[x]);
             if(cord_req != undefined){
-              arr_arrows.push(new Arrow(cord_req[0], cord_req[1], cord_course[0], cord_course[1], false));
+              arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, false));
             }
+            console.log(cord_req);
+            cord_req = [];
           }
           for(var y=0; y<this.semesters[i].semester_courses[j].coreq.length; y++){
             cord_req = this.find_course(this.semesters[i].semester_courses[j].coreq[y]);
-            if(cord_req){
-              arr_arrows.push(new Arrow(cord_req[0], cord_req[1], cord_course[0], cord_course[1], true));
+            if(cord_req != undefined){
+              arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, true));
             }
+            cord_req = [];
           }
         }
       }
     }
+    console.log(arr_arrows);
     return (arr_arrows);
   }
 }
