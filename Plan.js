@@ -11,7 +11,8 @@ class Plan {
   */
   constructor(major, start_season, start_year){
     const value = document.getElementById('majorSelect').value+"";
-    this.major = MAJORS[0]; //TEMP FIX. this.major was pulling the major name only instead of the major object. This sets this.major = the first major object in the array of majors.
+    if(value==="CS")
+    this.major= MAJORS[0];//TEMP FIX. this.major was pulling the major name only instead of the major object. This sets this.major = the first major object in the array of majors.
     this.semesters = [];
     this.course_bank = [];
     this.fill_course_bank();

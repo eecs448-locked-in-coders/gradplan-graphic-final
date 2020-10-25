@@ -11,7 +11,6 @@ class Executive {
 			this.plan.semesters[new_y].add_course(course, new_x);
 			this.renderArrows();
 		};
-
 		document.getElementById('done').addEventListener('click', () => {
 			//update();
 			const value = document.getElementById('yearSelect').value+"";
@@ -25,13 +24,11 @@ class Executive {
 				
 			};
 
-			console.log(item);
 			this.createTestPlan(item);
 
 		});
 		this.render = new Render(3, 4); // TODO hard-coded rows/cols
 	}
-
 
 	createTestPlan(item) {
 		this.plan = new Plan("Computer Science", item.season, item.year);
@@ -45,11 +42,9 @@ class Executive {
 		this.plan.semesters[2].semester_courses[3] = this.plan.course_id_to_object("PHSX 216");
 		this.renderCourseBank();
 		this.renderCourseGrid();
-	
-	
 	}
-	
-	renderCourseBank()
+    
+    renderCourseBank()
     {
         let grid= document.getElementById("course-bank");
         let numofcoursesincurrentrow =3;
@@ -117,5 +112,3 @@ class Executive {
 		]);
 	}
 }
-
-	
