@@ -52,6 +52,7 @@ class Render {
 	
 	// @pre: resize has already been called with correct size
 	renderArrows(arrows) {
+		this.draw.clear(); // Remove any existing arrows
 		this.arrows = arrows;
 		this.initChannels();
 		let courseColors = this.findColors();
@@ -78,7 +79,7 @@ class Render {
 				else if (arrow.yIn != arrow.yOut) {
 					let [channelX, startEndOffset] = this.findVertChannel(arrow.xOut, arrow.yIn, arrow.yOut);
 					path.push(
-						arrow.startPoint(startOffset), // Start right of starting course
+						arrow.startPoint(startEndOffset), // Start right of starting course
 						[channelX, arrow.startPoint(startEndOffset)[1]], // Enter channel
 						[channelX, arrow.endPoint(startEndOffset)[1]], // Traverse along channel to the point directly above the ending course
 						...this.arrowHead(...arrow.endPoint(startEndOffset), RIGHT) // Connect to ending course with an arrowhead
@@ -112,7 +113,7 @@ class Render {
 				else if (arrow.xIn != arrow.xOut) {
 					let [channelY, startEndOffset] = this.findHorizChannel(arrow.xIn, arrow.xOut, arrow.yOut);
 					path.push(
-						arrow.startPoint(startOffset), // Start below middle of starting course
+						arrow.startPoint(startEndOffset), // Start below middle of starting course
 						[arrow.startPoint(startEndOffset)[0], channelY], // Enter channel
 						[arrow.endPoint(startEndOffset)[0], channelY], // Traverse along channel to the point directly above the ending course
 						...this.arrowHead(...arrow.endPoint(startEndOffset), DOWN) // Connect to ending course with an arrowhead
