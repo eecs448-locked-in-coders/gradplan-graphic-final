@@ -11,15 +11,29 @@ class Executive {
 			this.plan.semesters[new_y].add_course(course, new_x);
 			this.renderArrows();
 		};
-		
+		document.getElementById('done').addEventListener('click', () => {
+			//update();
+			const value = document.getElementById('yearSelect').value+"";
+			const year = value.substring(0,4);
+			const season = value.substring(4,5) == "S" ? SPRING : FALL;
+			const id = year.substring(2)+  value.substring(4,5);
+			const majorSelect = document.getElementById('majorSelect').value+"";
+				const item = {
+				id: id,
+				season: season,
+				year: year,
+				majorSelect: "Computer Science",
+				
+			};
+
+			this.createTestPlan(item);
+
+		});
 		this.render = new Render(3, 4); // TODO hard-coded rows/cols
-        this.createTestPlan();
-        this.renderCourseBank();
-		this.renderCourseGrid();
 	}
-	
-	createTestPlan() {
-		this.plan = new Plan("Computer Science", FALL, 2018);
+
+	createTestPlan(item) {
+		this.plan = new Plan(item.majorSelect, item.season, item.year);
 		this.plan.semesters[0].semester_courses[1] = this.plan.course_id_to_object("EECS 168");
 		this.plan.semesters[0].semester_courses[2] = this.plan.course_id_to_object("EECS 140");
 		this.plan.semesters[1].semester_courses[1] = this.plan.course_id_to_object("MATH 526");
@@ -28,6 +42,8 @@ class Executive {
 		this.plan.semesters[2].semester_courses[1] = this.plan.course_id_to_object("PHSX 210");
 		this.plan.semesters[2].semester_courses[2] = this.plan.course_id_to_object("EECS 388");
 		this.plan.semesters[2].semester_courses[3] = this.plan.course_id_to_object("PHSX 216");
+		this.renderCourseBank();
+		this.renderCourseGrid();
 	}
     
     renderCourseBank()

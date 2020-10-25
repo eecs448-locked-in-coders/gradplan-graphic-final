@@ -16,5 +16,6 @@ const MAJORS = [
 		"EECS 582", "EECS 645", "EECS 660", "EECS 662", "EECS 665", "EECS 678", "MATH 125", "MATH 126", "MATH 127", "MATH 290",
 		"MATH 526", "PHSX 210", "PHSX 212", "PHSX 216", "PHSX 236", "Senior Elec 1", "Senior Elec 2", "Senior Elec 3",
 		"Senior Elec 4", "Prof Elec", "GE 3N", "GE 2.1(1)", "GE 2.1(2)", "GE 2.2", "GE 3H", "GE 3S", "Add A/H", "Add SS",
-		"AE 4.1", "AE 4.2"])
+    "AE 4.1", "AE 4.2"])
+    
 ];
