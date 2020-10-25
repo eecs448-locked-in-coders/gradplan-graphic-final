@@ -6,6 +6,12 @@
     #course-grid tr {
         height: 80px;
     }
+	#course-grid th {
+		padding-left: 10px;
+	}
+	#course-grid th, #course-grid td {
+		width: 120px;
+	}
     .redips-drag {
         width: 90px;
         height: 50px;
@@ -18,7 +24,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 100;
+		text-align: center;
+		line-height: 1;
     }
     #arrows svg {
         display: block;
@@ -114,5 +121,9 @@
         margin-left: auto;
         margin-right: auto;
     }
-
+	
+	/* all arrows black when printing */
+	polyline {
+		stroke: black !important;
+	}
 }

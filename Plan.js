@@ -10,9 +10,10 @@ class Plan {
     course_bank = [course, course, ...]
   */
   constructor(major, start_season, start_year){
-    this.major = major;
+    this.major = MAJORS[0]; //TEMP FIX. this.major was pulling the major name only instead of the major object. This sets this.major = the first major object in the array of majors.
     this.semesters = [];
     this.course_bank = [];
+    this.fill_course_bank();
     for(var i=0; i<4; i++)
     {
       //Makes 8 semester of fall/spring, flips between fall and spring
@@ -25,17 +26,17 @@ class Plan {
 
   }
   remove_course(course){
-    for(var i=0; i<this.semesters.length(); i++){
+    for(var i=0; i<this.semesters.length; i++){
       this.semesters[i].semester_course.remove_course(course);
     }
     //check course bank
-    for(var i=0; i<this.course_bank.length(); i++){
+    for(var i=0; i<this.course_bank.length; i++){
       this.course_bank[i] = undefined;
     }
   }
   //id is string
   course_id_to_object(id){
-    for(var i=0; i<COURSES.length(); i++){
+    for(var i=0; i<COURSES.length; i++){
       if(id == COURSES[i].course_code){
         return(COURSES[i]);
       }
@@ -43,14 +44,14 @@ class Plan {
   }
 
   fill_course_bank(){
-    for(var i=0; i<this.major.req_class.length(); i++){
-      this.course_bank.push(course_id_to_object(this.major.req_class[i]));
+    for(var i=0; i<this.major.req_class.length; i++){
+      this.course_bank.push(this.course_id_to_object(this.major.req_class[i]));
     }
   }
 
   add_semester(season, year){
     let duplicate = false;
-    for(var i=0; i<this.semesters.length(); i++){
+    for(var i=0; i<this.semesters.length; i++){
       duplicate = (season == this.semesters[i].semester_season() && year == this.semester[i].semeseter_year());
       if(season > this.semesters[i].semester_season() && year > this.semesters[i].semester_year() && !duplicate){
         this.semesters.splice(i, 0, new Semester(season, year, []));
@@ -59,7 +60,7 @@ class Plan {
   }
 
   remove_semester(season, year){
-    for(var i=0; i<this.semesters.length(); i++){
+    for(var i=0; i<this.semesters.length; i++){
       if(season == this.semesters[i].semester_season() && year == this.semesters[i].semseter_year()){
         this.semester.splice(i, 1);
       }

@@ -57,4 +57,5 @@ const COURSES = [
   new Course("Add A/H", [], [], [1,1,1], 3),
   new Course("Add SS", [], [], [1,1,1], 3),
   new Course("AE 4.1", [], [], [1,1,1], 3),
-  new Course("AE 4.2", [], [], [1,1,1], 3),];
+  new Course("AE 4.2", [], [], [1,1,1], 3),
+];
