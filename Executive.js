@@ -1,40 +1,55 @@
+const COURSE_BANK_COLS = 3;
+
 class Executive {
 	constructor() {
-		// Initialize drag-and-drop
+		this.render = new Render();
+		// Initialize plan when done is clicked
+		document.getElementById('done').addEventListener('click', () => {
+			const value = document.getElementById('yearSelect').value;
+			const year = value.substring(0,4);
+			const season = value.substring(4,5) == "S" ? SPRING : FALL;
+			const major = document.getElementById('majorSelect').value;
+
+			document.getElementById("welcome").style.display = "none";
+			this.plan = new Plan(major, season, year);
+			this.renderBank("course-bank", this.plan.course_bank);
+			this.renderBank("transfer-bank", this.plan.transfer_bank);
+			this.renderCourseGrid();
+		});
+
+		// Initialize drag-and-drop to move courses within plan
 		REDIPS.drag.dropMode = "single";
 		REDIPS.drag.event.dropped = targetCell => {
-			console.log(targetCell);
+
 			let course = this.plan.course_id_to_object(targetCell.firstElementChild.dataset["course"]);
 			let new_x = targetCell.dataset["x"];
 			let new_y = targetCell.dataset["y"];
+			let old_longest = this.plan.get_longest();
 			this.plan.remove_course(course);
-			this.plan.semesters[new_y].add_course(course, new_x);
+			console.log(targetCell.dataset["bank"]);
+			if(targetCell.dataset["bank"] == "course"){
+				this.plan.course_bank.push(course);
+			}
+			else if(targetCell.dataset["bank"] == "transfer"){
+				this.plan.transfer_bank.push(course);
+			}
+			else{
+				this.plan.semesters[new_y].add_course(course, new_x);
+				// Rerender course grid if longest semester changed
+				if (this.plan.get_longest() != old_longest) this.renderCourseGrid();
+			}
+			this.renderBank("course-bank", this.plan.course_bank);
+			this.renderBank("transfer-bank", this.plan.transfer_bank);
 			this.renderArrows();
 		};
-		document.getElementById('done').addEventListener('click', () => {
-			//update();
-			const value = document.getElementById('yearSelect').value+"";
-			const year = value.substring(0,4);
-			const season = value.substring(4,5) == "S" ? SPRING : FALL;
-			const id = year.substring(2)+  value.substring(4,5);
-			const majorSelect = document.getElementById('majorSelect').value+"";
-				const item = {
-				id: id,
-				season: season,
-				year: year,
-				majorSelect: "Computer Science",
 
-			};
-
-			this.createTestPlan(item);
-
-		});
-		this.render = new Render(3, 4); // TODO hard-coded rows/cols
+		// Test plan
+		//this.createTestPlan();
 	}
 
-
-	createTestPlan(item) {
-		this.plan = new Plan(item.majorSelect, item.season, item.year);
+	createTestPlan() {
+		document.getElementById("welcome").style.display = "none";
+		this.plan = new Plan("Computer Science", FALL, 2018);
 		this.plan.semesters[0].semester_courses[1] = this.plan.course_id_to_object("EECS 168");
 		this.plan.semesters[0].semester_courses[2] = this.plan.course_id_to_object("EECS 140");
 		this.plan.semesters[1].semester_courses[1] = this.plan.course_id_to_object("MATH 125");
@@ -43,29 +58,36 @@ class Executive {
 		this.plan.semesters[2].semester_courses[1] = this.plan.course_id_to_object("PHSX 210");
 		this.plan.semesters[2].semester_courses[2] = this.plan.course_id_to_object("EECS 388");
 		this.plan.semesters[2].semester_courses[3] = this.plan.course_id_to_object("PHSX 216");
-		this.renderCourseBank();
+		this.renderBank("course-bank", this.plan.course_bank);
+		this.renderBank("transfer-bank", this.plan.transfer_bank);
 		this.renderCourseGrid();
 	}
 
-    renderCourseBank()
-    {
-		let grid= document.getElementById("course-bank");
-		let tr;
-		let maxnumofcols = 3;
-		let numofcoursesincurrentrow =3;
-        for (let course of this.plan.course_bank)
-        {
-                if (numofcoursesincurrentrow == maxnumofcols) //Limits the number of courses in a row to 4
-                {
+    renderBank(html_id, arr_course) {
+			let grid = document.getElementById(html_id);
+			while (grid.firstChild) grid.removeChild(grid.firstChild);
+			let tr;
+			let numCoursesInCurrentRow = COURSE_BANK_COLS;
+      for (let course of arr_course) {
+				if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
 					tr = document.createElement("tr");
-                    grid.appendChild(tr);
-                    numofcoursesincurrentrow = 0;
-                }
-                let td = document.createElement("td");
-                td.innerHTML = course.to_html();
-                tr.appendChild(td);
-                numofcoursesincurrentrow++;
-        }
+					grid.appendChild(tr);
+					numCoursesInCurrentRow = 0;
+				}
+				let td = document.createElement("td");
+				td.dataset["bank"] = (html_id == "course-bank")?"course":"transfer";
+				td.innerHTML = course.to_html();
+				tr.appendChild(td);
+				numCoursesInCurrentRow++;
+      }
+			tr = document.createElement("tr");
+			grid.appendChild(tr);
+			for(var i=0; i<COURSE_BANK_COLS; i++){
+				let td = document.createElement("td");
+				td.dataset["bank"] = (html_id == "course-bank")?"course":"transfer";
+				tr.appendChild(td);
+			}
+			REDIPS.drag.init(); // Updates which elements have drag-and-drop
     }
 
 	// Redrawing the course grid should only be needed after drastic changes (e.g. removing a semester)
@@ -75,7 +97,7 @@ class Executive {
 		// Clear grid
 		while (grid.firstChild) grid.removeChild(grid.firstChild);
 
-		let cols = this.plan.get_longest()+1; // +1 leaves an empty column to add another course to a semester
+		let cols = this.plan.get_longest() + 1; // +1 leaves an empty column to add another course to a semester
 		for (let i = 0; i < this.plan.semesters.length; i++) {
 			let semester = this.plan.semesters[i];
 			let tr = document.createElement("tr");
@@ -104,10 +126,6 @@ class Executive {
 	}
 
 	renderArrows() {
-		// TODO: Create list of arrows to draw either here or from a function in Plan.js
-
-		// Test arrows from and to hard-coded course positions
-		
 		this.render.renderArrows(this.plan.generate_arrows());
 		
 		for (let i = 0; i < this.plan.semesters.length; i++) {

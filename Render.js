@@ -33,12 +33,10 @@ class Render {
 	constructor(rows, cols) {
 		this.draw = SVG().addTo(document.getElementById("arrows"));
 
-		// Rows and columns of courses in the grid (not counting column of semester names)
-		if (rows && cols) {
-			this.rows = rows;
-			this.cols = cols;
-			this.resize();
-		}
+		// Default to empty SVG
+		this.rows = 0;
+		this.cols = 0;
+		this.resize();
 	}
 
 	resize(rows, cols) {

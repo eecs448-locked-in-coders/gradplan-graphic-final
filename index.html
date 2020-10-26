@@ -1,10 +1,11 @@
  <!DOCTYPE html>
 <html>
 <head>
-	<title>Gradplan Graphic</title>
-	<!-- Bootstrap -->
 	<meta charset="utf-8">
+	<title>Gradplan Graphic</title>
   	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Libraries -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
@@ -12,13 +13,15 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.0.16/svg.min.js" integrity="sha512-p3Tp2zn+wApBreZCgRkmMwnfpN8MUPXzzOihXx7iGYXqE7t6m9drY8HeyMeeFuDWiTFKrGUrq3jpbT0vX6zY/Q==" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 	<script type="text/javascript" src="redips-drag-min.js"></script>
+
+	<!-- Application code and style -->
+	<link rel="stylesheet" href="style.css">
 	<script type="text/javascript" src="Executive.js"></script>
 	<script type="text/javascript" src="Render.js"></script>
 	<script type="text/javascript" src="Plan.js"></script>
 	<script type="text/javascript" src="Semester.js"></script>
 	<script type="text/javascript" src="Course.js"></script>
 	<script type="text/javascript" src="Major.js"></script>
-	<link rel="stylesheet" href="style.css">
 	<script>
 		window.addEventListener('DOMContentLoaded', e => {
 			window.executive = new Executive();
@@ -26,17 +29,28 @@
 	</script>
 </head>
 <body>
-	<div class="header jumbotron container-fluid pt-4">
+	<header class="container-fluid py-3">
 		<div class="row">
-			<div class="col-sm-4"> <img src="KUSig_Horz_Web_Blue.png" class="KU_image"></div>
-			<h1 class="col-sm-4 text-sm-center nonprintable KU_color_text">Gradplan Graphic</h1>
-			<h1 class="col-sm-7 ml-n5 text-center print_only KU_color_text">Graduation planner</h1>
+			<div class="col-sm-4">
+				<a href="https://ku.edu/"><img src="KUSig_Horz_Web_Blue.png" class="KU_image pt-2 ml-2"></a>
+			</div>
+			<div class="col-sm-4 text-sm-center KU_color_text">
+				<h1>Gradplan Graphic</h1>
+				EECS 448 Team 13
+			</div>
+			<div class="col-sm-4 text-right">
+				<!--Student info-->
+				<div class="d-inline-block text-left">
+					<span class="students_info">Jayhawk Jayhawk</span><br>
+					<span class="students_info">Major:</span> Computer Science<br>
+					<span class="students_info">Student ID:</span> 9999999
+				</div>
+				<img src="ku_jayhawk_2.jpg" class="profile_picture align-top no-print">
+			</div>
 		</div>
-		<div class="row text-center nonprintable">
-			<p class="col KU_color_text">EECS 448 Team 13</p>
-		</div>
-	</div>
-	  <!-- Navigation bar -->
+	</header>
+
+	<!-- Navigation bar -->
 	<nav class="navbar navbar-expand-sm navbar-dark KU_color_background">
 		<a class="navbar-brand" href="index.html">Home</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -45,100 +59,82 @@
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
 			<ul class="navbar-nav">
 				<li class="nav-item">
-			  		<a class="nav-link" href="http://www.classes.ku.edu">Schedule of classes</a>
+			  		<a class="nav-link" href="http://classes.ku.edu">Schedule of Classes</a>
 				</li>
 				<li class="nav-item">
-			  		<a class="nav-link" href="http://www.sa.ku.edu">Enroll and Pay</a>
+			  		<a class="nav-link" href="http://vsb.ku.edu">Visual Schedule Builder</a>
+				</li>
+				<li class="nav-item">
+			  		<a class="nav-link" href="http://sa.ku.edu">Enroll & Pay</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="https://my.ku.edu/uPortal/">myKU</a>
 				</li>
+				<!--
 				<li class="nav-item">
 			  		<a class="nav-link" href="members.html">Members</a>
 				</li>
+				-->
 		  	</ul>
 
+			<!--
 			<div class="d-flex justify-content-center ml-3">
 				<div class="searchbar">
 			  		<input class="search_input" type="text" name="" placeholder="Search...">
 			  		<a href="#" class="search_icon"><i class="fas fa-search"></i></a>
 				</div>
 		  	</div>
-		</div>  
+			-->
+		</div>
 		<!--Print button-->
-		<a href="javascript:window.print()" type="button" class="btn btn-default btn-sm navbar-btn print_button">Print  <i class="fa fa-print"></i></a>
+		<a href="javascript:window.print()" type="button" class="btn btn-light btn-sm float-right">Print  <i class="fa fa-print"></i></a>
 	</nav>
 
-	<!--Printing-->
-	<div class="container print_only ">
-		<div class="row mt-5">
-			<div class="col-sm-6 x">
-				<img src="ku_jayhawk_2.jpg" class="mt-3 profile_picture" id="students_photo">
-				<p class="mt-2" id="name">
-					<span class="students_info">Name: </span>
-					Jayhawk Jayhawk
-				</p>
-				<p class="mt-n3" id="majors">
-					<span class="students_info">Major(s): </span>
-					Computer Science
-				</p>
-				<p class="mt-n3" id="studentID">
-					<span class="students_info">Student ID: </span>
-					9999999
-				</p>
-			</div>
-
-			<div class="col-sm-6 mt-n2">
+	<!--Printing only content (reformatted notifications and other courses)-->
+	<div class="container only_print">
+		<div class="row mt-3">
+			<div class="col-sm-6">
 				<h3>Notifications</h3>
-				<div class="bg-light border p-3 roundBorders">
+				<div class="bg-light border p-3">
 					<ul id="notifications2"></ul>
-				</div>	
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<h3>Excluded courses</h3>
+				None
+
+				<h3>Transferred courses</h3>
+				MATH 125, EECS 168, AE 4.1
 			</div>
 		</div>
 	</div>
 
 	<!--Content-->
 	<div class="container">
-		<div id= "redips-drag"class="row">
-			<div class="col-lg-4 nonprintable">
-				<div class="mt-3"> <!--Student--> 
-					<h2 id="name">Jayhawk Jayhawk</h2>
-					<img src="ku_jayhawk_2.jpg" class="mt-3 profile_picture" id="students_photo">
-					<p class="mt-2" id="majors">
-						<span class="students_info">Major(s): </span>
-						Computer Science
-					</p>
-					<p class="mt-n3" id="studentID">
-						<span class="students_info">Student ID: </span>
-						9999999
-					</p>
+		<div id="redips-drag" class="row">
+			<div class="col-lg-4 no-print">
+				<div class="my-4">
+					<h3>Course Bank</h3>
+					<table id="course-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 250px; min-height: 100px;">
+						<tr><td></td></tr>
+					</table>
 				</div>
-				<h2>Season and Year:</h2>
-						<select id="yearSelect"  name="year">
-			    			<option value="2020F">Fall 2020</option>
-							<option value="2020S">Spring 2020</option>  
-							<option value="2019F">Fall 2019</option>
-							<option value="2019S">Spring 2019</option>  
-							<option value="2018F">Fall 2018</option> 
-							<option value="2018S">Spring 2018</option> 
-							<option value="2017F">Fall 2017</option> 
-							<option value="2017S">Spring 2017</option>
-						</select>
-						<h2>Major:</h2>
-						<select id="majorSelect" name="Major">
-							<option value="CS">Computer Science</option>
-						</select>
-						<button id="done">Done</button>
-
+				<div class="mb-4">
+					<h3>Transfer Credits</h3>
+					<table id="transfer-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 250px; min-height: 60px;">
+						<tr><td></td></tr>
+					</table>
+				</div>
 
 				<div class="mb-4"> <!--Errors and notifications-->
 					<h3>Notifications</h3>
-					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box roundBorders">
+					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
 						<ul id="notifications"></ul>
 					</div>
 				</div>
 
-				<div class="mb-4"> <!--Extra-->
+				<!--
+				<div class="mb-4">
 					<h3>Course information</h3>
 					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box roundBorders">
 						<p id="course_info">This course is an introduction to software engineering, 
@@ -149,73 +145,68 @@
 							  	Prerequisite: EECS 268 and upper-level EECS eligibility. LEC.</p>
 					</div>
 				</div>
-
-				<div class="row mb-4">
-					<div class="col-sm-10"> 
-						<h3>Major Specific Course Bank</h3>			
-							<table id="course-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 100px; min-height: 200px;">
-							</table>
-					</div>
-				</div>
-				<div class="row mb-4">
-					<div class="col-sm-10"> 
-						<h3>Transfer Credits</h3>			
-							<table id="course-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 100px; min-height: 200px;">
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-								<tr>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							</table>
-					</div>
-				</div>
+				-->
 
 			</div>
-		
-			<div class="col-lg-8 mt-5">
-				<div class="d-flex printable_grid">
-					<div class="bg-light border"> <!--Schedule-->
+
+			<div class="col-lg-8 mt-4">
+				<div class="d-flex">
+					<div id="schedule-container" class="bg-light border"> <!--Schedule-->
 						<div id="arrows"></div><!--Will contain the SVG with the arrows-->
 						<table id="course-grid"></table><!--Will contain the drag-and-droppable courses-->
+						<div id="welcome" class="p-3">
+							<h1>Welcome!</h1>
+							<h4>Select your major and first semester at KU semester to begin.</h4>
+							<div class="input-group">
+								<select id="majorSelect" class="form-control">
+									<option value="Computer Science">Computer Science</option>
+								</select>
+								<select id="yearSelect" class="form-control">
+									<option value="2020F">Fall 2020</option>
+									<option value="2020S">Spring 2020</option>
+									<option value="2019F">Fall 2019</option>
+									<option value="2019S">Spring 2019</option>
+									<option value="2018F">Fall 2018</option>
+									<option value="2018S">Spring 2018</option>
+									<option value="2017F">Fall 2017</option>
+									<option value="2017S">Spring 2017</option>
+								</select>
+								<div class="input-group-append">
+									<button type="button" class="btn btn-primary" id="done">Start Planning</button>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 
-				<div class="row mt-5 nonprintable">
+				<div class="row mt-5 no-print">
 					<div class="col-sm-6">
-						<h3>KU Core information</h3>
-						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box roundBorders">
-							<p id="ku_core_info">Core Goal 1, Core Goal 2, Core Goal 3,</p>
+						<h3>KU Core links</h3>
+						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
+							<ul>
+								<li><a href="https://kucore.ku.edu/courses">List of all approved courses</a></li>
+								<li><a href="https://college.ku.edu/winter">Winter break courses</a></li>
+							</ul>
 						</div>
 					</div>
 					<div class="col-sm-6">
-						<h3>Useful links</h3>
-						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box roundBorders">
-							<ul id="extra_links">
+						<h3>EECS links</h3>
+						<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box">
+							<ul>
 								<li><a href="http://eecs.ku.edu/eecs-courses">List of all EECS courses</a></li>
-								<li><a href="http://catalog.ku.edu/engineering/electrical-engineering-computer-science/bs-computer-science/">Description of the Bachelor of Science in Computer Science </a></li>
+								<li><a href="http://eecs.ku.edu/current-students/undergraduate">Undergraduate handbook</a></li>
+								<li><a href="https://catalog.ku.edu/engineering/electrical-engineering-computer-science/bs-computer-science/">Description of the Bachelor of Science in Computer Science</a></li>
 							</ul>
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
+
+	<footer class="pt-2 my-2 border-top text-center">
+		Copyright &copy; 2020 EECS 448 Team 13: Deepak Kumar, Drake Prebyl, James Kraijcek, Rafael Alaras, Rodridgo Figueroa Justiniano.
+			<a href="https://github.com/eecs448-locked-in-coders/gradplan-graphic">GitHub Repository</a>
+	</footer>
 </body>
 </html>
-
