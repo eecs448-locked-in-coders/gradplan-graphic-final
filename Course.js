@@ -21,10 +21,10 @@ class Course {
   }
 }
 const COURSES = [
-  new Course("EECS 101", [], ["Math 104"], [0,0,1], 1),
-  new Course("EECS 140", [], ["Math 104"], [1,0,1], 4),
-  new Course("EECS 168", [], ["Math 104"], [1,1,1], 4),
-  new Course("EECS 210", ["EECS 168", "Math 126"], [], [1,0,1], 4),
+  new Course("EECS 101", [], ["MATH 104"], [0,0,1], 1),
+  new Course("EECS 140", [], ["MATH 104"], [1,0,1], 4),
+  new Course("EECS 168", [], ["MATH 104"], [1,1,1], 4),
+  new Course("EECS 210", ["EECS 168", "MATH 126"], [], [1,0,1], 4),
   new Course("EECS 268", ["EECS 168"], [], [1,1,1], 4),
   new Course("EECS 368", ["EECS 268"], [], [1,0,1], 3),
   new Course("EECS 388", ["EECS 140", "EECS 168"], [], [1,0,1], 4),

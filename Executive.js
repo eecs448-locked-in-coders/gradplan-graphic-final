@@ -20,7 +20,12 @@ class Executive {
 		// Initialize drag-and-drop to move courses within plan
 		REDIPS.drag.dropMode = "single";
 		REDIPS.drag.event.dropped = targetCell => {
-
+			// Clear all notifications
+			for (let list of ["notifications", "notifications2"]) {
+				list = document.getElementById(list);
+				while (list.firstChild) list.removeChild(list.firstChild);
+			}
+			
 			let course = this.plan.course_id_to_object(targetCell.firstElementChild.dataset["course"]);
 			let new_x = targetCell.dataset["x"];
 			let new_y = targetCell.dataset["y"];
