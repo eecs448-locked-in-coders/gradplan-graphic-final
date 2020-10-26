@@ -72,15 +72,18 @@ class Plan {
     }
   }
 
-  add_semester(season, year){
-    let duplicate = false;
-    for(var i=0; i<this.semesters.length; i++){
-      duplicate = (season == this.semesters[i].semester_season && year == this.semesters[i].semester_year);
-      if(season > this.semesters[i].semester_season && year > this.semesters[i].semester_year && !duplicate){
-        this.semesters.splice(i, 0, new Semester(season, year, []));
-      }
-    }
-  }
+	add_semester(season, year){
+		let new_order = year*3 + season;
+		for (var i=0; i<this.semesters.length; i++) {
+			let old_order = this.semesters[i].semester_year*3 + this.semesters[i].semester_season;
+			if (old_order+1 == new_order) {
+				this.semesters.splice(i+1, 0, new Semester(season, year, []));
+				return; // Important for preventing infinite loops
+			}
+		}
+		// Add semester at end
+		this.semesters.splice(this.semesters.length, 0, new Semester(season, year, []));
+	}
 
   remove_semester(season, year){
     for(var i=0; i<this.semesters.length; i++){

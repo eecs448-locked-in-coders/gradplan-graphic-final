@@ -5,16 +5,41 @@ class Executive {
 		this.render = new Render();
 		// Initialize plan when done is clicked
 		document.getElementById('done').addEventListener('click', () => {
-			const value = document.getElementById('yearSelect').value;
-			const year = value.substring(0,4);
-			const season = value.substring(4,5) == "S" ? SPRING : FALL;
-			const major = document.getElementById('majorSelect').value;
+			let value = document.getElementById('yearSelect').value;
+			let year = parseInt(value.substring(0,4));
+			let season = value.substring(4,5) == "S" ? SPRING : FALL;
+			let major = document.getElementById('majorSelect').value;
 
 			document.getElementById("welcome").style.display = "none";
 			this.plan = new Plan(major, season, year);
 			this.renderBank("course-bank", this.plan.course_bank);
 			this.renderBank("transfer-bank", this.plan.transfer_bank);
 			this.renderCourseGrid();
+			
+			document.getElementById("add-semester").style.display = "";
+			
+			// Set up adding semesters - add the summers between the automatic semesters
+			for (let tmpYear = year; tmpYear < year+4; tmpYear++) {
+				let option = document.createElement("option");
+				option.text = "Summer " + tmpYear;
+				option.value = tmpYear + "-1";
+				document.getElementById("addSemesterSelect").add(option);
+			}
+			
+			// Add the next few semsters
+			year += season == FALL ? 4 : 3;
+			season = 2-season;
+			for (let semester = 1; semester <= 9; semester++) {
+				season++;
+				if (season >= 3) {
+					season -= 3;
+					year++;
+				}
+				let option = document.createElement("option");
+				option.text = SEASON_NAMES[season] + " " + year;
+				option.value = year + "-" + season;
+				document.getElementById("addSemesterSelect").add(option);
+			}
 		});
 
 		// Initialize drag-and-drop to move courses within plan
@@ -47,9 +72,17 @@ class Executive {
 			this.renderBank("transfer-bank", this.plan.transfer_bank);
 			this.renderArrows();
 		};
+		
+		// Adding a semester
+		document.getElementById('add-semester-btn').addEventListener('click', () => {
+			let semester = document.getElementById("addSemesterSelect").value.split('-');
+			console.log(semester);
+			this.plan.add_semester(parseInt(semester[1]), parseInt(semester[0]));
+			this.renderCourseGrid();
+		});
 
 		// Test plan
-		this.createTestPlan();
+		//this.createTestPlan();
 	}
 
 	createTestPlan() {

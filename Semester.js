@@ -1,5 +1,6 @@
 //Fall-Summer-Spring, year, and list of course codes placed in the semester
 const MAX_HOURS = 19;
+const SEASON_NAMES = ["Spring", "Summer", "Fall"];
 class Semester {
 
   /*
@@ -13,7 +14,7 @@ class Semester {
     this.semester_courses = semester_courses;
   }
   season_name() {
-	return (["Spring", "Summer", "Fall"])[this.semester_season];
+	return SEASON_NAMES[this.semester_season];
   }
 
   get_credit_hour(){
