@@ -91,6 +91,7 @@ header {
         display: none;
 	}
 
+
 	.KU_image {
 		filter: grayscale(100%) brightness(0%);
 	}
@@ -112,6 +113,7 @@ header {
     .KU_color_text {
         color: black;
     }
+
 
 	#schedule-container {
 		margin-left: auto;
@@ -182,5 +184,3 @@ header {
 	color: rgb(0, 81, 186);
 	text-decoration: none;
 }
-
-*/

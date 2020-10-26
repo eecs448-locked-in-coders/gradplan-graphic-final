@@ -3,7 +3,6 @@ const COURSE_BANK_COLS = 3;
 class Executive {
 	constructor() {
 		this.render = new Render();
-
 		// Initialize plan when done is clicked
 		document.getElementById('done').addEventListener('click', () => {
 			const value = document.getElementById('yearSelect').value;
@@ -21,6 +20,7 @@ class Executive {
 		// Initialize drag-and-drop to move courses within plan
 		REDIPS.drag.dropMode = "single";
 		REDIPS.drag.event.dropped = targetCell => {
+
 			let course = this.plan.course_id_to_object(targetCell.firstElementChild.dataset["course"]);
 			let new_x = targetCell.dataset["x"];
 			let new_y = targetCell.dataset["y"];
