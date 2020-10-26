@@ -181,7 +181,7 @@ class Executive {
 		}
 		
 		// Also update the print displays
-		document.getElementById("print-course-bank").innerText = this.plan.course_bank.map(course => course.course_code).join(", ");
-		document.getElementById("print-transfer-bank").innerText = this.plan.transfer_bank.map(course => course.course_code).join(", ");
+		document.getElementById("print-course-bank").innerText = this.plan.course_bank.map(course => course.course_code).join(", ") || "None";
+		document.getElementById("print-transfer-bank").innerText = this.plan.transfer_bank.map(course => course.course_code).join(", ") || "None";
 	}
 }
