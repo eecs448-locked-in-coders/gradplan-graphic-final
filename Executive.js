@@ -32,13 +32,13 @@ class Executive {
 			let old_longest = this.plan.get_longest();
 			this.plan.remove_course(course);
 			console.log(targetCell.dataset["bank"]);
-			if(targetCell.dataset["bank"] == "course"){
+			if (targetCell.dataset["bank"] == "course") {
 				this.plan.course_bank.push(course);
 			}
-			else if(targetCell.dataset["bank"] == "transfer"){
+			else if (targetCell.dataset["bank"] == "transfer") {
 				this.plan.transfer_bank.push(course);
 			}
-			else{
+			else {
 				this.plan.semesters[new_y].add_course(course, new_x);
 				// Rerender course grid if longest semester changed
 				if (this.plan.get_longest() != old_longest) this.renderCourseGrid();
@@ -49,7 +49,7 @@ class Executive {
 		};
 
 		// Test plan
-		//this.createTestPlan();
+		this.createTestPlan();
 	}
 
 	createTestPlan() {
@@ -115,7 +115,7 @@ class Executive {
 
 			let th = document.createElement("th");
 			th.className = "redips-mark";
-			th.innerText = semester.semester_year + " " + semester.season_name();
+			th.innerHTML = semester.semester_year + " " + semester.season_name() + "<br><span style='font-weight:normal'><span id='ch"+semester.semester_year+"-"+semester.semester_season+"'>0</span> credit hours</span>";
 			tr.appendChild(th);
 
 			for (let j = 0; j < cols; j++) {
@@ -138,5 +138,9 @@ class Executive {
 
 	renderArrows() {
 		this.render.renderArrows(this.plan.generate_arrows());
+		// Also update the credit hours
+		for (let semester of this.plan.semesters) {
+			document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).innerText = semester.get_credit_hour();
+		}
 	}
 }
