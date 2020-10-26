@@ -21,20 +21,6 @@ class Semester {
     for(let i = 0; i < this.semester_courses.length; i++){
       if(this.semester_courses[i] != undefined){
         sum = sum + this.semester_courses[i].credit_hour;
-        if (sum > MAX_HOURS) {
-        
-          let ul = document.getElementById("notifications");
-          let li = document.createElement("li");
-          li.appendChild(document.createTextNode("EXCESS HOURS - "+this.season_name()+this.semester_year+": You are taking more than "+MAX_HOURS+
-          " credit hours.You need to fill out a form. \n"));
-          ul.appendChild(li);
-          
-          ul = document.getElementById("notifications2");
-          li = document.createElement("li");
-          li.appendChild(document.createTextNode("EXCESS HOURS - "+this.season_name()+this.semester_year+": You are taking more than "+MAX_HOURS+
-          " credit hours.You need to fill out a form. \n"));
-          ul.appendChild(li);
-        }
       }
     }
     return sum;

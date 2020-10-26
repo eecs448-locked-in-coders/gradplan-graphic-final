@@ -73,7 +73,7 @@ class Executive {
 			while (grid.firstChild) grid.removeChild(grid.firstChild);
 			let tr;
 			let numCoursesInCurrentRow = COURSE_BANK_COLS;
-      for (let course of arr_course) {
+			for (let course of arr_course) {
 				if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
 					tr = document.createElement("tr");
 					grid.appendChild(tr);
@@ -84,14 +84,20 @@ class Executive {
 				td.innerHTML = course.to_html();
 				tr.appendChild(td);
 				numCoursesInCurrentRow++;
-      }
-			tr = document.createElement("tr");
-			grid.appendChild(tr);
-			for(var i=0; i<COURSE_BANK_COLS; i++){
+			}
+			
+			// Add an empty row if no blank spaces in current one
+			if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
+				tr = document.createElement("tr");
+				grid.appendChild(tr);
+				numCoursesInCurrentRow = 0;
+			}
+			for (var i=numCoursesInCurrentRow; i<COURSE_BANK_COLS; i++) {
 				let td = document.createElement("td");
 				td.dataset["bank"] = (html_id == "course-bank")?"course":"transfer";
 				tr.appendChild(td);
 			}
+			
 			REDIPS.drag.init(); // Updates which elements have drag-and-drop
     }
 
@@ -132,9 +138,5 @@ class Executive {
 
 	renderArrows() {
 		this.render.renderArrows(this.plan.generate_arrows());
-		
-		for (let i = 0; i < this.plan.semesters.length; i++) {
-			this.plan.semesters[i].get_credit_hour();	
-		}
 	}
 }

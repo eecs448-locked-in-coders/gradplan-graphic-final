@@ -117,6 +117,7 @@ class Plan {
 		look for course pre/co req
 		find req courses coordinate
 		create arrow
+		This function is also pulling double-duty checking validations
 	*/
 	generate_arrows(){
 		var arr_arrows = [];
@@ -147,6 +148,15 @@ class Plan {
 				}
 			}
 		}
+		
+		// Check for excessive hours
+		for (let plan of this.semesters) {
+			if (plan.get_credit_hour() > MAX_HOURS) {
+				this.add_error("EXCESS HOURS - " + plan.season_name()+ " " + plan.semester_year + ": You are taking more than " + MAX_HOURS +
+					" credit hours. You will need to fill out a waiver.\n");
+			}
+		}
+		
 		return (arr_arrows);
 	}
   

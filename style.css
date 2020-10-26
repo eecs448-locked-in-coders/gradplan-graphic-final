@@ -41,6 +41,10 @@ header {
 	max-height: 200px;
 }
 
+ul {
+	padding-left: 20px;
+}
+
 #course-grid tr {
 	height: 95px;
 }
@@ -118,6 +122,11 @@ header {
 	#schedule-container {
 		margin-left: auto;
 		margin-right: auto;
+	}
+	
+	/* Hide empty column when printing*/
+	#course-grid tr td:last-child {
+		display: none;
 	}
 
     .redips-drag {
