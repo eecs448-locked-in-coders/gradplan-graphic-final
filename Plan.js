@@ -72,15 +72,18 @@ class Plan {
     }
   }
 
-  add_semester(season, year){
-    let duplicate = false;
-    for(var i=0; i<this.semesters.length; i++){
-      duplicate = (season == this.semesters[i].semester_season && year == this.semester[i].semester_year);
-      if(season > this.semesters[i].semester_season && year > this.semesters[i].semester_year && !duplicate){
-        this.semesters.splice(i, 0, new Semester(season, year, []));
-      }
-    }
-  }
+	add_semester(season, year){
+		let new_order = year*3 + season;
+		for (var i=0; i<this.semesters.length; i++) {
+			let old_order = this.semesters[i].semester_year*3 + this.semesters[i].semester_season;
+			if (old_order+1 == new_order) {
+				this.semesters.splice(i+1, 0, new Semester(season, year, []));
+				return; // Important for preventing infinite loops
+			}
+		}
+		// Add semester at end
+		this.semesters.splice(this.semesters.length, 0, new Semester(season, year, []));
+	}
 
   remove_semester(season, year){
     for(var i=0; i<this.semesters.length; i++){
@@ -111,60 +114,64 @@ class Plan {
       return longest;
   }
 
-  /*
-    check each course
-    find course coordinate
-    look for course pre/co req
-    find req courses coordinate
-    create arrow
-  */
-  generate_arrows(){
-    var arr_arrows = [];
-    var cord_req = [];
-    for(var i=0; i<this.semesters.length; i++){
-      for(var j=0; j<this.semesters[i].semester_courses.length; j++){
-        if(this.semesters[i].semester_courses[j] != undefined){
-          for(var x=0; x<this.semesters[i].semester_courses[j].prereq.length; x++){
-            cord_req = this.find_course(this.semesters[i].semester_courses[j].prereq[x]);
-            if(cord_req != undefined){
-              arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, false));
-            }
-            else {
-              let ul = document.getElementById("notifications");
-              let li = document.createElement("li");
-              li.appendChild(document.createTextNode("INVALID COURSE: "+this.semesters[i].semester_courses[j].prereq[x]+
-              " is a prerequisite of "+this.semesters[i].semester_courses[j].course_code + "\n"));
-              ul.appendChild(li);
-              
-              ul = document.getElementById("notifications2");
-              li = document.createElement("li");
-              li.appendChild(document.createTextNode("INVALID COURSE: "+this.semesters[i].semester_courses[j].prereq[x]+
-              " is a prerequisite of "+this.semesters[i].semester_courses[j].course_code + "\n"));
-              ul.appendChild(li);
-            }
-          }
-          for(var y=0; y<this.semesters[i].semester_courses[j].coreq.length; y++){
-            cord_req = this.find_course(this.semesters[i].semester_courses[j].coreq[y]);
-            if(cord_req != undefined){
-              arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, true));
-            }
-            else {
-              let ul = document.getElementById("notifications");
-              let li = document.createElement("li");
-              li.appendChild(document.createTextNode("INVALID COURSE: "+this.semesters[i].semester_courses[j].coreq[y]+
-              " is a corequisite of "+this.semesters[i].semester_courses[j].course_code + "\n"));
-              ul.appendChild(li);
-              
-              ul = document.getElementById("notifications2");
-              li = document.createElement("li");
-              li.appendChild(document.createTextNode("INVALID COURSE: "+this.semesters[i].semester_courses[j].coreq[y]+
-              " is a corequisite of "+this.semesters[i].semester_courses[j].course_code + "\n"));
-              ul.appendChild(li);
-            }
-          }
-        }
-      }
-    }
-    return (arr_arrows);
-  }
+	/*
+		check each course
+		find course coordinate
+		look for course pre/co req
+		find req courses coordinate
+		create arrow
+		This function is also pulling double-duty checking validations
+	*/
+	generate_arrows(){
+		var arr_arrows = [];
+		var cord_req = [];
+		for (var i=0; i<this.semesters.length; i++) {
+			for (var j=0; j<this.semesters[i].semester_courses.length; j++) {
+				if (this.semesters[i].semester_courses[j] != undefined) {
+					for (var x=0; x<this.semesters[i].semester_courses[j].prereq.length; x++) {
+						cord_req = this.find_course(this.semesters[i].semester_courses[j].prereq[x]);
+						if (cord_req != undefined) {
+							arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, false));
+							if (cord_req[0] >= i) {
+								this.add_error("INVALID COURSE: "+this.semesters[i].semester_courses[j].prereq[x]+
+									" is a prerequisite of "+this.semesters[i].semester_courses[j].course_code + "\n");
+							}
+						}
+					}
+					for (var y=0; y<this.semesters[i].semester_courses[j].coreq.length; y++) {
+						cord_req = this.find_course(this.semesters[i].semester_courses[j].coreq[y]);
+						if (cord_req != undefined) {
+							arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, true));
+							if (cord_req[0] > i) {
+								this.add_error("INVALID COURSE: "+this.semesters[i].semester_courses[j].coreq[y]+
+									" is a corequisite of "+this.semesters[i].semester_courses[j].course_code + "\n");
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		// Check for excessive hours
+		for (let plan of this.semesters) {
+			if (plan.get_credit_hour() > MAX_HOURS) {
+				this.add_error("EXCESS HOURS - " + plan.season_name()+ " " + plan.semester_year + ": You are taking more than " + MAX_HOURS +
+					" credit hours. You will need to fill out a waiver.\n");
+			}
+		}
+		
+		return (arr_arrows);
+	}
+  
+	add_error(msg) {
+		let ul = document.getElementById("notifications");
+		let li = document.createElement("li");
+		li.appendChild(document.createTextNode(msg));
+		ul.appendChild(li);
+
+		ul = document.getElementById("notifications2");
+		li = document.createElement("li");
+		li.appendChild(document.createTextNode(msg));
+		ul.appendChild(li);
+	}
 }
