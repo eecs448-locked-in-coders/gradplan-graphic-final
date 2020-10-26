@@ -116,6 +116,19 @@ class Plan {
             if(cord_req != undefined){
               arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, false));
             }
+            else {
+              let ul = document.getElementById("notifications");
+              let li = document.createElement("li");
+              li.appendChild(document.createTextNode("INVALID COURSE: You need to take "+this.semesters[i].semester_courses[j].prereq[x]+
+              " before taking "+this.semesters[i].semester_courses[j].course_code + "\n"));
+              ul.appendChild(li);
+              
+              ul = document.getElementById("notifications2");
+              li = document.createElement("li");
+              li.appendChild(document.createTextNode("INVALID COURSE: You need to take "+this.semesters[i].semester_courses[j].prereq[x]+
+              " before taking "+this.semesters[i].semester_courses[j].course_code + "\n"));
+              ul.appendChild(li);
+            }
             console.log(cord_req);
             cord_req = [];
           }

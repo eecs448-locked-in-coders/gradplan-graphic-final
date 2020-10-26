@@ -5,13 +5,10 @@ class Executive {
 		REDIPS.drag.event.dropped = targetCell => {
 			console.log(targetCell);
 			let course = this.plan.course_id_to_object(targetCell.firstElementChild.dataset["course"]);
-			alert(course);
 			let new_x = targetCell.dataset["x"];
 			let new_y = targetCell.dataset["y"];
 			this.plan.remove_course(course);
 			this.plan.semesters[new_y].add_course(course, new_x);
-			alert(this.plan.semesters[new_y].get_credit_hour());
-			
 			this.renderArrows();
 		};
 		document.getElementById('done').addEventListener('click', () => {
@@ -40,7 +37,7 @@ class Executive {
 		this.plan = new Plan(item.majorSelect, item.season, item.year);
 		this.plan.semesters[0].semester_courses[1] = this.plan.course_id_to_object("EECS 168");
 		this.plan.semesters[0].semester_courses[2] = this.plan.course_id_to_object("EECS 140");
-		this.plan.semesters[1].semester_courses[1] = this.plan.course_id_to_object("MATH 526");
+		this.plan.semesters[1].semester_courses[1] = this.plan.course_id_to_object("MATH 125");
 		this.plan.semesters[1].semester_courses[3] = this.plan.course_id_to_object("GE 2.2");
 		this.plan.semesters[2].semester_courses[0] = this.plan.course_id_to_object("EECS 268");
 		this.plan.semesters[2].semester_courses[1] = this.plan.course_id_to_object("PHSX 210");
@@ -110,6 +107,11 @@ class Executive {
 		// TODO: Create list of arrows to draw either here or from a function in Plan.js
 
 		// Test arrows from and to hard-coded course positions
+		
 		this.render.renderArrows(this.plan.generate_arrows());
+		
+		for (let i = 0; i < this.plan.semesters.length; i++) {
+			this.plan.semesters[i].get_credit_hour();	
+		}
 	}
 }
