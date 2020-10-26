@@ -1,4 +1,5 @@
 //Fall-Summer-Spring, year, and list of course codes placed in the semester
+const MAX_HOURS = 19;
 class Semester {
 
   /*
@@ -11,9 +12,32 @@ class Semester {
     this.semester_year = semester_year;
     this.semester_courses = semester_courses;
   }
-
   season_name() {
 	return (["Spring", "Summer", "Fall"])[this.semester_season];
+  }
+
+  get_credit_hour(){
+    let sum = 0;
+    for(let i = 0; i < this.semester_courses.length; i++){
+      if(this.semester_courses[i] != undefined){
+        sum = sum + this.semester_courses[i].credit_hour;
+        if (sum > MAX_HOURS) {
+        
+          let ul = document.getElementById("notifications");
+          let li = document.createElement("li");
+          li.appendChild(document.createTextNode("EXCESS HOURS - "+this.season_name()+this.semester_year+": You are taking more than "+MAX_HOURS+
+          " credit hours.You need to fill out a form. \n"));
+          ul.appendChild(li);
+          
+          ul = document.getElementById("notifications2");
+          li = document.createElement("li");
+          li.appendChild(document.createTextNode("EXCESS HOURS - "+this.season_name()+this.semester_year+": You are taking more than "+MAX_HOURS+
+          " credit hours.You need to fill out a form. \n"));
+          ul.appendChild(li);
+        }
+      }
+    }
+    return sum;
   }
 
   add_course(course, index){
