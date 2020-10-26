@@ -174,9 +174,14 @@ class Executive {
 
 	renderArrows() {
 		this.render.renderArrows(this.plan.generate_arrows());
+		
 		// Also update the credit hours
 		for (let semester of this.plan.semesters) {
 			document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).innerText = semester.get_credit_hour();
 		}
+		
+		// Also update the print displays
+		document.getElementById("print-course-bank").innerText = this.plan.course_bank.map(course => course.course_code).join(", ");
+		document.getElementById("print-transfer-bank").innerText = this.plan.transfer_bank.map(course => course.course_code).join(", ");
 	}
 }
