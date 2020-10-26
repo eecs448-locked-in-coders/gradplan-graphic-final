@@ -1,225 +1,186 @@
 @media screen{
-    .only_print {
-        display: none;
-    }
-
-    body {
-        font-family: Raleway,sans-serif;
-    }
-
-    .header {
-        margin-bottom:0;
-        max-height: 3cm;
-    }
-
-    .KU_image {
-        float:left; 
-        max-height: 5cm; 
-        max-width: 6cm;
-    }
-
-    .KU_color_text {
-        color: rgb(0, 81, 186);
-    }
-
-    .KU_color_background {
-        background-color:  rgb(0, 81, 186);
-    }
-
-    .print_button {
-        background: white;
-        float: right;
-    }
-
-    .profile_picture {
-        max-height: 5cm; 
-        max-width: 6cm; 
-        border-radius: 20%;
-    }
-
-    .students_info {
-        font-weight: bold;
-    }
-
-    .scrollable_box {
-        max-width: 800px; max-height: 200px;
-    }
-
-    #course-grid tr {
-        height: 80px;
-    }
-	#course-grid th {
-		padding-left: 10px;
+	.only_print {
+		display: none;
 	}
-	#course-grid th, #course-grid td {
-		width: 120px;
-		min-width: 120px; /*not sure why, but this is needed or table cells could shrink*/
-	}
-    .redips-drag {
-        width: 90px;
-        height: 50px;
-        border-radius: 5px;
-        background: #0cc;
-        /* Center this within td */
-        margin-left: auto;
-        margin-right: auto;
-        /* Center text within this */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-		text-align: center;
-		line-height: 1;
-    }
-    #arrows svg {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-
-    .searchbar{
-        margin-bottom: auto;
-        margin-top: auto;
-        height: 30px;
-        background-color: white;
-        border-radius: 20px;
-        padding: 5px;
-    }
-
-    .search_input{
-        color: black;
-        border: 0;
-        outline: 0;
-        background: none;
-        width: 0;
-        caret-color:transparent;
-        line-height: 20px;
-        transition: width 0.4s linear;
-    }
-
-    .searchbar:hover > .search_input{
-        padding: 0 10px;
-        width: 450px;
-        caret-color: rgb(0, 81, 186);
-        transition: width 0.4s linear;
-    }
-
-    .searchbar:hover > .search_icon{
-        background: white;
-        color:  rgb(0, 81, 186);
-    }
-
-    .search_icon{
-        height: 20px;
-        width: 20px;
-        float: right;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        color: rgb(0, 81, 186);
-        text-decoration:none;
-    }
 }
 
-@media print{
+body {
+	font-family: Raleway, sans-serif;
+}
 
+header {
+	background-color: #e9ecef;
+}
+
+.KU_image {
+	float: left;
+	max-height: 5cm;
+	max-width: 6cm;
+}
+
+.KU_color_text {
+	color: rgb(0, 81, 186);
+}
+
+.KU_color_background {
+	background-color: rgb(0, 81, 186);
+}
+
+.profile_picture {
+	max-height: 2cm;
+	max-width: 3cm;
+	border-radius: 20%;
+}
+
+.students_info {
+	font-weight: bold;
+}
+
+.scrollable_box {
+	max-width: 800px;
+	max-height: 200px;
+}
+
+#course-grid tr {
+	height: 80px;
+}
+#course-grid th {
+	padding-left: 10px;
+}
+#course-grid th, #course-grid td {
+	width: 120px;
+	min-width: 120px; /*not sure why, but this is needed or table cells could shrink*/
+}
+
+#transfer-bank tr, #course-bank tr {
+	height: 60px;
+}
+#transfer-bank th, #transfer-bank td, #course-bank th, #course-bank td {
+	width: 100px;
+	min-width: 100px; /*not sure why, but this is needed or table cells could shrink*/
+}
+
+.redips-drag {
+	width: 90px;
+	height: 50px;
+	border-radius: 5px;
+	background: #0cc;
+	/* Center this within td */
+	margin-left: auto;
+	margin-right: auto;
+	/* Center text within this */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	line-height: 1;
+}
+
+#arrows svg {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media print {
     @page {
         margin: 0.5cm;
     }
 
-    body {
-        font-family: Raleway,sans-serif;
-    }
-
-    .header {
-        margin-bottom:0;
-        max-height: 3cm;
-    }
-
     header nav, footer {
         display: none;
-        }
+	}
 
-    .nonprintable {
+	.KU_image {
+		filter: grayscale(100%) brightness(0%);
+	}
+
+	header {
+		background: white;
+		border-bottom: solid black;
+	}
+
+    .no-print {
         display: none;
-    }
-
-    .KU_image {
-        float:left; 
-        max-height: 5cm; 
-        max-width: 6cm;
-    }
-
-    .scrollable_box {
-        max-width: 800px; max-height: 200px;
-    }
-
-    .students_info {
-        font-weight: bold;
     }
 
     .profile_picture {
-        max-height: 5cm; 
-        max-width: 6cm; 
-        border-radius: 20%;
-    }
-    
-    .KU_color_text {
-        color: rgb(0, 81, 186);
+        max-height: 5cm;
+        max-width: 6cm;
     }
 
-    h1 {
-        font-size: 60px;
+    .KU_color_text {
+        color: black;
     }
+
+	#schedule-container {
+		margin-left: auto;
+		margin-right: auto;
+	}
 
     .redips-drag {
-        width: 90px;
-        height: 50px;
-        border-radius: 5px;
-        background: #0cc;
-        /* Center this within td */
-        margin-left: auto;
-        margin-right: auto;
-        /* Center text within this */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 100;
-    }
-
-    .printable_grid {
-        margin-left: 150px;
-    }
-
-    #course-grid tr {
-        height: 80px;
-    }
-
-	#course-grid th {
-		padding-left: 10px;
-    }
-    
-	#course-grid th, #course-grid td {
-		width: 120px;
-    }
-    
-    #arrows svg {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+        background: white;
     }
 
     * {
-        -webkit-print-color-adjust: exact !important; 
-        color-adjust: exact !important;                 
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
-    
+
     /* all arrows black when printing */
-	polyline {
+	#arrows svg polyline {
 		stroke: black !important;
 	}
-	
+
 	.bg-light { background: white !important; }
 	.border { border-color: black !important; }
 }
+
+
+/* Unused search bar
+
+.searchbar {
+	margin-bottom: auto;
+	margin-top: auto;
+	height: 30px;
+	background-color: white;
+	border-radius: 20px;
+	padding: 5px;
+}
+
+.search_input {
+	color: black;
+	border: 0;
+	outline: 0;
+	background: none;
+	width: 0;
+	caret-color:transparent;
+	line-height: 20px;
+	transition: width 0.4s linear;
+}
+
+.searchbar:hover > .search_input {
+	padding: 0 10px;
+	width: 450px;
+	caret-color: rgb(0, 81, 186);
+	transition: width 0.4s linear;
+}
+
+.searchbar:hover > .search_icon {
+	background: white;
+	color:  rgb(0, 81, 186);
+}
+
+.search_icon {
+	height: 20px;
+	width: 20px;
+	float: right;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	color: rgb(0, 81, 186);
+	text-decoration: none;
+}
+
+*/
