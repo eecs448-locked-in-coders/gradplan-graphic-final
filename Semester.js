@@ -11,11 +11,11 @@ class Semester {
     this.semester_year = semester_year;
     this.semester_courses = semester_courses;
   }
-  
+
   season_name() {
 	return (["Spring", "Summer", "Fall"])[this.semester_season];
   }
-  
+
   add_course(course, index){
     this.semester_courses[index] = course;
   }

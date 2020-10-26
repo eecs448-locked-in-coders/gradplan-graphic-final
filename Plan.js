@@ -14,6 +14,7 @@ class Plan {
     this.major= MAJORS[0];//TEMP FIX. this.major was pulling the major name only instead of the major object. This sets this.major = the first major object in the array of majors.
     this.semesters = [];
     this.course_bank = [];
+    this.transfer_bank = [];
     this.fill_course_bank();
     for(var i=0; i<4; i++)
     {
@@ -45,7 +46,15 @@ class Plan {
     }
     //check course bank
     for(var i=0; i<this.course_bank.length; i++){
-      this.course_bank[i] = undefined;
+      if(course == this.course_bank[i]){
+        this.course_bank.splice(i, 1);
+      }
+    }
+    //check transfer
+    for(var i=0; i<this.transfer_bank.length; i++){
+      if(course == this.transfer_bank[i]){
+        this.transfer_bank.splice(i, 1);
+      }
     }
   }
   //id is string
@@ -81,7 +90,7 @@ class Plan {
             return;
           }
         }
-        this.semester.splice(i, 1);
+        this.semesters.splice(i, 1);
       }
     }
   }
@@ -116,7 +125,6 @@ class Plan {
       for(var j=0; j<this.semesters[i].semester_courses.length; j++){
         if(this.semesters[i].semester_courses[j] != undefined){
           for(var x=0; x<this.semesters[i].semester_courses[j].prereq.length; x++){
-            console.log(this.semesters[i].semester_courses[j].prereq[x]);
             cord_req = this.find_course(this.semesters[i].semester_courses[j].prereq[x]);
             if(cord_req != undefined){
               arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, false));

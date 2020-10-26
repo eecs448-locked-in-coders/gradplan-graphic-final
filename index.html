@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<title>Gradplan Graphic</title>
   	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
+
 	<!-- Libraries -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -13,7 +13,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.0.16/svg.min.js" integrity="sha512-p3Tp2zn+wApBreZCgRkmMwnfpN8MUPXzzOihXx7iGYXqE7t6m9drY8HeyMeeFuDWiTFKrGUrq3jpbT0vX6zY/Q==" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
 	<script type="text/javascript" src="redips-drag-min.js"></script>
-	
+
 	<!-- Application code and style -->
 	<link rel="stylesheet" href="style.css">
 	<script type="text/javascript" src="Executive.js"></script>
@@ -49,7 +49,7 @@
 			</div>
 		</div>
 	</header>
-	
+
 	<!-- Navigation bar -->
 	<nav class="navbar navbar-expand-sm navbar-dark KU_color_background">
 		<a class="navbar-brand" href="index.html">Home</a>
@@ -85,7 +85,7 @@
 				</div>
 		  	</div>
 			-->
-		</div>  
+		</div>
 		<!--Print button-->
 		<a href="javascript:window.print()" type="button" class="btn btn-light btn-sm float-right">Print  <i class="fa fa-print"></i></a>
 	</nav>
@@ -105,7 +105,7 @@
 			<div class="col-sm-6">
 				<h3>Excluded courses</h3>
 				None
-				
+
 				<h3>Transferred courses</h3>
 				MATH 125, EECS 168, AE 4.1
 			</div>
@@ -117,14 +117,14 @@
 		<div id="redips-drag" class="row">
 			<div class="col-lg-4 no-print">
 				<div class="my-4">
-					<h3>Course Bank</h3>			
+					<h3>Course Bank</h3>
 					<table id="course-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 250px; min-height: 100px;">
 						<tr><td></td></tr>
 					</table>
 				</div>
 				<div class="mb-4">
-					<h3>Transfer Credits</h3>			
-					<table id="course-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 250px; min-height: 100px;">
+					<h3>Transfer Credits</h3>
+					<table id="transfer-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 250px; min-height: 60px;">
 						<tr><td></td></tr>
 					</table>
 				</div>
@@ -149,7 +149,7 @@
 				-->
 
 			</div>
-		
+
 			<div class="col-lg-8 mt-4">
 				<div class="d-flex">
 					<div id="schedule-container" class="bg-light border"> <!--Schedule-->
@@ -164,12 +164,12 @@
 								</select>
 								<select id="yearSelect" class="form-control">
 									<option value="2020F">Fall 2020</option>
-									<option value="2020S">Spring 2020</option>  
+									<option value="2020S">Spring 2020</option>
 									<option value="2019F">Fall 2019</option>
-									<option value="2019S">Spring 2019</option>  
-									<option value="2018F">Fall 2018</option> 
-									<option value="2018S">Spring 2018</option> 
-									<option value="2017F">Fall 2017</option> 
+									<option value="2019S">Spring 2019</option>
+									<option value="2018F">Fall 2018</option>
+									<option value="2018S">Spring 2018</option>
+									<option value="2017F">Fall 2017</option>
 									<option value="2017S">Spring 2017</option>
 								</select>
 								<div class="input-group-append">
@@ -204,11 +204,10 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<footer class="pt-2 my-2 border-top text-center">
-		Copyright &copy; 2020 EECS 448 Team 13: Deepak Kumar, Drake Prebyl, James Kraijcek, Rafael Alaras, Rodridgo Figueroa Justiniano. 
+		Copyright &copy; 2020 EECS 448 Team 13: Deepak Kumar, Drake Prebyl, James Kraijcek, Rafael Alaras, Rodridgo Figueroa Justiniano.
 			<a href="https://github.com/eecs448-locked-in-coders/gradplan-graphic">GitHub Repository</a>
 	</footer>
 </body>
 </html>
-

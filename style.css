@@ -13,8 +13,8 @@ header {
 }
 
 .KU_image {
-	float: left; 
-	max-height: 5cm; 
+	float: left;
+	max-height: 5cm;
 	max-width: 6cm;
 }
 
@@ -27,8 +27,8 @@ header {
 }
 
 .profile_picture {
-	max-height: 2cm; 
-	max-width: 3cm; 
+	max-height: 2cm;
+	max-width: 3cm;
 	border-radius: 20%;
 }
 
@@ -50,6 +50,14 @@ header {
 #course-grid th, #course-grid td {
 	width: 120px;
 	min-width: 120px; /*not sure why, but this is needed or table cells could shrink*/
+}
+
+#transfer-bank tr, #course-bank tr {
+	height: 60px;
+}
+#transfer-bank th, #transfer-bank td, #course-bank th, #course-bank td {
+	width: 100px;
+	min-width: 100px; /*not sure why, but this is needed or table cells could shrink*/
 }
 
 .redips-drag {
@@ -82,11 +90,12 @@ header {
     header nav, footer {
         display: none;
 	}
-	
+
+
 	.KU_image {
 		filter: grayscale(100%) brightness(0%);
 	}
-	
+
 	header {
 		background: white;
 		border-bottom: solid black;
@@ -97,14 +106,15 @@ header {
     }
 
     .profile_picture {
-        max-height: 5cm; 
-        max-width: 6cm; 
+        max-height: 5cm;
+        max-width: 6cm;
     }
-    
+
     .KU_color_text {
         color: black;
     }
-	
+
+
 	#schedule-container {
 		margin-left: auto;
 		margin-right: auto;
@@ -115,15 +125,15 @@ header {
     }
 
     * {
-        -webkit-print-color-adjust: exact !important; 
-        color-adjust: exact !important;                 
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
-    
+
     /* all arrows black when printing */
 	#arrows svg polyline {
 		stroke: black !important;
 	}
-	
+
 	.bg-light { background: white !important; }
 	.border { border-color: black !important; }
 }
@@ -174,5 +184,3 @@ header {
 	color: rgb(0, 81, 186);
 	text-decoration: none;
 }
-
-*/
