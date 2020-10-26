@@ -56,7 +56,6 @@ class Executive {
 			let new_y = targetCell.dataset["y"];
 			let old_longest = this.plan.get_longest();
 			this.plan.remove_course(course);
-			console.log(targetCell.dataset["bank"]);
 			if (targetCell.dataset["bank"] == "course") {
 				this.plan.course_bank.push(course);
 			}
@@ -76,7 +75,11 @@ class Executive {
 		// Adding a semester
 		document.getElementById('add-semester-btn').addEventListener('click', () => {
 			let semester = document.getElementById("addSemesterSelect").value.split('-');
-			console.log(semester);
+			
+			// Remove semester from dropdown
+			document.getElementById("addSemesterSelect").remove(document.getElementById("addSemesterSelect").selectedIndex);
+			document.getElementById("addSemesterSelect").selectedIndex = 0;
+			
 			this.plan.add_semester(parseInt(semester[1]), parseInt(semester[0]));
 			this.renderCourseGrid();
 		});
