@@ -104,38 +104,38 @@ class Executive {
 		this.renderCourseGrid();
 	}
 
-    renderBank(html_id, arr_course) {
-			let grid = document.getElementById(html_id);
-			while (grid.firstChild) grid.removeChild(grid.firstChild);
-			let tr;
-			let numCoursesInCurrentRow = COURSE_BANK_COLS;
-			for (let course of arr_course) {
-				if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
-					tr = document.createElement("tr");
-					grid.appendChild(tr);
-					numCoursesInCurrentRow = 0;
-				}
-				let td = document.createElement("td");
-				td.dataset["bank"] = (html_id == "course-bank")?"course":"transfer";
-				td.innerHTML = course.to_html();
-				tr.appendChild(td);
-				numCoursesInCurrentRow++;
-			}
-			
-			// Add an empty row if no blank spaces in current one
+	renderBank(html_id, arr_course) {
+		let grid = document.getElementById(html_id);
+		while (grid.firstChild) grid.removeChild(grid.firstChild);
+		let tr;
+		let numCoursesInCurrentRow = COURSE_BANK_COLS;
+		for (let course of arr_course) {
 			if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
 				tr = document.createElement("tr");
 				grid.appendChild(tr);
 				numCoursesInCurrentRow = 0;
 			}
-			for (var i=numCoursesInCurrentRow; i<COURSE_BANK_COLS; i++) {
-				let td = document.createElement("td");
-				td.dataset["bank"] = (html_id == "course-bank")?"course":"transfer";
-				tr.appendChild(td);
-			}
-			
-			REDIPS.drag.init(); // Updates which elements have drag-and-drop
-    }
+			let td = document.createElement("td");
+			td.dataset["bank"] = (html_id == "course-bank")?"course":"transfer";
+			td.innerHTML = course.to_html();
+			tr.appendChild(td);
+			numCoursesInCurrentRow++;
+		}
+		
+		// Add an empty row if no blank spaces in current one
+		if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
+			tr = document.createElement("tr");
+			grid.appendChild(tr);
+			numCoursesInCurrentRow = 0;
+		}
+		for (var i=numCoursesInCurrentRow; i<COURSE_BANK_COLS; i++) {
+			let td = document.createElement("td");
+			td.dataset["bank"] = (html_id == "course-bank")?"course":"transfer";
+			tr.appendChild(td);
+		}
+		
+		REDIPS.drag.init(); // Updates which elements have drag-and-drop
+	}
 
 	// Redrawing the course grid should only be needed after drastic changes (e.g. removing a semester)
 	// The rest of the time, the users takes care of these steps by moving courses around
