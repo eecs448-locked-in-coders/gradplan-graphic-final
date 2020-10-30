@@ -35,7 +35,7 @@ class Plan {
 		let coords;
 		this.semesters.forEach((semester, y) => {
 			semester.semester_courses.forEach((course, x) => {
-				if (course_code == course.course_code) coords = [y, x];
+				if (course != undefined && course_code == course.course_code) coords = [y, x];
 			});
 		});
 		return coords;
@@ -109,11 +109,13 @@ class Plan {
 		
 		this.semesters.forEach((semester, y) => {
 			semester.semester_courses.forEach((course, x) => {
-				for (let reqs of [course.prereq, course.coreq]) {
-					for (let req of reqs) {
-						let coord_req = this.find_course(req);
-						if (coord_req != undefined) {
-							arr_arrows.push(new Arrow(coord_req[1], coord_req[0], x, y, reqs == course.coreq));
+				if (course != undefined) {
+					for (let reqs of [course.prereq, course.coreq]) {
+						for (let req of reqs) {
+							let coord_req = this.find_course(req);
+							if (coord_req != undefined) {
+								arr_arrows.push(new Arrow(coord_req[1], coord_req[0], x, y, reqs == course.coreq));
+							}
 						}
 					}
 				}
