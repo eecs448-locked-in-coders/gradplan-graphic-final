@@ -36,8 +36,8 @@ class Executive {
 			// Set up adding semesters - add the summers between the automatic semesters
 			for (let tmpYear = year; tmpYear < year+4; tmpYear++) {
 				let option = document.createElement("option");
-				option.text = "Summer " + tmpYear;
-				option.value = tmpYear + "-1";
+				option.text = SEASON_NAMES[SUMMER] + " " + tmpYear;
+				option.value = tmpYear + "-" + SUMMER;
 				document.getElementById("addSemesterSelect").add(option);
 			}
 			
@@ -66,7 +66,7 @@ class Executive {
 				while (list.firstChild) list.removeChild(list.firstChild);
 			}
 			
-			let course = this.plan.course_id_to_object(targetCell.firstElementChild.dataset["course"]);
+			let course = this.plan.course_code_to_object(targetCell.firstElementChild.dataset["course"]);
 			this.plan.remove_course(course); // Remove course from wherever it is
 			if (targetCell.dataset["bank"] == "course") {
 				this.plan.course_bank.push(course);
@@ -75,7 +75,7 @@ class Executive {
 				this.plan.transfer_bank.push(course);
 			}
 			else {
-				this.plan.semesters[targetCell.dataset["y"]].add_course(course, targetCell.dataset["x"]);
+				this.plan.add_course(targetCell.dataset["y"], targetCell.dataset["x"], course);
 			}
 			this.update();
 		};
@@ -96,52 +96,60 @@ class Executive {
 		//this.createTestPlan();
 	}
 	
-	// Main function for rerendering the screen
+	// Main function for rerendering the screen and updating errors
 	update() {
+		// Update course bank and transfer credits
 		this.renderBank("course-bank", this.plan.course_bank);
 		this.renderBank("transfer-bank", this.plan.transfer_bank);
-		this.renderCourseGrid(); // Must call before renderArrows
-		this.arrowRender.renderArrows(this.plan.generate_arrows());
-		REDIPS.drag.init(); // Updates which elements have drag-and-drop
-		
-		// Update the credit hours
-		for (let semester of this.plan.semesters) {
-			document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).innerText = semester.get_credit_hour();
-		}
-		
-		// Also update the print displays
 		document.getElementById("print-course-bank").innerText = this.plan.course_bank.map(course => course.course_code).join(", ") || "None";
 		document.getElementById("print-transfer-bank").innerText = this.plan.transfer_bank.map(course => course.course_code).join(", ") || "None";
+		
+		// Update main semester grid
+		this.renderCourseGrid(); // Must call before renderArrows
+		let arrows = this.plan.generate_arrows();
+		this.arrowRender.renderArrows(arrows);
+		REDIPS.drag.init(); // Updates which elements have drag-and-drop
+		
+		// Update the credit hour displays
+		for (let semester of this.plan.semesters) {
+			let credit_hours = semester.get_credit_hour();
+			document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).innerText = credit_hours;
+			if (credit_hours > MAX_HOURS) // Add excessive hour warnings
+				this.add_error("EXCESS HOURS: " + semester.season_name() + " " + semester.semester_year + ": You are taking more than " + MAX_HOURS +
+					" credit hours. You will need to fill out a waiver.\n");
+		}
+		
+		// Check for invalid placements
+		for (let arrow of arrows) {
+			if (!arrow.fromSide && arrow.yIn >= arrow.yOut) { // Invalid prerequisite
+				this.add_error("INVALID COURSE: " + this.plan.get_course(arrow.yIn, arrow.xIn).course_code 
+					+ " is a prerequisite of " + this.plan.get_course(arrow.yOut, arrow.xOut).course_code + "\n");
+			}
+			else if (arrow.fromSide && arrow.yIn > arrow.yOut) { // Invalid corequisite
+				this.add_error("INVALID COURSE: " + this.plan.get_course(arrow.yIn, arrow.xIn).course_code 
+					+ " is a corequisite of " + this.plan.get_course(arrow.yOut, arrow.xOut).course_code + "\n");
+			}
+		}
 	}
 
-	renderBank(html_id, arr_course) {
+	renderBank(html_id, arrCourse) {
 		let grid = document.getElementById(html_id);
 		while (grid.firstChild) grid.removeChild(grid.firstChild); // Clear bank
 		let tr;
 		let numCoursesInCurrentRow = COURSE_BANK_COLS;
-		for (let course of arr_course) {
+		// At least one more cell than the number of courses, then round up to multiple of 3
+		let totalCells = Math.ceil((arrCourse.length+1)/COURSE_BANK_COLS)*COURSE_BANK_COLS;
+		for (let i = 0; i < totalCells; i++) {
 			if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
 				tr = document.createElement("tr");
 				grid.appendChild(tr);
 				numCoursesInCurrentRow = 0;
 			}
 			let td = document.createElement("td");
-			td.dataset["bank"] = (html_id == "course-bank")?"course" : "transfer";
-			td.innerHTML = course.to_html();
+			td.dataset["bank"] = (html_id == "course-bank") ? "course" : "transfer";
+			if (arrCourse[i]) td.innerHTML = arrCourse[i].to_html();
 			tr.appendChild(td);
 			numCoursesInCurrentRow++;
-		}
-		
-		// Add an empty row if no blank spaces in current one
-		if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
-			tr = document.createElement("tr");
-			grid.appendChild(tr);
-			numCoursesInCurrentRow = 0;
-		}
-		for (var i = numCoursesInCurrentRow; i < COURSE_BANK_COLS; i++) {
-			let td = document.createElement("td");
-			td.dataset["bank"] = (html_id == "course-bank") ? "course" : "transfer";
-			tr.appendChild(td);
 		}
 	}
 
@@ -177,17 +185,26 @@ class Executive {
 		this.arrowRender.resize(this.plan.semesters.length, cols);
 	}
 	
+	add_error(msg) {
+		for (let id of ["notifications", "print-notifications"]) {
+			let ul = document.getElementById(id);
+			let li = document.createElement("li");
+			li.appendChild(document.createTextNode(msg));
+			ul.appendChild(li);
+		}
+	}
+	
 	createTestPlan() {
 		document.getElementById("welcome").style.display = "none";
 		this.plan = new Plan("Computer Science", FALL, 2018);
-		this.plan.semesters[0].semester_courses[1] = this.plan.course_id_to_object("EECS 168");
-		this.plan.semesters[0].semester_courses[2] = this.plan.course_id_to_object("EECS 140");
-		this.plan.semesters[1].semester_courses[1] = this.plan.course_id_to_object("MATH 125");
-		this.plan.semesters[1].semester_courses[3] = this.plan.course_id_to_object("GE 2.2");
-		this.plan.semesters[2].semester_courses[0] = this.plan.course_id_to_object("EECS 268");
-		this.plan.semesters[2].semester_courses[1] = this.plan.course_id_to_object("PHSX 210");
-		this.plan.semesters[2].semester_courses[2] = this.plan.course_id_to_object("EECS 388");
-		this.plan.semesters[2].semester_courses[3] = this.plan.course_id_to_object("PHSX 216");
+		this.plan.add_course(0, 1, this.plan.course_code_to_object("EECS 168"));
+		this.plan.add_course(0, 2, this.plan.course_code_to_object("EECS 140"));
+		this.plan.add_course(1, 1, this.plan.course_code_to_object("MATH 125"));
+		this.plan.add_course(1, 3, this.plan.course_code_to_object("GE 2.2"));
+		this.plan.add_course(2, 0, this.plan.course_code_to_object("EECS 268"));
+		this.plan.add_course(2, 1, this.plan.course_code_to_object("PHSX 210"));
+		this.plan.add_course(2, 2, this.plan.course_code_to_object("EECS 388"));
+		this.plan.add_course(2, 3, this.plan.course_code_to_object("PHSX 216"));
 		this.update();
 	}
 }

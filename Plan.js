@@ -26,6 +26,10 @@ class Plan {
 		}
 
 	}
+	
+	get_course(semester, col) {
+		return this.semesters[semester].semester_courses[col];
+	}
 
 	find_course(course_code) {
 		let coords;
@@ -37,19 +41,18 @@ class Plan {
 		return coords;
 	}
 
+	add_course(semester, col, course) {
+		this.semesters[semester].add_course(col, course);
+	}
+	
 	remove_course(course) {
-		//check course bank
-		for (let i=0; i<this.course_bank.length; i++) {
-			if (course == this.course_bank[i]) {
-				this.course_bank.splice(i, 1);
-				return;
-			}
-		}
-		//check transfer
-		for (let i=0; i<this.transfer_bank.length; i++) {
-			if (course == this.transfer_bank[i]) {
-				this.transfer_bank.splice(i, 1);
-				return;
+		//check course and transfer banks
+		for (let bank of [this.course_bank, this.transfer_bank]) {
+			for (let i = 0; i < bank.length; i++) {
+				if (course == bank[i]) {
+					bank.splice(i, 1);
+					return;
+				}
 			}
 		}
 		// Not found above - must be in semester grid
@@ -58,19 +61,18 @@ class Plan {
 		}
 	}
 	
-	//id is string
-	course_id_to_object(id) {
-		return COURSES.find(course => course.course_code == id);
+	course_code_to_object(course_code) {
+		return COURSES.find(course => course.course_code == course_code);
 	}
 
 	fill_course_bank() {
-		this.course_bank = this.major.req_class.map(req_class => this.course_id_to_object(req_class));
+		this.course_bank = this.major.req_class.map(req_class => this.course_code_to_object(req_class));
 	}
 
 	add_semester(season, year) {
 		let new_order = year*3 + season;
-		for (let semester of this.semesters) {
-			let old_order = semester.semester_year*3 + semester.semester_season;
+		for (let i = 0; i < this.semesters.length; i++) {
+			let old_order = this.semesters[i].semester_year*3 + this.semesters[i].semester_season;
 			if (old_order+1 == new_order) {
 				this.semesters.splice(i+1, 0, new Semester(season, year, []));
 				return; // Important for preventing infinite loops
@@ -107,42 +109,17 @@ class Plan {
 		
 		this.semesters.forEach((semester, y) => {
 			semester.semester_courses.forEach((course, x) => {
-				for (let prereq of course.prereq) {
-					let coord_req = this.find_course(prereq);
-					if (coord_req != undefined) {
-						arr_arrows.push(new Arrow(coord_req[1], coord_req[0], x, y, false));
-						if (coord_req[0] >= y)
-							this.add_error("INVALID COURSE: " + prereq + " is a prerequisite of " + course.course_code + "\n");
-					}
-				}
-				for (let coreq of course.coreq) {
-					let coord_req = this.find_course(coreq);
-					if (coord_req != undefined) {
-						arr_arrows.push(new Arrow(coord_req[1], coord_req[0], x, y, true));
-						if (coord_req[0] > y)
-							this.add_error("INVALID COURSE: " + coreq + " is a corequisite of " + course.course_code + "\n");
+				for (let reqs of [course.prereq, course.coreq]) {
+					for (let req of reqs) {
+						let coord_req = this.find_course(req);
+						if (coord_req != undefined) {
+							arr_arrows.push(new Arrow(coord_req[1], coord_req[0], x, y, reqs == course.coreq));
+						}
 					}
 				}
 			});
 		});
 		
-		// Check for excessive hours
-		for (let plan of this.semesters) {
-			if (plan.get_credit_hour() > MAX_HOURS) {
-				this.add_error("EXCESS HOURS:" + plan.season_name() + " " + plan.semester_year + ": You are taking more than " + MAX_HOURS +
-					" credit hours. You will need to fill out a waiver.\n");
-			}
-		}
-		
 		return arr_arrows;
-	}
-	
-	add_error(msg) {
-		for (let id of ["notifications", "print-notifications"]) {
-			let ul = document.getElementById(id);
-			let li = document.createElement("li");
-			li.appendChild(document.createTextNode(msg));
-			ul.appendChild(li);
-		}
 	}
 }

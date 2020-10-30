@@ -22,8 +22,8 @@ class Semester {
 		return this.semester_courses.reduce((sum, course) => sum + (course ? course.credit_hour : 0), 0);
 	}
 
-	add_course(course, index) {
-		this.semester_courses[index] = course;
+	add_course(col, course) {
+		this.semester_courses[col] = course;
 	}
 	
 	remove_course(course) {
