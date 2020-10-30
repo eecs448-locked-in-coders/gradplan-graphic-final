@@ -54,12 +54,23 @@ ul {
 #course-grid th, #course-grid td {
 	width: 120px;
 	min-width: 120px; /*needed because of display flex on contanier*/
+	max-width: 120px;
 }
 
 .tutorial { /*help text*/
 	text-align: center;
 	color: #bbb;
 	border: 2px dashed #bbb;
+}
+
+.ch { /*credit hours*/
+	font-weight: normal;
+	white-space: nowrap;
+}
+
+.ch.error { /*excess hours*/
+	color: red;
+	font-weight: bold;
 }
 
 #transfer-bank tr, #course-bank tr {
@@ -84,6 +95,16 @@ ul {
 	align-items: center;
 	text-align: center;
 	line-height: 1;
+}
+
+.redips-drag.warning {
+	background: #ff6;
+	font-weight: bold;
+}
+
+.redips-drag.error {
+	background: #f44;
+	font-weight: bold;
 }
 
 #arrows svg {

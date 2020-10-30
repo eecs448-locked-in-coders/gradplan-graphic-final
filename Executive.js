@@ -126,10 +126,12 @@ class Executive {
 		// Update the credit hour displays
 		for (let semester of this.plan.semesters) {
 			let credit_hours = semester.get_credit_hour();
-			document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).innerText = credit_hours;
-			if (credit_hours > MAX_HOURS) // Add excessive hour warnings
+			document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).innerText = credit_hours + " credit hours";
+			if (credit_hours > MAX_HOURS) { // Add excessive hour warnings
 				this.add_error("EXCESS HOURS: " + semester.season_name() + " " + semester.semester_year + ": You are taking more than " + MAX_HOURS +
 					" credit hours. You will need to fill out a waiver.\n");
+				document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).classList.add("error");
+			}
 		}
 		
 		// Check for invalid placements
@@ -137,10 +139,15 @@ class Executive {
 			if (!arrow.fromSide && arrow.yIn >= arrow.yOut) { // Invalid prerequisite
 				this.add_error("INVALID COURSE: " + this.plan.get_course(arrow.yIn, arrow.xIn).course_code 
 					+ " is a prerequisite of " + this.plan.get_course(arrow.yOut, arrow.xOut).course_code + "\n");
+				// Add error class to course. +1 on the x is to account for the semester name column.
+				document.getElementById("course-grid").rows[arrow.yOut].cells[arrow.xOut+1].firstElementChild.classList.add("error");
+				// TODO: Make arrow red (will require moving renderArrows call to after this loop)
 			}
 			else if (arrow.fromSide && arrow.yIn > arrow.yOut) { // Invalid corequisite
 				this.add_error("INVALID COURSE: " + this.plan.get_course(arrow.yIn, arrow.xIn).course_code 
 					+ " is a corequisite of " + this.plan.get_course(arrow.yOut, arrow.xOut).course_code + "\n");
+				// Add error class to course. +1 on the x is to account for the semester name column.
+				document.getElementById("course-grid").rows[arrow.yOut].cells[arrow.xOut+1].firstElementChild.classList.add("error");
 			}
 		}
 	}
@@ -179,7 +186,7 @@ class Executive {
 
 			let th = document.createElement("th");
 			th.className = "redips-mark";
-			th.innerHTML = semester.semester_year + " " + semester.season_name() + "<br><span style='font-weight:normal'><span id='ch"+semester.semester_year+"-"+semester.semester_season+"'>0</span> credit hours</span>";
+			th.innerHTML = semester.semester_year + " " + semester.season_name() + "<br><span class='ch' id='ch"+semester.semester_year+"-"+semester.semester_season+"'>0 credit hours</span>";
 			tr.appendChild(th);
 
 			for (let j = 0; j < cols; j++) {
