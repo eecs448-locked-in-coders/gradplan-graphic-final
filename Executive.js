@@ -4,6 +4,9 @@ class Executive {
 	constructor() {
 		this.arrowRender = new ArrowRender();
 		
+		// Add tooltips to courses
+		$('#redips-drag').tooltip({selector: '[data-toggle="tooltip"]'})
+		
 		// Populate options for major
 		for (let major of MAJORS) {
 			let option = document.createElement("option");
@@ -57,8 +60,13 @@ class Executive {
 			}
 		});
 
-		// Initialize drag-and-drop to move courses within plan
+		// Initialize drag-and-drop to move courses
 		REDIPS.drag.dropMode = "single";
+		REDIPS.drag.event.clicked = targetCell => {
+			// Remove tooltip while dragging
+			delete targetCell.firstElementChild.dataset.toggle;
+			$(targetCell.firstElementChild).tooltip('dispose');
+		};
 		REDIPS.drag.event.dropped = targetCell => {
 			// Clear all notifications
 			for (let id of ["notifications", "print-notifications"]) {
@@ -109,6 +117,8 @@ class Executive {
 		let arrows = this.plan.generate_arrows();
 		this.arrowRender.renderArrows(arrows);
 		REDIPS.drag.init(); // Updates which elements have drag-and-drop
+		//$('[data-toggle="tooltip"]').tooltip({trigger : 'hover'}); // Enable tooltips
+		//$('[data-toggle="tooltip"]').on('click', function () { $(this).tooltip('hide'); });
 		
 		// Update the credit hour displays
 		for (let semester of this.plan.semesters) {
