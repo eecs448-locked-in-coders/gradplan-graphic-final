@@ -3,116 +3,98 @@ const SPRING = 0, SUMMER = 1, FALL = 2;
 const MIN_COLS = 3; // Minimum number of columns to put courses in
 class Plan {
 
-  /*
-    major = major object
-    start_semester = int 0,1,2
-    start_year = int, year
-    semesters = [semester, semester, ...]
-    course_bank = [course, course, ...]
-  */
-  constructor(major, start_season, start_year){
-    this.major= MAJORS[0];//TEMP FIX. this.major was pulling the major name only instead of the major object. This sets this.major = the first major object in the array of majors.
-    this.semesters = [];
-    this.course_bank = [];
-    this.transfer_bank = [];
-    this.fill_course_bank();
-    for(var i=0; i<4; i++)
-    {
-      //Makes 8 semester of fall/spring, flips between fall and spring
-      //ONLY WOKRS IF YOU START AT FALL/SPRING
-      this.semesters.push(new Semester(start_season, start_year, []));
-      if(start_season == FALL) start_year++;
-      this.semesters.push(new Semester(2-start_season, start_year, []));
-      if(start_season == SPRING) start_year++;
-    }
+	/*
+		major_name = major name
+		start_semester = int 0,1,2
+		start_year = int, year
+		semesters = [semester, semester, ...]
+		course_bank = [course, course, ...]
+	*/
+	constructor(major_name, start_season, start_year) {
+		this.major = MAJORS.find(major => major.major_name = major_name);
+		this.semesters = [];
+		this.course_bank = [];
+		this.transfer_bank = [];
+		this.fill_course_bank();
+		for (var i = 0; i < 4; i++) {
+			//Makes 8 semester of fall/spring, flips between fall and spring
+			//ONLY WOKRS IF YOU START AT FALL/SPRING
+			this.semesters.push(new Semester(start_season, start_year, []));
+			if (start_season == FALL) start_year++;
+			this.semesters.push(new Semester(2-start_season, start_year, []));
+			if (start_season == SPRING) start_year++;
+		}
 
-  }
+	}
+	
+	get_course(semester, col) {
+		return this.semesters[semester].semester_courses[col];
+	}
 
-  find_course(course_string){
-    for(var i=0; i<this.semesters.length; i++){
-      for(var j=0; j<this.semesters[i].semester_courses.length; j++){
-        if(this.semesters[i].semester_courses[j] != undefined){
-          if(course_string == this.semesters[i].semester_courses[j].course_code){
-            return[i,j];
-          }
-        }
-      }
-    }
-  }
+	find_course(course_code) {
+		let coords;
+		this.semesters.forEach((semester, y) => {
+			semester.semester_courses.forEach((course, x) => {
+				if (course != undefined && course_code == course.course_code) coords = [y, x];
+			});
+		});
+		return coords;
+	}
 
-  remove_course(course){
-    for(var i=0; i<this.semesters.length; i++){
-      this.semesters[i].remove_course(course);
-    }
-    //check course bank
-    for(var i=0; i<this.course_bank.length; i++){
-      if(course == this.course_bank[i]){
-        this.course_bank.splice(i, 1);
-      }
-    }
-    //check transfer
-    for(var i=0; i<this.transfer_bank.length; i++){
-      if(course == this.transfer_bank[i]){
-        this.transfer_bank.splice(i, 1);
-      }
-    }
-  }
-  //id is string
-  course_id_to_object(id){
-    for(var i=0; i<COURSES.length; i++){
-      if(id == COURSES[i].course_code){
-        return(COURSES[i]);
-      }
-    }
-  }
+	add_course(semester, col, course) {
+		this.semesters[semester].add_course(col, course);
+	}
+	
+	remove_course(course) {
+		//check course and transfer banks
+		for (let bank of [this.course_bank, this.transfer_bank]) {
+			for (let i = 0; i < bank.length; i++) {
+				if (course == bank[i]) {
+					bank.splice(i, 1);
+					return;
+				}
+			}
+		}
+		// Not found above - must be in semester grid
+		for (let semester of this.semesters) {
+			semester.remove_course(course);
+		}
+	}
+	
+	course_code_to_object(course_code) {
+		return COURSES.find(course => course.course_code == course_code);
+	}
 
-  fill_course_bank(){
-    for(var i=0; i<this.major.req_class.length; i++){
-      this.course_bank.push(this.course_id_to_object(this.major.req_class[i]));
-    }
-  }
+	fill_course_bank() {
+		this.course_bank = this.major.req_class.map(req_class => this.course_code_to_object(req_class));
+	}
 
-	add_semester(season, year){
+	add_semester(season, year) {
 		let new_order = year*3 + season;
-		for (var i=0; i<this.semesters.length; i++) {
+		for (let i = 0; i < this.semesters.length; i++) {
 			let old_order = this.semesters[i].semester_year*3 + this.semesters[i].semester_season;
 			if (old_order+1 == new_order) {
 				this.semesters.splice(i+1, 0, new Semester(season, year, []));
 				return; // Important for preventing infinite loops
 			}
 		}
-		// Add semester at end
+		// Add semester at end if location is not in middle
 		this.semesters.splice(this.semesters.length, 0, new Semester(season, year, []));
 	}
 
-  remove_semester(season, year){
-    for(var i=0; i<this.semesters.length; i++){
-      if(season == this.semesters[i].semester_season && year == this.semesters[i].semseter_year){
-        for(var j=0; j<this.semesters[i].semester_courses.length; j++){
-          if(this.semesters[i].semster_courses[j] != undefined){
-            return;
-          }
-        }
-        this.semesters.splice(i, 1);
-      }
-    }
-  }
+	remove_semester(season, year) {
+		// Find the requested semester object
+		let i = this.semesters.findIndex(semester => season == semester.semester_season && year == semester.semester_year);
 
-  get_longest(){
-  	var longest = MIN_COLS;
-      for(var i=0; i<this.semesters.length; i++){
-        if(this.semesters[i].semester_courses.length > longest){
-		  // Make sure undefineds as the end of the array are not counted in the length
-		  for (var j = this.semesters[i].semester_courses.length-1; j >= longest; j--) {
-			if (this.semesters[i].semester_courses[j] != undefined) {
-			  longest = j+1;
-			  break;
-			}
-		  }
-        }
-      }
-      return longest;
-  }
+		// Prevent removing semesters containing courses
+		if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
+		this.semesters.splice(i, 1);
+	}
+
+	get_longest() {
+		// Traverse through semesters, updating longest with the length of the longest semester found so far
+		return this.semesters.reduce((longest, semester) => Math.max(semester.semester_courses.length, longest), MIN_COLS);
+	}
 
 	/*
 		check each course
@@ -122,56 +104,24 @@ class Plan {
 		create arrow
 		This function is also pulling double-duty checking validations
 	*/
-	generate_arrows(){
+	generate_arrows() {
 		var arr_arrows = [];
-		var cord_req = [];
-		for (var i=0; i<this.semesters.length; i++) {
-			for (var j=0; j<this.semesters[i].semester_courses.length; j++) {
-				if (this.semesters[i].semester_courses[j] != undefined) {
-					for (var x=0; x<this.semesters[i].semester_courses[j].prereq.length; x++) {
-						cord_req = this.find_course(this.semesters[i].semester_courses[j].prereq[x]);
-						if (cord_req != undefined) {
-							arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, false));
-							if (cord_req[0] >= i) {
-								this.add_error("INVALID COURSE: "+this.semesters[i].semester_courses[j].prereq[x]+
-									" is a prerequisite of "+this.semesters[i].semester_courses[j].course_code + "\n");
-							}
-						}
-					}
-					for (var y=0; y<this.semesters[i].semester_courses[j].coreq.length; y++) {
-						cord_req = this.find_course(this.semesters[i].semester_courses[j].coreq[y]);
-						if (cord_req != undefined) {
-							arr_arrows.push(new Arrow(cord_req[1], cord_req[0], j, i, true));
-							if (cord_req[0] > i) {
-								this.add_error("INVALID COURSE: "+this.semesters[i].semester_courses[j].coreq[y]+
-									" is a corequisite of "+this.semesters[i].semester_courses[j].course_code + "\n");
+		
+		this.semesters.forEach((semester, y) => {
+			semester.semester_courses.forEach((course, x) => {
+				if (course != undefined) {
+					for (let reqs of [course.prereq, course.coreq]) {
+						for (let req of reqs) {
+							let coord_req = this.find_course(req);
+							if (coord_req != undefined) {
+								arr_arrows.push(new Arrow(coord_req[1], coord_req[0], x, y, reqs == course.coreq));
 							}
 						}
 					}
 				}
-			}
-		}
+			});
+		});
 		
-		// Check for excessive hours
-		for (let plan of this.semesters) {
-			if (plan.get_credit_hour() > MAX_HOURS) {
-				this.add_error("EXCESS HOURS - " + plan.season_name()+ " " + plan.semester_year + ": You are taking more than " + MAX_HOURS +
-					" credit hours. You will need to fill out a waiver.\n");
-			}
-		}
-		
-		return (arr_arrows);
-	}
-  
-	add_error(msg) {
-		let ul = document.getElementById("notifications");
-		let li = document.createElement("li");
-		li.appendChild(document.createTextNode(msg));
-		ul.appendChild(li);
-
-		ul = document.getElementById("notifications2");
-		li = document.createElement("li");
-		li.appendChild(document.createTextNode(msg));
-		ul.appendChild(li);
+		return arr_arrows;
 	}
 }

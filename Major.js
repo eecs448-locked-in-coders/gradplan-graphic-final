@@ -1,13 +1,13 @@
 //List of required classes, list of electives, credit hour requirements
 class Major {
-  /*
-    major_name = string
-    req_class = [string]
-  */
-  constructor(major_name, req_class){
-    this.major_name = major_name;
-    this.req_class = req_class;
-  }
+	/*
+		major_name = string
+		req_class = [string]
+	*/
+	constructor(major_name, req_class) {
+		this.major_name = major_name;
+		this.req_class = req_class;
+	}
 }
 
 const MAJORS = [

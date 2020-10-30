@@ -8,9 +8,9 @@ const VERT_CHANNELS = [1, 3, 0, 4, 2]; // Order channels will be filled (5 vert 
 const HORIZ_CHANNELS = [1, 5, 2, 4, 0, 6, 3]; // Order channels will be filled (7 horiz channels)
 
 const TD_WIDTH = 120;
-const TD_HEIGHT = 95;
+const TD_HEIGHT = 90;
 const COURSE_WIDTH = 90;
-const COURSE_HEIGHT = 50;
+const COURSE_HEIGHT = 45;
 
 // The depth and half the width of an arrow head
 const ARROW_SIZE = 4;
@@ -29,7 +29,7 @@ const COLORS = ["#2196F3" /*blue*/, "#4CAF50" /*green*/, "#9C27B0" /*purple*/,
 const ARROWS_FOR_COLOR = 2; // Minimum number of arrows leaving a course before they will be given unique colors
 const DEFAULT_COLOR = "black"; // Color of arrows that don't meet the minimum
 
-class Render {
+class ArrowRender {
 	constructor(rows, cols) {
 		this.draw = SVG().addTo(document.getElementById("arrows"));
 
