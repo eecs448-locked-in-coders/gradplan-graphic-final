@@ -29,7 +29,7 @@ const COLORS = ["#2196F3" /*blue*/, "#4CAF50" /*green*/, "#9C27B0" /*purple*/,
 const ARROWS_FOR_COLOR = 2; // Minimum number of arrows leaving a course before they will be given unique colors
 const DEFAULT_COLOR = "black"; // Color of arrows that don't meet the minimum
 
-class Render {
+class ArrowRender {
 	constructor(rows, cols) {
 		this.draw = SVG().addTo(document.getElementById("arrows"));
 

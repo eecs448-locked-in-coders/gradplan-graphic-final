@@ -19,22 +19,21 @@ class Semester {
 	}
 
 	get_credit_hour() {
-		let sum = 0;
-		for (let i = 0; i < this.semester_courses.length; i++) {
-			if (this.semester_courses[i] != undefined) {
-				sum = sum + this.semester_courses[i].credit_hour;
-			}
-		}
-		return sum;
+		return this.semester_courses.reduce((sum, course) => sum + (course ? course.credit_hour : 0), 0);
 	}
 
 	add_course(course, index) {
 		this.semester_courses[index] = course;
 	}
+	
 	remove_course(course) {
-		for (var i=0; i<this.semester_courses.length; i++) {
-			if (this.semester_courses[i] == course) {
-				this.semester_courses[i] = undefined;
+		let courseIndex = this.semester_courses.indexOf(course);
+		if (courseIndex != undefined) {
+			this.semester_courses[courseIndex] = undefined;
+			// Remove any trailing undefineds left in array (important for Plan.getLongest)
+			for (let i = this.semester_courses.length; i >= 0; i--) {
+				if (this.semester_courses[i] != undefined) return;
+				this.semester_courses.splice(i, 1);
 			}
 		}
 	}
