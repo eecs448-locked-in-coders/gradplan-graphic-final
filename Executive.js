@@ -20,7 +20,7 @@ class Executive {
 		for (let year = thisYear; year >= thisYear-3; year--) {
 			for (let season of [FALL, SPRING]) {
 				let option = document.createElement("option");
-				option.text = SEASON_NAMES[season] + " " + year;
+				option.text = "Start in " + SEASON_NAMES[season] + " " + year;
 				option.value = year + "-" + season;
 				document.getElementById("startSemesterSelect").add(option);
 			}
@@ -35,6 +35,8 @@ class Executive {
 			document.getElementById("add-semester").style.display = "";
 			this.plan = new Plan(major, season, year);
 			this.update();
+			// Add help text in the first cell
+			document.getElementById("course-grid").rows[0].cells[1].innerHTML = "<div class='tutorial'>Drag-and-drop a course here..</div>";
 			
 			// Set up adding semesters - add the summers between the automatic semesters
 			for (let tmpYear = year; tmpYear < year+4; tmpYear++) {
@@ -73,6 +75,9 @@ class Executive {
 				let list = document.getElementById(id);
 				while (list.firstChild) list.removeChild(list.firstChild);
 			}
+			
+			// Remove tutorial if present
+			$(".tutorial").remove();
 			
 			let course = this.plan.course_code_to_object(targetCell.firstElementChild.dataset["course"]);
 			this.plan.remove_course(course); // Remove course from wherever it is
@@ -117,8 +122,6 @@ class Executive {
 		let arrows = this.plan.generate_arrows();
 		this.arrowRender.renderArrows(arrows);
 		REDIPS.drag.init(); // Updates which elements have drag-and-drop
-		//$('[data-toggle="tooltip"]').tooltip({trigger : 'hover'}); // Enable tooltips
-		//$('[data-toggle="tooltip"]').on('click', function () { $(this).tooltip('hide'); });
 		
 		// Update the credit hour displays
 		for (let semester of this.plan.semesters) {

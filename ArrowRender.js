@@ -8,9 +8,9 @@ const VERT_CHANNELS = [1, 3, 0, 4, 2]; // Order channels will be filled (5 vert 
 const HORIZ_CHANNELS = [1, 5, 2, 4, 0, 6, 3]; // Order channels will be filled (7 horiz channels)
 
 const TD_WIDTH = 120;
-const TD_HEIGHT = 95;
+const TD_HEIGHT = 90;
 const COURSE_WIDTH = 90;
-const COURSE_HEIGHT = 50;
+const COURSE_HEIGHT = 45;
 
 // The depth and half the width of an arrow head
 const ARROW_SIZE = 4;
