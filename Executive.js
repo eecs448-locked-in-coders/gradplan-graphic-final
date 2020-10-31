@@ -106,7 +106,7 @@ class Executive {
 
     renderBank(html_id, arr_course) {
 			let grid = document.getElementById(html_id);
-			while (grid.firstChild) grid.removeChild(grid.firstChild);
+			while (grid.firstChild) grid.removeChild(grid.firstChild); //Clear the grid.
 			let tr;
 			let numCoursesInCurrentRow = COURSE_BANK_COLS;
 			for (let course of arr_course) {
