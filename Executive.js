@@ -1,4 +1,4 @@
-const COURSE_BANK_COLS = 3;
+const BANK_COLS = 3;
 
 class Executive {
 	constructor() {
@@ -108,9 +108,9 @@ class Executive {
 			let grid = document.getElementById(html_id);
 			while (grid.firstChild) grid.removeChild(grid.firstChild); //Clear the grid.
 			let tr;
-			let numCoursesInCurrentRow = COURSE_BANK_COLS;
+			let numCoursesInCurrentRow = BANK_COLS;
 			for (let course of arr_course) {
-				if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
+				if (numCoursesInCurrentRow == BANK_COLS) {
 					tr = document.createElement("tr");
 					grid.appendChild(tr);
 					numCoursesInCurrentRow = 0;
@@ -123,12 +123,12 @@ class Executive {
 			}
 			
 			// Add an empty row if no blank spaces in current one
-			if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
+			if (numCoursesInCurrentRow == BANK_COLS) {
 				tr = document.createElement("tr");
 				grid.appendChild(tr);
 				numCoursesInCurrentRow = 0;
 			}
-			for (var i=numCoursesInCurrentRow; i<COURSE_BANK_COLS; i++) {
+			for (var i=numCoursesInCurrentRow; i<BANK_COLS; i++) {
 				let td = document.createElement("td");
 				td.dataset["bank"] = (html_id == "course-bank")?"course":"transfer";
 				tr.appendChild(td);
