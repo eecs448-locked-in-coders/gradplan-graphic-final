@@ -125,6 +125,7 @@ class Executive {
 
 		document.getElementById("welcome").style.display = "none";
 		document.getElementById("add-semester").style.display = "";
+		document.getElementById("add_extra_course_box").style.display = "";
 		document.getElementById("save-container").style.display = "";
 		this.plan = new Plan(major, season, year);
 		this.update();
