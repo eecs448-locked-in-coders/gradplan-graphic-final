@@ -111,10 +111,17 @@ class Executive {
 		// Test plan
 		//this.createTestPlan();
 		document.getElementById("course_add_submit").addEventListener("click", () => {
-			let temp = new Course(document.getElementById("course_code").value,"",[],[],[1,1,1], document.getElementById("credit_hours").value);
-			COURSES.push(temp);
-			this.plan.course_bank.push(temp);
-			this.update()
+			let t_course_code = document.getElementById("course_code").value;
+			let t_credit_hours = parseInt(document.getElementById("credit_hours").value);
+			if (this.plan.course_code_to_object(t_course_code) == undefined)
+			{
+				let temp = new Course(t_course_code,"",[],[],[1,1,1], t_credit_hours);
+				COURSES.push(temp);
+				this.plan.course_bank.push(temp);
+				this.update();
+			}
+			document.getElementById("course_code").value = "";
+			document.getElementById("credit_hours").value = "";
 		})
 	}
 	
