@@ -55,6 +55,14 @@ class Executive {
 			document.getElementById("save-name").value = document.getElementById("planSelect").value.substr(6);
 		});
 		
+		// Import plan
+		document.getElementById("import-plan").addEventListener("click", () => {
+			let plan_string = document.getElementById("plan-to-import").value;
+			this.initPlan(); // Default plan will be overwritten if parse succeeds
+			this.plan.string_to_plan(plan_string);
+			this.update();
+		});
+		
 		// Delete saved plan
 		document.getElementById("delete-plan").addEventListener("click", () => {
 			let key = document.getElementById("planSelect").value;

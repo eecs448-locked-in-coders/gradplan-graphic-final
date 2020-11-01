@@ -171,21 +171,29 @@
 						<div id="welcome" class="border p-3">
 							<h1>Welcome!</h1>
 							<h4>Select your major and first semester at KU semester to begin.</h4>
-							<div class="input-group mb-2">
+							<div class="input-group">
 								<select id="majorSelect" class="form-control"></select>
 								<select id="startSemesterSelect" class="form-control"></select>
 								<div class="input-group-append">
 									<button type="button" class="btn btn-primary" id="done">Start Planning</button>
 								</div>
 							</div>
-							<h4>Or load an existing plan below:</h4>
-							<div class="input-group">
+							<hr class="my-4">
+							<h5>Or load a plan saved in your browser:</h5>
+							<div class="input-group mb-2">
 								<select id="planSelect" class="form-control">
 									<option disabled selected value="-1">Choose a plan...</option>
 								</select>
 								<div class="input-group-append">
 									<button type="button" class="btn btn-primary" id="load-plan">Load Plan</button>
 									<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete-plan">Delete Plan</button>
+								</div>
+							</div>
+							<h5>Or import a previously exported plan:</h5>
+							<div class="input-group">
+								<textarea class="form-control" id="plan-to-import" placeholder='{"version":1,"timestamp":1604269786608,"major":"Computer Science","course_bank":["EECS 101","EECS 140"],"transfer_bank":[],"semesters":[{"semester_year":2020,"semester_season":2,"semester_courses":["EECS 168"]}]}'></textarea>
+								<div class="input-group-append">
+									<button type="button" class="btn btn-primary" id="import-plan">Import</button>
 								</div>
 							</div>
 						</div>
