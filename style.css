@@ -132,10 +132,9 @@ ul {
         margin: 0.5cm;
     }
 
-    header nav, footer {
+    header nav, footer, .delete-semester, .no-print {
         display: none;
 	}
-
 
 	.KU_image {
 		filter: grayscale(100%) brightness(0%);
@@ -145,10 +144,6 @@ ul {
 		background: white;
 		border-bottom: solid black;
 	}
-
-    .no-print {
-        display: none;
-    }
 
     .profile_picture {
         max-height: 5cm;

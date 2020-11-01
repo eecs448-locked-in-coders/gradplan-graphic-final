@@ -73,6 +73,22 @@ class Executive {
 			name = name.replace(/[^\w\s]/g, ""); // Remove special characters from name
 			this.savePlan(name);
 		});
+		
+		// Plan export button
+		document.getElementById("export-button").addEventListener("click", () => {
+			// Copy plan to clipboard
+			let textarea = document.createElement("textarea");
+			textarea.style.style = "position: absolute; left: -999px; top: -999px"; // display none prevents this from working
+			document.body.appendChild(textarea);
+			textarea.value = this.plan.plan_to_string();
+			textarea.select();
+			document.execCommand("copy");
+			document.body.removeChild(textarea);
+			
+			// Display alert that auto-closes
+			document.getElementById("plan-exported").style.display = "";
+			window.setTimeout(() => document.getElementById("plan-exported").style.display = "none", 5000);
+		});
 
 		// Initialize drag-and-drop to move courses
 		REDIPS.drag.dropMode = "single";
