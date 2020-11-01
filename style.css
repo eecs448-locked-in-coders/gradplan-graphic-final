@@ -36,6 +36,13 @@ header {
 	font-weight: bold;
 }
 
+#save-name {
+	display: inline;
+	width: 16em;
+	position: relative;
+	top: 1px;
+}
+
 .scrollable_box {
 	max-width: 800px;
 	max-height: 200px;

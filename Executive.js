@@ -26,40 +26,45 @@ class Executive {
 			}
 		}
 		
-		// Initialize plan when done is clicked
-		document.getElementById("done").addEventListener("click", () => {
-			let [year, season] = document.getElementById("startSemesterSelect").value.split('-').map(Number);
-			let major = document.getElementById("majorSelect").value;
-
-			document.getElementById("welcome").style.display = "none";
-			document.getElementById("add-semester").style.display = "";
-			this.plan = new Plan(major, season, year);
-			this.update();
-			// Add help text in the first cell
-			document.getElementById("course-grid").rows[0].cells[1].innerHTML = "<div class='tutorial'>Drag-and-drop a course here..</div>";
-			
-			// Set up adding semesters - add the summers between the automatic semesters
-			for (let tmpYear = year; tmpYear < year+4; tmpYear++) {
-				let option = document.createElement("option");
-				option.text = SEASON_NAMES[SUMMER] + " " + tmpYear;
-				option.value = tmpYear + "-" + SUMMER;
-				document.getElementById("addSemesterSelect").add(option);
-			}
-			
-			// Option to add the next few semsters
-			year += season == FALL ? 4 : 3;
-			season = 2-season;
-			for (let semester = 1; semester <= 9; semester++) {
-				season++;
-				if (season >= 3) {
-					season -= 3;
-					year++;
+		// Initialize plan when done is clicked (arrow function used to preserve this)
+		document.getElementById("done").addEventListener("click", () => this.initPlan());
+		
+		// Populate list of saved plans to load
+		for (let i = 0; i < localStorage.length; i++) {
+			let key = localStorage.key(i);
+			if (key.startsWith("gpg-1-")) {
+				let plan = localStorage.getItem(key);
+				try {
+					plan = JSON.parse(plan);
+					let date = new Date(plan.timestamp);
+					let option = document.createElement("option");
+					option.text = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + ": " + key.substr(6);
+					option.value = key;
+					document.getElementById("planSelect").add(option);
 				}
-				let option = document.createElement("option");
-				option.text = SEASON_NAMES[season] + " " + year;
-				option.value = year + "-" + season;
-				document.getElementById("addSemesterSelect").add(option);
+				catch (e) {
+					// Skip plans with formatting issues
+					console.log(e);
+				}
 			}
+		}
+		
+		// Load existing plan on click
+		document.getElementById("load-plan").addEventListener("click", () => {
+			// Read plan string before init. This is important when loading the autosave plan.
+			let plan_string = localStorage.getItem(document.getElementById("planSelect").value);
+			this.initPlan(); // Default plan will be overwritten if parse succeeds
+			this.plan.string_to_plan(plan_string);
+			this.update();
+		});
+		
+		// Plan save button
+		document.getElementById("save-button").addEventListener("click", () => {
+			let name = document.getElementById("save-name").value;
+			// Default name e.g. Computer Science Fall 2018
+			if (!name) name = this.plan.major.major_name + " " + this.plan.semesters[0].season_name() + " " + this.plan.semesters[0].semester_year;
+			name = name.replace(/[^\w\s]/g, ""); // Remove special characters from name
+			this.savePlan(name);
 		});
 
 		// Initialize drag-and-drop to move courses
@@ -109,6 +114,43 @@ class Executive {
 		//this.createTestPlan();
 	}
 	
+	// Hide welcome and start plan based on dropdowns
+	initPlan() {
+		let [year, season] = document.getElementById("startSemesterSelect").value.split('-').map(Number);
+		let major = document.getElementById("majorSelect").value;
+
+		document.getElementById("welcome").style.display = "none";
+		document.getElementById("add-semester").style.display = "";
+		document.getElementById("save-container").style.display = "";
+		this.plan = new Plan(major, season, year);
+		this.update();
+		// Add help text in the first cell
+		document.getElementById("course-grid").rows[0].cells[1].innerHTML = "<div class='tutorial'>Drag-and-drop a course here..</div>";
+		
+		// Set up adding semesters - add the summers between the automatic semesters
+		for (let tmpYear = year; tmpYear < year+4; tmpYear++) {
+			let option = document.createElement("option");
+			option.text = SEASON_NAMES[SUMMER] + " " + tmpYear;
+			option.value = tmpYear + "-" + SUMMER;
+			document.getElementById("addSemesterSelect").add(option);
+		}
+		
+		// Option to add the next few semsters
+		year += season == FALL ? 4 : 3;
+		season = 2-season;
+		for (let semester = 1; semester <= 9; semester++) {
+			season++;
+			if (season >= 3) {
+				season -= 3;
+				year++;
+			}
+			let option = document.createElement("option");
+			option.text = SEASON_NAMES[season] + " " + year;
+			option.value = year + "-" + season;
+			document.getElementById("addSemesterSelect").add(option);
+		}
+	}
+	
 	// Main function for rerendering the screen and updating errors
 	update() {
 		// Update course bank and transfer credits
@@ -150,6 +192,9 @@ class Executive {
 				document.getElementById("course-grid").rows[arrow.yOut].cells[arrow.xOut+1].firstElementChild.classList.add("error");
 			}
 		}
+		
+		// Autosave plan
+		this.savePlan("autosave");
 	}
 
 	renderBank(html_id, arrCourse) {
@@ -212,6 +257,15 @@ class Executive {
 			li.appendChild(document.createTextNode(msg));
 			ul.appendChild(li);
 		}
+	}
+	
+	savePlan(name) {
+		// 1 is for version number
+		localStorage.setItem("gpg-1-" + name, this.plan.plan_to_string());
+	}
+	
+	loadPlan(name) {
+		this.plan.string_to_plan(localStorage.getItem("gpg-1-" + name));
 	}
 	
 	createTestPlan() {
