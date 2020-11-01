@@ -15,7 +15,7 @@ class Plan {
 		this.semesters = [];
 		this.course_bank = [];
 		this.transfer_bank = [];
-		this.fill_course_bank();
+		this.fill_course_bank_w_req_classes();
 		for (var i = 0; i < 4; i++) {
 			//Makes 8 semester of fall/spring, flips between fall and spring
 			//ONLY WOKRS IF YOU START AT FALL/SPRING
@@ -103,7 +103,7 @@ class Plan {
 		return COURSES.find(course => course.course_code == course_code);
 	}
 
-	fill_course_bank() {
+	fill_course_bank_w_req_classes() {
 		this.course_bank = this.major.req_class.map(req_class => this.course_code_to_object(req_class));
 	}
 
