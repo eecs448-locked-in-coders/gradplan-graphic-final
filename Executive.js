@@ -111,9 +111,10 @@ class Executive {
 		// Test plan
 		//this.createTestPlan();
 		document.getElementById("course_add_submit").addEventListener("click", () => {
-			
-
-
+			let temp = new Course(document.getElementById("course_code").value,"",[],[],[1,1,1], document.getElementById("credit_hours").value);
+			COURSES.push(temp);
+			this.plan.course_bank.push(temp);
+			this.update()
 		})
 	}
 	
