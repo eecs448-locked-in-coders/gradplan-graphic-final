@@ -68,7 +68,7 @@ class Executive {
 		REDIPS.drag.event.clicked = targetCell => {
 			// Remove tooltip while dragging
 			delete targetCell.firstElementChild.dataset.toggle;
-			$(targetCell.firstElementChild).tooltip('dispose');
+			$(targetCell.firstElementChild).tooltip("dispose");
 		};
 		REDIPS.drag.event.dropped = targetCell => {
 			// Clear all notifications
@@ -225,13 +225,21 @@ class Executive {
 			th.className = "redips-mark";
 			th.innerHTML = semester.semester_year + " " + semester.season_name() + "<br><span class='ch' id='ch"+semester.semester_year+"-"+semester.semester_season+"'>0 credit hours</span>";
 			tr.appendChild(th);
-			let dele= document.createElement("button");
-			dele.textContent="x";
-			dele.addEventListener('click',e=>{
-				this.plan.remove_semester(semester.semester_season, semester.semester_year);
-				this.update();
-
-			});
+			
+			// Delete button
+			if (semester.semester_courses.length == 0) {
+				let dele = document.createElement("button");
+				dele.className = "btn btn-sm btn-danger delete-semester";
+				dele.innerHTML = '<i class="fa fa-trash"></i>';
+				dele.addEventListener("click", e => {
+					this.plan.remove_semester(semester.semester_season, semester.semester_year);
+					// Add semester to dropdown so it can be re-added
+					this.makeElement("option", "addSemesterSelect", semester.season_name() + " " + semester.semester_year, semester.semester_year + "-" + semester.semester_season);
+					this.update();
+				});
+				th.appendChild(dele);
+			}
+			
 			for (let j = 0; j < cols; j++) {
 				let td = document.createElement("td");
 				if (semester.semester_courses[j] != undefined) {
@@ -240,8 +248,6 @@ class Executive {
 				td.dataset["x"] = j;
 				td.dataset["y"] = i;
 				tr.appendChild(td);
-				tr.appendChild(dele);
-				
 			}
 
 			grid.appendChild(tr);

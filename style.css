@@ -57,6 +57,7 @@ ul {
 }
 #course-grid th {
 	padding-left: 10px;
+	position: relative; /*for positioning delete buttons*/
 }
 #course-grid th, #course-grid td {
 	width: 120px;
@@ -78,6 +79,12 @@ ul {
 .ch.error { /*excess hours*/
 	color: red;
 	font-weight: bold;
+}
+
+.delete-semester {
+	position: absolute;
+	top: 28px;
+	left: -30px;
 }
 
 #transfer-bank tr, #course-bank tr {
