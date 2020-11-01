@@ -8,13 +8,14 @@ class Course {
 										Remember that winter doesn't exist, its just extended spring
 		credit_hour = int
 	*/
-	constructor(course_code, title, prereq, coreq, course_semester, credit_hour) {
+	constructor(course_code, title, prereq, coreq, course_semester, credit_hour, is_custom = false) {
 		this.course_code = course_code;
 		this.title = title;
 		this.prereq = prereq;
 		this.coreq = coreq;
 		this.course_semester = course_semester;
 		this.credit_hour = credit_hour;
+		this.is_custom = is_custom; // Used when saving plans to strings
 	}
 	
 	to_html() {

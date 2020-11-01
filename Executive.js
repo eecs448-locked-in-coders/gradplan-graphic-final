@@ -31,7 +31,8 @@ class Executive {
 				try {
 					plan = JSON.parse(plan);
 					let date = new Date(plan.timestamp);
-					let text = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + ": " + key.substr(6);
+					// Get the date the plan was last modified in YYYY-MM-DD format, correcting for time zone
+					let text = new Date(plan.timestamp - new Date().getTimezoneOffset()*60000).toISOString().split("T")[0] + ": " + key.substr(6);
 					this.makeElement("option", "planSelect", text, key);
 				}
 				catch (e) {
@@ -54,6 +55,24 @@ class Executive {
 			document.getElementById("save-name").value = document.getElementById("planSelect").value.substr(6);
 		});
 		
+		// Import plan
+		document.getElementById("import-plan").addEventListener("click", () => {
+			let plan_string = document.getElementById("plan-to-import").value;
+			this.initPlan(); // Default plan will be overwritten if parse succeeds
+			this.plan.string_to_plan(plan_string);
+			this.update();
+		});
+		
+		// Delete saved plan
+		document.getElementById("delete-plan").addEventListener("click", () => {
+			let key = document.getElementById("planSelect").value;
+			if (key == "-1") return; // Do nothing if dropdown not selected
+			localStorage.removeItem(key);
+			// Remove plan from dropdown
+			document.getElementById("planSelect").remove(document.getElementById("planSelect").selectedIndex);
+			document.getElementById("planSelect").selectedIndex = 0;
+		});
+		
 		// Plan save button
 		document.getElementById("save-button").addEventListener("click", () => {
 			let name = document.getElementById("save-name").value;
@@ -62,13 +81,29 @@ class Executive {
 			name = name.replace(/[^\w\s]/g, ""); // Remove special characters from name
 			this.savePlan(name);
 		});
+		
+		// Plan export button
+		document.getElementById("export-button").addEventListener("click", () => {
+			// Copy plan to clipboard
+			let textarea = document.createElement("textarea");
+			textarea.style.style = "position: absolute; left: -999px; top: -999px"; // display none prevents this from working
+			document.body.appendChild(textarea);
+			textarea.value = this.plan.plan_to_string();
+			textarea.select();
+			document.execCommand("copy");
+			document.body.removeChild(textarea);
+			
+			// Display alert that auto-closes
+			document.getElementById("plan-exported").style.display = "";
+			window.setTimeout(() => document.getElementById("plan-exported").style.display = "none", 5000);
+		});
 
 		// Initialize drag-and-drop to move courses
 		REDIPS.drag.dropMode = "single";
 		REDIPS.drag.event.clicked = targetCell => {
 			// Remove tooltip while dragging
 			delete targetCell.firstElementChild.dataset.toggle;
-			$(targetCell.firstElementChild).tooltip('dispose');
+			$(targetCell.firstElementChild).tooltip("dispose");
 		};
 		REDIPS.drag.event.dropped = targetCell => {
 			// Clear all notifications
@@ -107,22 +142,24 @@ class Executive {
 			this.plan.add_semester(season, year);
 			this.update();
 		});
-
-		// Test plan
-		//this.createTestPlan();
+		
+		// Adding a custom course
 		document.getElementById("course_add_submit").addEventListener("click", () => {
 			let t_course_code = document.getElementById("course_code").value;
 			let t_credit_hours = parseInt(document.getElementById("credit_hours").value);
-			if (this.plan.course_code_to_object(t_course_code) == undefined)
-			{
-				let temp = new Course(t_course_code,"",[],[],[1,1,1], t_credit_hours);
+			if (t_course_code == "" || isNaN(t_credit_hours)) return; // Both inputs not filled out
+			if (this.plan.course_code_to_object(t_course_code) == undefined) {
+				let temp = new Course(t_course_code, "Custom course", [], [], [1,1,1], t_credit_hours, true);
 				COURSES.push(temp);
 				this.plan.course_bank.push(temp);
 				this.update();
 			}
 			document.getElementById("course_code").value = "";
 			document.getElementById("credit_hours").value = "";
-		})
+		});
+
+		// Test plan
+		//this.createTestPlan();
 	}
 	
 	// Hide welcome and start plan based on dropdowns
@@ -239,13 +276,21 @@ class Executive {
 			th.className = "redips-mark";
 			th.innerHTML = semester.semester_year + " " + semester.season_name() + "<br><span class='ch' id='ch"+semester.semester_year+"-"+semester.semester_season+"'>0 credit hours</span>";
 			tr.appendChild(th);
-			let dele= document.createElement("button");
-			dele.textContent="x";
-			dele.addEventListener('click',e=>{
-				this.plan.remove_semester(semester.semester_season, semester.semester_year);
-				this.update();
-
-			});
+			
+			// Delete button
+			if (semester.semester_courses.length == 0) {
+				let dele = document.createElement("button");
+				dele.className = "btn btn-sm btn-danger delete-semester";
+				dele.innerHTML = '<i class="fa fa-trash"></i>';
+				dele.addEventListener("click", e => {
+					this.plan.remove_semester(semester.semester_season, semester.semester_year);
+					// Add semester to dropdown so it can be re-added
+					this.makeElement("option", "addSemesterSelect", semester.season_name() + " " + semester.semester_year, semester.semester_year + "-" + semester.semester_season);
+					this.update();
+				});
+				th.appendChild(dele);
+			}
+			
 			for (let j = 0; j < cols; j++) {
 				let td = document.createElement("td");
 				if (semester.semester_courses[j] != undefined) {
@@ -254,8 +299,6 @@ class Executive {
 				td.dataset["x"] = j;
 				td.dataset["y"] = i;
 				tr.appendChild(td);
-				tr.appendChild(dele);
-				
 			}
 
 			grid.appendChild(tr);

@@ -57,6 +57,7 @@ ul {
 }
 #course-grid th {
 	padding-left: 10px;
+	position: relative; /*for positioning delete buttons*/
 }
 #course-grid th, #course-grid td {
 	width: 120px;
@@ -78,6 +79,12 @@ ul {
 .ch.error { /*excess hours*/
 	color: red;
 	font-weight: bold;
+}
+
+.delete-semester {
+	position: absolute;
+	top: 28px;
+	left: -30px;
 }
 
 #transfer-bank tr, #course-bank tr {
@@ -125,10 +132,9 @@ ul {
         margin: 0.5cm;
     }
 
-    header nav, footer {
+    header nav, footer, .delete-semester, .no-print {
         display: none;
 	}
-
 
 	.KU_image {
 		filter: grayscale(100%) brightness(0%);
@@ -138,10 +144,6 @@ ul {
 		background: white;
 		border-bottom: solid black;
 	}
-
-    .no-print {
-        display: none;
-    }
 
     .profile_picture {
         max-height: 5cm;
