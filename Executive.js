@@ -1,4 +1,4 @@
-const COURSE_BANK_COLS = 3;
+const BANK_COLS = 3;
 
 class Executive {
 	constructor() {
@@ -145,6 +145,19 @@ class Executive {
 
 		// Test plan
 		//this.createTestPlan();
+		document.getElementById("course_add_submit").addEventListener("click", () => {
+			let t_course_code = document.getElementById("course_code").value;
+			let t_credit_hours = parseInt(document.getElementById("credit_hours").value);
+			if (this.plan.course_code_to_object(t_course_code) == undefined)
+			{
+				let temp = new Course(t_course_code,"",[],[],[1,1,1], t_credit_hours);
+				COURSES.push(temp);
+				this.plan.course_bank.push(temp);
+				this.update();
+			}
+			document.getElementById("course_code").value = "";
+			document.getElementById("credit_hours").value = "";
+		})
 	}
 	
 	// Hide welcome and start plan based on dropdowns
@@ -154,6 +167,7 @@ class Executive {
 
 		document.getElementById("welcome").style.display = "none";
 		document.getElementById("add-semester").style.display = "";
+		document.getElementById("add_extra_course_box").style.display = "";
 		document.getElementById("save-container").style.display = "";
 		this.plan = new Plan(major, season, year);
 		this.update();
@@ -228,11 +242,11 @@ class Executive {
 		let grid = document.getElementById(html_id);
 		while (grid.firstChild) grid.removeChild(grid.firstChild); // Clear bank
 		let tr;
-		let numCoursesInCurrentRow = COURSE_BANK_COLS;
+		let numCoursesInCurrentRow = BANK_COLS;
 		// At least one more cell than the number of courses, then round up to multiple of 3
-		let totalCells = Math.ceil((arrCourse.length+1)/COURSE_BANK_COLS)*COURSE_BANK_COLS;
+		let totalCells = Math.ceil((arrCourse.length+1)/BANK_COLS)*BANK_COLS;
 		for (let i = 0; i < totalCells; i++) {
-			if (numCoursesInCurrentRow == COURSE_BANK_COLS) {
+			if (numCoursesInCurrentRow == BANK_COLS) {
 				tr = document.createElement("tr");
 				grid.appendChild(tr);
 				numCoursesInCurrentRow = 0;
