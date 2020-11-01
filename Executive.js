@@ -149,7 +149,7 @@ class Executive {
 			let t_credit_hours = parseInt(document.getElementById("credit_hours").value);
 			if (t_course_code == "" || isNaN(t_credit_hours)) return; // Both inputs not filled out
 			if (this.plan.course_code_to_object(t_course_code) == undefined) {
-				let temp = new Course(t_course_code, "Custom course", [], [], [1,1,1], t_credit_hours);
+				let temp = new Course(t_course_code, "Custom course", [], [], [1,1,1], t_credit_hours, true);
 				COURSES.push(temp);
 				this.plan.course_bank.push(temp);
 				this.update();

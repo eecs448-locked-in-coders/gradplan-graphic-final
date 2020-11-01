@@ -37,7 +37,11 @@ class Plan {
 			"semesters": this.semesters.map(semester => ({
 				"semester_year": semester.semester_year,
 				"semester_season": semester.semester_season,
-				"semester_courses": semester.semester_courses.map(course => course ? course.course_code : ""),
+				"semester_courses": semester.semester_courses.map(course => {
+					if (course == undefined) return "";
+					else if (course.is_custom) return [course.course_code, course.credit_hour];
+					else return course.course_code;
+				}),
 			})),
 		};
 		console.log(plan);
@@ -55,7 +59,16 @@ class Plan {
 			this.semesters = plan.semesters.map(semester => new Semester(
 				semester.semester_season,
 				semester.semester_year,
-				semester.semester_courses.map(course_code => course_code == "" ? undefined : this.course_code_to_object(course_code)),
+				semester.semester_courses.map(course_code => {
+					if (course_code == "") return undefined;
+					else if (Array.isArray(course_code)) { // custom course - recreate it
+						console.log(course_code);
+						let course = new Course(course_code[0], "Custom course", [], [], [1,1,1], course_code[1], true);
+						COURSES.push(course);
+						return course;
+					}
+					else return this.course_code_to_object(course_code)
+				}),
 			));
 			return true; // Successful parse
 		} catch (e) {
