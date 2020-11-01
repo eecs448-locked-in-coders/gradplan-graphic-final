@@ -9,57 +9,58 @@ class Executive {
 		
 		// Populate options for major
 		for (let major of MAJORS) {
-			let option = document.createElement("option");
-			option.text = major.major_name;
-			option.value = major.major_name;
-			document.getElementById("majorSelect").add(option);
+			this.makeElement("option", "majorSelect", major.major_name, major.major_name);
 		}
 		
 		// Populate options for starting semester
 		let thisYear = new Date().getFullYear();
 		for (let year = thisYear; year >= thisYear-3; year--) {
 			for (let season of [FALL, SPRING]) {
-				let option = document.createElement("option");
-				option.text = "Start in " + SEASON_NAMES[season] + " " + year;
-				option.value = year + "-" + season;
-				document.getElementById("startSemesterSelect").add(option);
+				this.makeElement("option", "startSemesterSelect", "Start in " + SEASON_NAMES[season] + " " + year, year + "-" + season);
 			}
 		}
 		
-		// Initialize plan when done is clicked
-		document.getElementById("done").addEventListener("click", () => {
-			let [year, season] = document.getElementById("startSemesterSelect").value.split('-').map(Number);
-			let major = document.getElementById("majorSelect").value;
-
-			document.getElementById("welcome").style.display = "none";
-			document.getElementById("add-semester").style.display = "";
-			this.plan = new Plan(major, season, year);
-			this.update();
-			// Add help text in the first cell
-			document.getElementById("course-grid").rows[0].cells[1].innerHTML = "<div class='tutorial'>Drag-and-drop a course here..</div>";
-			
-			// Set up adding semesters - add the summers between the automatic semesters
-			for (let tmpYear = year; tmpYear < year+4; tmpYear++) {
-				let option = document.createElement("option");
-				option.text = SEASON_NAMES[SUMMER] + " " + tmpYear;
-				option.value = tmpYear + "-" + SUMMER;
-				document.getElementById("addSemesterSelect").add(option);
-			}
-			
-			// Option to add the next few semsters
-			year += season == FALL ? 4 : 3;
-			season = 2-season;
-			for (let semester = 1; semester <= 9; semester++) {
-				season++;
-				if (season >= 3) {
-					season -= 3;
-					year++;
+		// Initialize plan when done is clicked (arrow function used to preserve this)
+		document.getElementById("done").addEventListener("click", () => this.initPlan());
+		
+		// Populate list of saved plans to load
+		for (let i = 0; i < localStorage.length; i++) {
+			let key = localStorage.key(i);
+			if (key.startsWith("gpg-1-")) {
+				let plan = localStorage.getItem(key);
+				try {
+					plan = JSON.parse(plan);
+					let date = new Date(plan.timestamp);
+					let text = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + ": " + key.substr(6);
+					this.makeElement("option", "planSelect", text, key);
 				}
-				let option = document.createElement("option");
-				option.text = SEASON_NAMES[season] + " " + year;
-				option.value = year + "-" + season;
-				document.getElementById("addSemesterSelect").add(option);
+				catch (e) {
+					// Skip plans with formatting issues
+					console.log(e);
+				}
 			}
+		}
+		
+		// Load existing plan on click
+		document.getElementById("load-plan").addEventListener("click", () => {
+			let key = document.getElementById("planSelect").value;
+			if (key == "-1") return; // Do nothing if dropdown not selected
+			// Read plan string before init. This is important when loading the autosave plan.
+			let plan_string = localStorage.getItem(key);
+			this.initPlan(); // Default plan will be overwritten if parse succeeds
+			this.plan.string_to_plan(plan_string);
+			this.update();
+			// Substr to remove the gpg-1-
+			document.getElementById("save-name").value = document.getElementById("planSelect").value.substr(6);
+		});
+		
+		// Plan save button
+		document.getElementById("save-button").addEventListener("click", () => {
+			let name = document.getElementById("save-name").value;
+			// Default name e.g. Computer Science Fall 2018
+			if (!name) name = this.plan.major.major_name + " " + this.plan.semesters[0].season_name() + " " + this.plan.semesters[0].semester_year;
+			name = name.replace(/[^\w\s]/g, ""); // Remove special characters from name
+			this.savePlan(name);
 		});
 
 		// Initialize drag-and-drop to move courses
@@ -95,7 +96,9 @@ class Executive {
 		
 		// Adding a semester
 		document.getElementById('add-semester-btn').addEventListener('click', () => {
-			let [year, season] = document.getElementById("addSemesterSelect").value.split('-').map(Number);
+			let semester = document.getElementById("addSemesterSelect").value;
+			if (semester == "-1") return; // Do nothing if dropdown not selected
+			let [year, season] = semester.split('-').map(Number);
 			
 			// Remove semester from dropdown
 			document.getElementById("addSemesterSelect").remove(document.getElementById("addSemesterSelect").selectedIndex);
@@ -107,6 +110,37 @@ class Executive {
 
 		// Test plan
 		//this.createTestPlan();
+	}
+	
+	// Hide welcome and start plan based on dropdowns
+	initPlan() {
+		let [year, season] = document.getElementById("startSemesterSelect").value.split('-').map(Number);
+		let major = document.getElementById("majorSelect").value;
+
+		document.getElementById("welcome").style.display = "none";
+		document.getElementById("add-semester").style.display = "";
+		document.getElementById("save-container").style.display = "";
+		this.plan = new Plan(major, season, year);
+		this.update();
+		// Add help text in the first cell
+		document.getElementById("course-grid").rows[0].cells[1].innerHTML = "<div class='tutorial'>Drag-and-drop a course here..</div>";
+		
+		// Set up adding semesters - add the summers between the automatic semesters
+		for (let tmpYear = year; tmpYear < year+4; tmpYear++) {
+			this.makeElement("option", "addSemesterSelect", SEASON_NAMES[SUMMER] + " " + tmpYear, tmpYear + "-" + SUMMER);
+		}
+		
+		// Option to add the next few semsters
+		year += season == FALL ? 4 : 3;
+		season = 2-season;
+		for (let semester = 1; semester <= 9; semester++) {
+			season++;
+			if (season >= 3) {
+				season -= 3;
+				year++;
+			}
+			this.makeElement("option", "addSemesterSelect", SEASON_NAMES[season] + " " + year, year + "-" + season);
+		}
 	}
 	
 	// Main function for rerendering the screen and updating errors
@@ -150,6 +184,9 @@ class Executive {
 				document.getElementById("course-grid").rows[arrow.yOut].cells[arrow.xOut+1].firstElementChild.classList.add("error");
 			}
 		}
+		
+		// Autosave plan
+		this.savePlan("autosave");
 	}
 
 	renderBank(html_id, arrCourse) {
@@ -183,12 +220,18 @@ class Executive {
 		for (let i = 0; i < this.plan.semesters.length; i++) {
 			let semester = this.plan.semesters[i];
 			let tr = document.createElement("tr");
-
+			
 			let th = document.createElement("th");
 			th.className = "redips-mark";
 			th.innerHTML = semester.semester_year + " " + semester.season_name() + "<br><span class='ch' id='ch"+semester.semester_year+"-"+semester.semester_season+"'>0 credit hours</span>";
 			tr.appendChild(th);
+			let dele= document.createElement("button");
+			dele.textContent="x";
+			dele.addEventListener('click',e=>{
+				this.plan.remove_semester(semester.semester_season, semester.semester_year);
+				this.update();
 
+			});
 			for (let j = 0; j < cols; j++) {
 				let td = document.createElement("td");
 				if (semester.semester_courses[j] != undefined) {
@@ -197,6 +240,8 @@ class Executive {
 				td.dataset["x"] = j;
 				td.dataset["y"] = i;
 				tr.appendChild(td);
+				tr.appendChild(dele);
+				
 			}
 
 			grid.appendChild(tr);
@@ -207,11 +252,26 @@ class Executive {
 	
 	add_error(msg) {
 		for (let id of ["notifications", "print-notifications"]) {
-			let ul = document.getElementById(id);
-			let li = document.createElement("li");
-			li.appendChild(document.createTextNode(msg));
-			ul.appendChild(li);
+			this.makeElement("li", id, msg);
 		}
+	}
+	
+	savePlan(name) {
+		// 1 is for version number
+		localStorage.setItem("gpg-1-" + name, this.plan.plan_to_string());
+	}
+	
+	loadPlan(name) {
+		this.plan.string_to_plan(localStorage.getItem("gpg-1-" + name));
+	}
+	
+	// Helper function to reduce repetitiveness of code. All parameters except type optional.
+	makeElement(type, parentId, text, value) {
+		let el = document.createElement(type);
+		if (value) el.value = value;
+		if (text) el.appendChild(document.createTextNode(text));
+		if (parentId) document.getElementById(parentId).appendChild(el);
+		return el;
 	}
 	
 	createTestPlan() {

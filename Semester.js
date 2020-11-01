@@ -12,10 +12,12 @@ class Semester {
 		this.semester_season = semester_season;
 		this.semester_year = semester_year;
 		this.semester_courses = semester_courses;
+		
 	}
 	
 	season_name() {
 		return SEASON_NAMES[this.semester_season];
+
 	}
 
 	get_credit_hour() {

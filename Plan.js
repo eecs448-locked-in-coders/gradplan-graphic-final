@@ -24,7 +24,45 @@ class Plan {
 			this.semesters.push(new Semester(2-start_season, start_year, []));
 			if (start_season == SPRING) start_year++;
 		}
-
+	}
+	
+	plan_to_string() {
+		// Version exists to allows this format to be modified in future versions
+		let plan = {
+			"version": 1, 
+			"timestamp": Date.now(),
+			"major": this.major.major_name, 
+			"course_bank": this.course_bank.map(course => course.course_code),
+			"transfer_bank": this.transfer_bank.map(course => course.course_code),
+			"semesters": this.semesters.map(semester => ({
+				"semester_year": semester.semester_year,
+				"semester_season": semester.semester_season,
+				"semester_courses": semester.semester_courses.map(course => course ? course.course_code : ""),
+			})),
+		};
+		console.log(plan);
+		return JSON.stringify(plan);
+	}
+	
+	// Return if the string is parsed successfully
+	string_to_plan(plan) {
+		try {
+			plan = JSON.parse(plan);
+			if (plan.version != 1) return false; // Unsupported version
+			this.major = MAJORS.find(major => major.major_name = plan.major);
+			this.course_bank = plan.course_bank.map(course_code => this.course_code_to_object(course_code));
+			this.transfer_bank = plan.transfer_bank.map(course_code => this.course_code_to_object(course_code));
+			this.semesters = plan.semesters.map(semester => new Semester(
+				semester.semester_season,
+				semester.semester_year,
+				semester.semester_courses.map(course_code => course_code == "" ? undefined : this.course_code_to_object(course_code)),
+			));
+			return true; // Successful parse
+		} catch (e) {
+			// An error occured, most likely due an incorrectly formatted string
+			console.log(e);
+			return false;
+		}
 	}
 	
 	get_course(semester, col) {
@@ -83,12 +121,13 @@ class Plan {
 	}
 
 	remove_semester(season, year) {
-		// Find the requested semester object
-		let i = this.semesters.findIndex(semester => season == semester.semester_season && year == semester.semester_year);
+	// Find the requested semester object
+	let i = this.semesters.findIndex(semester => season == semester.semester_season && year == semester.semester_year);
 
-		// Prevent removing semesters containing courses
-		if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
-		this.semesters.splice(i, 1);
+	// Prevent removing semesters containing courses
+	if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
+	this.semesters.splice(i, 1);
+	
 	}
 
 	get_longest() {
