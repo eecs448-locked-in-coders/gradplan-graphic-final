@@ -86,6 +86,11 @@ class Executive {
 
 		// Test plan
 		//this.createTestPlan();
+		document.getElementById("course_add_submit").addEventListener("click", () => {
+			
+
+
+		})
 	}
 
 	createTestPlan() {

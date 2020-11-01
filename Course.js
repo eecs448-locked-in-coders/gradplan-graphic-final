@@ -20,7 +20,7 @@ class Course {
 	return '<div class="redips-drag" data-course="' + this.course_code + '">' + this.course_code + "<br>(" + this.credit_hour + ")</div>";
   }
 }
-const COURSES = [
+COURSES = [
   new Course("EECS 101", [], ["MATH 104"], [0,0,1], 1),
   new Course("EECS 140", [], ["MATH 104"], [1,0,1], 4),
   new Course("EECS 168", [], ["MATH 104"], [1,1,1], 4),
