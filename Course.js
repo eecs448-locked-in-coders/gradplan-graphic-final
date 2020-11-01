@@ -21,7 +21,7 @@ class Course {
 		return '<div class="redips-drag" data-toggle="tooltip" title="' + this.title + '" data-course="' + this.course_code + '">' + this.course_code + "<br>(" + this.credit_hour + ")</div>";
 	}
 }
-const COURSES = [
+COURSES = [
 	new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1),
 	new Course("EECS 140", "Introd to Digital Logic Design", [], ["MATH 104"], [1,0,1], 4),
 	new Course("EECS 168", "Programming I",  [], ["MATH 104"], [1,1,1], 4),
