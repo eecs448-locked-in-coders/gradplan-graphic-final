@@ -220,12 +220,18 @@ class Executive {
 		for (let i = 0; i < this.plan.semesters.length; i++) {
 			let semester = this.plan.semesters[i];
 			let tr = document.createElement("tr");
-
+			
 			let th = document.createElement("th");
 			th.className = "redips-mark";
 			th.innerHTML = semester.semester_year + " " + semester.season_name() + "<br><span class='ch' id='ch"+semester.semester_year+"-"+semester.semester_season+"'>0 credit hours</span>";
 			tr.appendChild(th);
+			let dele= document.createElement("button");
+			dele.textContent="x";
+			dele.addEventListener('click',e=>{
+				this.plan.remove_semester(semester.semester_season, semester.semester_year);
+				this.update();
 
+			});
 			for (let j = 0; j < cols; j++) {
 				let td = document.createElement("td");
 				if (semester.semester_courses[j] != undefined) {
@@ -234,6 +240,8 @@ class Executive {
 				td.dataset["x"] = j;
 				td.dataset["y"] = i;
 				tr.appendChild(td);
+				tr.appendChild(dele);
+				
 			}
 
 			grid.appendChild(tr);

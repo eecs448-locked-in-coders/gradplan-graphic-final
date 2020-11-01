@@ -121,12 +121,13 @@ class Plan {
 	}
 
 	remove_semester(season, year) {
-		// Find the requested semester object
-		let i = this.semesters.findIndex(semester => season == semester.semester_season && year == semester.semester_year);
+	// Find the requested semester object
+	let i = this.semesters.findIndex(semester => season == semester.semester_season && year == semester.semester_year);
 
-		// Prevent removing semesters containing courses
-		if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
-		this.semesters.splice(i, 1);
+	// Prevent removing semesters containing courses
+	if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
+	this.semesters.splice(i, 1);
+	
 	}
 
 	get_longest() {
