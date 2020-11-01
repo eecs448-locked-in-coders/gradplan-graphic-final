@@ -31,7 +31,8 @@ class Executive {
 				try {
 					plan = JSON.parse(plan);
 					let date = new Date(plan.timestamp);
-					let text = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + ": " + key.substr(6);
+					// Get the date the plan was last modified in YYYY-MM-DD format, correcting for time zone
+					let text = new Date(plan.timestamp - new Date().getTimezoneOffset()*60000).toISOString().split("T")[0] + ": " + key.substr(6);
 					this.makeElement("option", "planSelect", text, key);
 				}
 				catch (e) {
@@ -52,6 +53,16 @@ class Executive {
 			this.update();
 			// Substr to remove the gpg-1-
 			document.getElementById("save-name").value = document.getElementById("planSelect").value.substr(6);
+		});
+		
+		// Delete saved plan
+		document.getElementById("delete-plan").addEventListener("click", () => {
+			let key = document.getElementById("planSelect").value;
+			if (key == "-1") return; // Do nothing if dropdown not selected
+			localStorage.removeItem(key);
+			// Remove plan from dropdown
+			document.getElementById("planSelect").remove(document.getElementById("planSelect").selectedIndex);
+			document.getElementById("planSelect").selectedIndex = 0;
 		});
 		
 		// Plan save button

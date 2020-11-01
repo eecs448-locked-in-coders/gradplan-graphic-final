@@ -93,7 +93,7 @@
 				<a id="save-button" type="button" class="btn btn-light btn-sm">Save <i class="fa fa-save"></i></a>
 			</span>
 			<!--Print button-->
-			<a href="javascript:window.print()" type="button" class="btn btn-light btn-sm">Print  <i class="fa fa-print"></i></a>
+			<a href="javascript:window.print()" type="button" class="btn btn-light btn-sm">Print <i class="fa fa-print"></i></a>
 		</span>
 	</nav>
 
@@ -178,7 +178,21 @@
 								</select>
 								<div class="input-group-append">
 									<button type="button" class="btn btn-primary" id="load-plan">Load Plan</button>
+									<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete-plan">Delete Plan</button>
 								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="confirm-delete-plan">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">Delete Plan</div>
+							<div class="modal-body">Are you sure you wish to delete the selected plan?</div>
+							<div class="modal-footer">
+								<input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancel">
+								<input type="button" class="btn btn-danger" id="delete-plan" data-dismiss="modal" value="Delete">
 							</div>
 						</div>
 					</div>
