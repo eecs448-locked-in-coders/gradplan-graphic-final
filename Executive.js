@@ -9,20 +9,14 @@ class Executive {
 		
 		// Populate options for major
 		for (let major of MAJORS) {
-			let option = document.createElement("option");
-			option.text = major.major_name;
-			option.value = major.major_name;
-			document.getElementById("majorSelect").add(option);
+			this.makeElement("option", "majorSelect", major.major_name, major.major_name);
 		}
 		
 		// Populate options for starting semester
 		let thisYear = new Date().getFullYear();
 		for (let year = thisYear; year >= thisYear-3; year--) {
 			for (let season of [FALL, SPRING]) {
-				let option = document.createElement("option");
-				option.text = "Start in " + SEASON_NAMES[season] + " " + year;
-				option.value = year + "-" + season;
-				document.getElementById("startSemesterSelect").add(option);
+				this.makeElement("option", "startSemesterSelect", "Start in " + SEASON_NAMES[season] + " " + year, year + "-" + season);
 			}
 		}
 		
@@ -37,10 +31,8 @@ class Executive {
 				try {
 					plan = JSON.parse(plan);
 					let date = new Date(plan.timestamp);
-					let option = document.createElement("option");
-					option.text = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + ": " + key.substr(6);
-					option.value = key;
-					document.getElementById("planSelect").add(option);
+					let text = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + ": " + key.substr(6);
+					this.makeElement("option", "planSelect", text, key);
 				}
 				catch (e) {
 					// Skip plans with formatting issues
@@ -51,11 +43,15 @@ class Executive {
 		
 		// Load existing plan on click
 		document.getElementById("load-plan").addEventListener("click", () => {
+			let key = document.getElementById("planSelect").value;
+			if (key == "-1") return; // Do nothing if dropdown not selected
 			// Read plan string before init. This is important when loading the autosave plan.
-			let plan_string = localStorage.getItem(document.getElementById("planSelect").value);
+			let plan_string = localStorage.getItem(key);
 			this.initPlan(); // Default plan will be overwritten if parse succeeds
 			this.plan.string_to_plan(plan_string);
 			this.update();
+			// Substr to remove the gpg-1-
+			document.getElementById("save-name").value = document.getElementById("planSelect").value.substr(6);
 		});
 		
 		// Plan save button
@@ -100,7 +96,9 @@ class Executive {
 		
 		// Adding a semester
 		document.getElementById('add-semester-btn').addEventListener('click', () => {
-			let [year, season] = document.getElementById("addSemesterSelect").value.split('-').map(Number);
+			let semester = document.getElementById("addSemesterSelect").value;
+			if (semester == "-1") return; // Do nothing if dropdown not selected
+			let [year, season] = semester.split('-').map(Number);
 			
 			// Remove semester from dropdown
 			document.getElementById("addSemesterSelect").remove(document.getElementById("addSemesterSelect").selectedIndex);
@@ -129,10 +127,7 @@ class Executive {
 		
 		// Set up adding semesters - add the summers between the automatic semesters
 		for (let tmpYear = year; tmpYear < year+4; tmpYear++) {
-			let option = document.createElement("option");
-			option.text = SEASON_NAMES[SUMMER] + " " + tmpYear;
-			option.value = tmpYear + "-" + SUMMER;
-			document.getElementById("addSemesterSelect").add(option);
+			this.makeElement("option", "addSemesterSelect", SEASON_NAMES[SUMMER] + " " + tmpYear, tmpYear + "-" + SUMMER);
 		}
 		
 		// Option to add the next few semsters
@@ -144,10 +139,7 @@ class Executive {
 				season -= 3;
 				year++;
 			}
-			let option = document.createElement("option");
-			option.text = SEASON_NAMES[season] + " " + year;
-			option.value = year + "-" + season;
-			document.getElementById("addSemesterSelect").add(option);
+			this.makeElement("option", "addSemesterSelect", SEASON_NAMES[season] + " " + year, year + "-" + season);
 		}
 	}
 	
@@ -252,10 +244,7 @@ class Executive {
 	
 	add_error(msg) {
 		for (let id of ["notifications", "print-notifications"]) {
-			let ul = document.getElementById(id);
-			let li = document.createElement("li");
-			li.appendChild(document.createTextNode(msg));
-			ul.appendChild(li);
+			this.makeElement("li", id, msg);
 		}
 	}
 	
@@ -266,6 +255,15 @@ class Executive {
 	
 	loadPlan(name) {
 		this.plan.string_to_plan(localStorage.getItem("gpg-1-" + name));
+	}
+	
+	// Helper function to reduce repetitiveness of code. All parameters except type optional.
+	makeElement(type, parentId, text, value) {
+		let el = document.createElement(type);
+		if (value) el.value = value;
+		if (text) el.appendChild(document.createTextNode(text));
+		if (parentId) document.getElementById(parentId).appendChild(el);
+		return el;
 	}
 	
 	createTestPlan() {
