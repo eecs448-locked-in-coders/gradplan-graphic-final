@@ -8,20 +8,21 @@ class Course {
 										Remember that winter doesn't exist, its just extended spring
 		credit_hour = int
 	*/
-	constructor(course_code, title, prereq, coreq, course_semester, credit_hour) {
+	constructor(course_code, title, prereq, coreq, course_semester, credit_hour, is_custom = false) {
 		this.course_code = course_code;
 		this.title = title;
 		this.prereq = prereq;
 		this.coreq = coreq;
 		this.course_semester = course_semester;
 		this.credit_hour = credit_hour;
+		this.is_custom = is_custom; // Used when saving plans to strings
 	}
 	
 	to_html() {
 		return '<div class="redips-drag" data-toggle="tooltip" title="' + this.title + '" data-course="' + this.course_code + '">' + this.course_code + "<br>(" + this.credit_hour + ")</div>";
 	}
 }
-const COURSES = [
+COURSES = [
 	new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1),
 	new Course("EECS 140", "Introd to Digital Logic Design", [], ["MATH 104"], [1,0,1], 4),
 	new Course("EECS 168", "Programming I",  [], ["MATH 104"], [1,1,1], 4),

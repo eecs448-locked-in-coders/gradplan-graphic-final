@@ -91,9 +91,11 @@
 				<input type="text" id="save-name" class="form-control form-control-sm" placeholder="Plan name...">
 				<!--Save button-->
 				<a id="save-button" type="button" class="btn btn-light btn-sm">Save <i class="fa fa-save"></i></a>
+				<!--Export button-->
+				<a id="export-button" type="button" class="btn btn-light btn-sm">Export <i class="fa fa-file-export"></i></a>
 			</span>
 			<!--Print button-->
-			<a href="javascript:window.print()" type="button" class="btn btn-light btn-sm">Print  <i class="fa fa-print"></i></a>
+			<a href="javascript:window.print()" type="button" class="btn btn-light btn-sm">Print <i class="fa fa-print"></i></a>
 		</span>
 	</nav>
 
@@ -115,9 +117,14 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<!--Content-->
 	<div class="container">
+		<div class="alert alert-success mt-4" id="plan-exported" style="display:none">
+			<button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>
+			Plan data copied to clipboard. You can share this with others or reimport it later.
+		</div>
+	
 		<div id="redips-drag" class="row">
 			<div class="col-lg-4 no-print">
 				<div class="my-4">
@@ -126,11 +133,33 @@
 						<tr><td></td></tr>
 					</table>
 				</div>
+				
 				<div class="mb-4">
 					<h3>Transfer Credits</h3>
 					<table id="transfer-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 250px; min-height: 60px;">
 						<tr><td></td></tr>
 					</table>
+				</div>
+				
+				<div class="mb-4" id="add_extra_course_box" style="display:none">
+					<h3>Add Custom Course</h3>
+					<div class="row mr-2">
+						<label for="course_code" class="col-sm-5 col-form-label">Course Code:</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control" id="course_code">
+						</div>
+					</div>
+					<div class="row mr-2">
+						<label for="credit_hours" class="col-sm-5 col-form-label">Credit Hours:</label>
+						<div class="col-sm-7">
+							<div class="input-group">
+								<input type="number" class="form-control" id="credit_hours" name="credit_hours" min="0">
+								<div class="input-group-append">
+									<button type="submit" class="btn btn-primary" id="course_add_submit">Add</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<div class="mb-4"> <!--Errors and notifications-->
@@ -164,21 +193,43 @@
 						<div id="welcome" class="border p-3">
 							<h1>Welcome!</h1>
 							<h4>Select your major and first semester at KU semester to begin.</h4>
-							<div class="input-group mb-2">
+							<div class="input-group">
 								<select id="majorSelect" class="form-control"></select>
 								<select id="startSemesterSelect" class="form-control"></select>
 								<div class="input-group-append">
 									<button type="button" class="btn btn-primary" id="done">Start Planning</button>
 								</div>
 							</div>
-							<h4>Or load an existing plan below:</h4>
-							<div class="input-group">
+							<hr class="my-4">
+							<h5>Or load a plan saved in your browser:</h5>
+							<div class="input-group mb-2">
 								<select id="planSelect" class="form-control">
 									<option disabled selected value="-1">Choose a plan...</option>
 								</select>
 								<div class="input-group-append">
 									<button type="button" class="btn btn-primary" id="load-plan">Load Plan</button>
+									<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete-plan">Delete Plan</button>
 								</div>
+							</div>
+							<h5>Or import a previously exported plan:</h5>
+							<div class="input-group">
+								<textarea class="form-control" id="plan-to-import" placeholder='{"version":1,"timestamp":1604269786608,"major":"Computer Science","course_bank":["EECS 101","EECS 140"],"transfer_bank":[],"semesters":[{"semester_year":2020,"semester_season":2,"semester_courses":["EECS 168"]}]}'></textarea>
+								<div class="input-group-append">
+									<button type="button" class="btn btn-primary" id="import-plan">Import</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="confirm-delete-plan">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">Delete Plan</div>
+							<div class="modal-body">Are you sure you wish to delete the selected plan?</div>
+							<div class="modal-footer">
+								<input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancel">
+								<input type="button" class="btn btn-danger" id="delete-plan" data-dismiss="modal" value="Delete">
 							</div>
 						</div>
 					</div>
