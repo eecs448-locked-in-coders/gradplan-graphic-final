@@ -116,7 +116,7 @@ class Executive {
 	initPlan() {
 		let [year, season] = document.getElementById("startSemesterSelect").value.split('-').map(Number);
 		let major = document.getElementById("majorSelect").value;
-
+		
 		document.getElementById("welcome").style.display = "none";
 		document.getElementById("add-semester").style.display = "";
 		document.getElementById("save-container").style.display = "";
