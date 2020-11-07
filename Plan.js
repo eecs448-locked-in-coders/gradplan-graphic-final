@@ -26,7 +26,7 @@ class Plan {
 		}
 
 	}
-	
+
 	get_course(semester, col) {
 		return this.semesters[semester].semester_courses[col];
 	}
@@ -44,7 +44,7 @@ class Plan {
 	add_course(semester, col, course) {
 		this.semesters[semester].add_course(col, course);
 	}
-	
+
 	remove_course(course) {
 		//check course and transfer banks
 		for (let bank of [this.course_bank, this.transfer_bank]) {
@@ -60,7 +60,7 @@ class Plan {
 			semester.remove_course(course);
 		}
 	}
-	
+
 	course_code_to_object(course_code) {
 		return COURSES.find(course => course.course_code == course_code);
 	}
@@ -83,12 +83,24 @@ class Plan {
 	}
 
 	remove_semester(season, year) {
+		let x = null;
 		// Find the requested semester object
-		let i = this.semesters.findIndex(semester => season == semester.semester_season && year == semester.semester_year);
-
+		for(let i=0; i<this.semesters.length; i++){
+			if((season == this.semesters[i].semester_season) && (year == this.semesters[i].semester_year)){
+				x = i;
+				for(let j=0; j<this.semesters[i].semester_courses.length; j++){
+					if (this.semesters[i].semester_courses[j].course != undefined)){
+						return;
+					}
+				}
+			}
+		}
 		// Prevent removing semesters containing courses
-		if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
-		this.semesters.splice(i, 1);
+
+		if(x === null){
+			return;
+		}
+		this.semesters.splice(x, 1);
 	}
 
 	get_longest() {
@@ -106,7 +118,7 @@ class Plan {
 	*/
 	generate_arrows() {
 		var arr_arrows = [];
-		
+
 		this.semesters.forEach((semester, y) => {
 			semester.semester_courses.forEach((course, x) => {
 				if (course != undefined) {
@@ -121,7 +133,7 @@ class Plan {
 				}
 			});
 		});
-		
+
 		return arr_arrows;
 	}
 }
