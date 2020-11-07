@@ -148,6 +148,7 @@ ul {
 	.students_info input {
 		padding: 0;
 		border: 0;
+		font-weight: bold;
 	}
 
 	header {
