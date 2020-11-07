@@ -29,8 +29,16 @@ const COLORS = ["#2196F3" /*blue*/, "#4CAF50" /*green*/, "#9C27B0" /*purple*/,
 const ARROWS_FOR_COLOR = 2; // Minimum number of arrows leaving a course before they will be given unique colors
 const DEFAULT_COLOR = "black"; // Color of arrows that don't meet the minimum
 
+/**
+* @class
+* @description This class is used to render arrows into non-overlapping channels with distinctive colors
+**/
 class ArrowRender {
-	constructor(rows, cols) {
+	/**
+	* @pre The #arrows element exists in the DOM
+	* @post A blank 0x0 SVG element is created inside arrows, to be resized and drawn in later
+	**/
+	constructor() {
 		this.draw = SVG().addTo(document.getElementById("arrows"));
 
 		// Default to empty SVG
@@ -39,6 +47,11 @@ class ArrowRender {
 		this.resize();
 	}
 
+	/**
+	* @param rows {number} The number of rows in the course grid
+	* @param cols {number} The number of columns in the course grid (not counting the column with the semester names)
+	* @post The svg is resized to be the same size as the #course-grid table
+	**/
 	resize(rows, cols) {
 		this.rows = rows;
 		this.cols = cols;
@@ -48,14 +61,17 @@ class ArrowRender {
 		document.querySelector("#arrows svg").style.marginBottom = -document.getElementById("course-grid").offsetHeight;
 	}
 
-	// @pre: resize has already been called with correct size
+	/**
+	* @pre Resize has already been called with correct rows/cols
+	* @param arrows {Arrow[]} An array of Arrow objects to render
+	* @post The svg element on the page has all the arrow lines rendered into it
+	**/
 	renderArrows(arrows) {
 		this.draw.clear(); // Remove any existing arrows
-		this.arrows = arrows;
 		this.initChannels();
-		let courseColors = this.findColors();
+		let courseColors = this.findColors(arrows);
 
-		for (let arrow of this.arrows) {
+		for (let arrow of arrows) {
 			let path = [];
 
 			if (arrow.fromSide) { // corequisite
@@ -137,8 +153,14 @@ class ArrowRender {
 		}
 	}
 
-	// Return the y coordinate (pixel) to draw the channel at
-	// startX and endX can be in either order
+	/**
+	* @brief This method is used to find an unoccupied horizontal channel to draw a segment of an arrow in
+	* @pre horizChannels is initialized
+	* @param startX {number} The X coordinate of one end of the channel set
+	* @param endX {number} The X coordinate of the other end of the channel set
+	* @param y {number} The Y coordinate of the channel set
+	* @return {[number, number]} The X pixel offset of the starting position and the Y pixel of the specific channel within the channel set respectively
+	**/
 	findHorizChannel(startX, endX, y) {
 		// Find an available channel (all segments along length of line available)
 		var chan;
@@ -167,6 +189,14 @@ class ArrowRender {
 		return [relChan * HORIZ_CHANNEL_SIZE + y*TD_HEIGHT, relChan * ARROW_SIZE*2.5];
 	}
 
+	/**
+	* @brief This method is just like findHorizChannel, but for vertical channels
+	* @pre vertChannels is initialized
+	* @param x {number} The X coordinate of the channel set
+	* @param startY {number} The Y coordinate of one end of the channel set
+	* @param endY {number} The Y coordinate of the other end of the channel set
+	* @return {[number, number]} The X pixel of the specific channel within the channel set and the Y pixel offset of the starting position respectively
+	**/
 	findVertChannel(x, startY, endY) {
 		// Find an available channel (all segments along length of line available)
 		var chan;
@@ -195,6 +225,14 @@ class ArrowRender {
 		return [relChan * VERT_CHANNEL_SIZE + x*TD_WIDTH, relChan * ARROW_SIZE*2.5];
 	}
 
+	/**
+	* @brief This method generates the coordinates for drawing an arrowhead, but does not actually draw it onto the canvas
+	* @param x {number} The X pixel of the arrowhead
+	* @param y {number} The Y pixel of the arrowhead
+	* @param dir {number} The direction for the arrow head to point, one of the constants UP, DOWN, LEFT, RIGHT
+	* @param length {number} The X and Y length of the diagonal segments of the arrowhead, defaulting to ARROW_SIZE
+	* @return {number[][]} An array of [x,y] coordinates representing the arrowhead to draw
+	**/
 	arrowHead(x, y, dir = DOWN, length = ARROW_SIZE) {
 		if (dir == UP)    return [[x, y], [x-length, y+length], [x, y], [x+length, y+length], [x, y]];
 		if (dir == DOWN)  return [[x, y], [x-length, y-length], [x, y], [x+length, y-length], [x, y]];
@@ -202,6 +240,10 @@ class ArrowRender {
 		if (dir == RIGHT) return [[x, y], [x-length, y-length], [x, y], [x-length, y+length], [x, y]];
 	}
 
+	/**
+	* @pre rows and cols have been assigned the correct values from a call to resize
+	* @post The vertChannels and horizChannels arrays are initialized to all be unoccupied
+	**/
 	initChannels() {
 		// Initialize all channels as unused (false)
 		// Note there is one more set of channels than the number of course rows/cols as the channels go between and around them
@@ -225,7 +267,12 @@ class ArrowRender {
 		}
 	}
 
-	findColors() {
+	/**
+	* @pre rows and cols have been assigned the correct values from a call to resize
+	* @param arrows {Arrow[]} The array of arrows that will be rendered
+	* @return {string[][]} An array of colors to use for each course indexed by the row and column of the starting coruse
+	**/
+	findColors(arrows) {
 		// Find which starting points will have the most arrows coming out of them
 		let courseCounts = [];
 		for (var row = 0; row < this.rows; row++) {
@@ -234,7 +281,7 @@ class ArrowRender {
 				courseCounts[row][col] = 0;
 			}
 		}
-		for (let arrow of this.arrows) {
+		for (let arrow of arrows) {
 			courseCounts[arrow.yIn][arrow.xIn]++;
 		}
 
@@ -259,8 +306,19 @@ class ArrowRender {
 	}
 }
 
+/**
+* @class
+* @description This class represents information about a single arrow which will need to be drawn on the course grid
+**/
 class Arrow {
-	// In = course arrow starts at; Out = course arrow ends at; fromSide = if arrows should be in/out the side of courses (corequisite)
+	/**
+	* @param xIn {number} The X coordinate of the starting course
+	* @param yIn {number} The Y coordinate of the starting course
+	* @param xOut {number} The X coordinate of the ending course
+	* @param yOut {number} The Y coordinate of the ending course
+	* @param fromSide {boolean} Whether the arrow should be drawn out the bottom (prerequisite) or side (corequisite)
+	* @post All parameters are saved as member variables
+	**/
 	constructor(xIn, yIn, xOut, yOut, fromSide) {
 		this.xIn = xIn;
 		this.yIn = yIn;
@@ -269,25 +327,35 @@ class Arrow {
 		this.fromSide = fromSide;
 	}
 
-	// Pixels of start point (out of the bottom or right of course)
+	/**
+	* @param offset {number} An amount to shift the starting point by from its default location (default 0)
+	* @return {[number,number]} The X,Y pixel coordinates the starting point of the arrow should be drawn (out of the bottom or right side of the start course)
+	**/
 	startPoint(offset = 0) {
 		if (this.fromSide) return [(this.xIn+.5)*TD_WIDTH + COURSE_WIDTH/2, (this.yIn+.5)*TD_HEIGHT+offset];
 		else return [(this.xIn+.5)*TD_WIDTH+offset, (this.yIn+.5)*TD_HEIGHT + COURSE_HEIGHT/2];
 	}
 
-	// Pixels of end point (into the top or left of course)
+	/**
+	* @param offset {number} An amount to shift the ending point by from its default location (default 0)
+	* @return {[number,number]} The X,Y pixel coordinates the ending point of the arrow should be drawn (into the top or left side of the end course)
+	**/
 	endPoint(offset = 0) {
 		if (this.fromSide) return [(this.xOut+.5)*TD_WIDTH - COURSE_WIDTH/2, (this.yOut+.5)*TD_HEIGHT+offset];
 		else return [(this.xOut+.5)*TD_WIDTH+offset, (this.yOut+.5)*TD_HEIGHT - COURSE_HEIGHT/2];
 	}
 
-	// Grid coordinates of junction point between first and second channels (for !fromSide, diagonally down-left or down-right from starting course)
+	/**
+	* @return {[number,number]} The X,Y grid coordinates of the junction point between the first and second channels the arrow occupies (if !fromSide, diagonally down-left or down-right from starting course)
+	**/
 	node1() {
 		if (this.fromSide) return [this.xIn+1, (this.yOut > this.yIn) ? this.yIn+1 : this.yIn];
 		else return [(this.xOut > this.xIn) ? this.xIn+1 : this.xIn, this.yIn+1];
 	}
 
-	// Grid coordinates of the junction point between the second and third channels (for !fromSide, below node1)
+	/**
+	* @return {[number,number]} The X,Y grid coordinates of the junction point between the second and third channels the arrow occupies (if !fromSide, below node1)
+	**/
 	node2() {
 		if (this.fromSide) return [this.xOut, (this.yOut > this.yIn) ? this.yIn+1 : this.yIn];
 		else return [(this.xOut > this.xIn) ? this.xIn+1 : this.xIn, this.yOut];
@@ -295,17 +363,15 @@ class Arrow {
 }
 
 /*
-	Line positioning logic:
-	 - "Channels" exist in between the courses
+	Line rendering details:
+	 - "Channels" exist in between the courses, stored as two 3D arrays of booleans (x, y, and which of the 5 channels; one array for vertical and one for horizontal)
 	 - Each channel is the length/width of a single course, i.e. not the full size of the chart
-	 - There is a fixed number of channels available (5)
-	 - When drawing a line, the middle channel is used if available, if not it works its way outward
+	 - There is a fixed number of channels available - 5 vertical and 7 horizontal currently
+	 - When drawing a line, outer channels are used first, leaving the middle channel for use by directly adjacent courses (a special case)
 	 - Prerequisite lines go out of the bottom of a box, then left/right to the nearest vertical channel in the direction of the class below, then down all the way, then over to the class
 	 - Corequisite lines are the same logic transposed (swap all x and y - out of the right side and into the left side of courses)
 	 - As the lines are placed booleans are set to indicate which channels are in use so future lines don't draw on top of them
-	 - Lines could be made different colors to make them easier to tell apart
-	 - Channels are stored as two 3D arrays of booleans (x, y, and which of the 5 channels; one array for vertical and one for horizontal)
-	 - Lines stay within the same channel when moving along horizontally or vertically - looks for a fully open one (findChannel function, takes start and end/dir/length)
-	 - Could add 45 degree diagonal lines from starting/ending points to entering channels and rounding the nodes between channels
-	 - If I wanted to allow shared lines for a course (like colored lines in draw.io), the 3D arrays would store which course/node the line is coming from instead of booleans)
+	 - Lines coming out of courses that are the prerequisite for more than one course have different colors to make them more distictive
+	 - Lines stay within the same channel when moving along horizontally or vertically - it looks for a fully open one (findChannel function, takes start and end/dir/length)
+	 - Future idea: To allow overlapping lines when they start at the same source, the 3D arrays would store which course/node the line is coming from instead of booleans
 */

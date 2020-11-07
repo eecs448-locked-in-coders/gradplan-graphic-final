@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -41,9 +41,9 @@
 			<div class="col-sm-4 text-right">
 				<!--Student info-->
 				<div class="d-inline-block text-left">
-					<span class="students_info">Jayhawk Jayhawk</span><br>
-					<span class="students_info">Major:</span> Computer Science<br>
-					<span class="students_info">Student ID:</span> 9999999
+					<span class="students_info"><input type="text" placeholder="Jayhawk Jayhawk" size=20></span><br>
+					<span class="students_info" id="showMajor">Major:</span><br>
+					<span class="students_info">Student ID: <input type="text" size=5 placeholder="9999999"></span>
 				</div>
 				<img src="ku_jayhawk_2.jpg" class="profile_picture align-top no-print">
 			</div>
@@ -70,24 +70,19 @@
 				<li class="nav-item">
 					<a class="nav-link" href="https://my.ku.edu/uPortal/">myKU</a>
 				</li>
-				<!--
-				<li class="nav-item">
-			  		<a class="nav-link" href="members.html">Members</a>
-				</li>
-				-->
 		  	</ul>
-
-			<!--
-			<div class="d-flex justify-content-center ml-3">
-				<div class="searchbar">
-			  		<input class="search_input" type="text" name="" placeholder="Search...">
-			  		<a href="#" class="search_icon"><i class="fas fa-search"></i></a>
-				</div>
-		  	</div>
-			-->
 		</div>
-		<!--Print button-->
-		<a href="javascript:window.print()" type="button" class="btn btn-light btn-sm float-right">Print  <i class="fa fa-print"></i></a>
+		<span class="float-right">
+			<span id="save-container" style="display: none">
+				<input type="text" id="save-name" class="form-control form-control-sm" placeholder="Plan name...">
+				<!--Save button-->
+				<a id="save-button" type="button" class="btn btn-light btn-sm">Save <i class="fa fa-save"></i></a>
+				<!--Export button-->
+				<a id="export-button" type="button" class="btn btn-light btn-sm">Export <i class="fa fa-file-export"></i></a>
+			</span>
+			<!--Print button-->
+			<a href="javascript:window.print()" type="button" class="btn btn-light btn-sm">Print <i class="fa fa-print"></i></a>
+		</span>
 	</nav>
 
 	<!--Printing only content (reformatted notifications and other courses)-->
@@ -108,9 +103,14 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<!--Content-->
 	<div class="container">
+		<div class="alert alert-success mt-4" id="plan-exported" style="display:none">
+			<button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>
+			Plan data copied to clipboard. You can share this with others or reimport it later.
+		</div>
+	
 		<div id="redips-drag" class="row">
 			<div class="col-lg-4 no-print">
 				<div class="my-4">
@@ -119,11 +119,33 @@
 						<tr><td></td></tr>
 					</table>
 				</div>
+				
 				<div class="mb-4">
 					<h3>Transfer Credits</h3>
 					<table id="transfer-bank" class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border" style="min-width: 250px; min-height: 60px;">
 						<tr><td></td></tr>
 					</table>
+				</div>
+				
+				<div class="mb-4" id="add_extra_course_box" style="display:none">
+					<h3>Add Custom Course</h3>
+					<div class="row mr-2">
+						<label for="course_code" class="col-sm-5 col-form-label">Course Code:</label>
+						<div class="col-sm-7">
+							<input type="text" class="form-control" id="course_code">
+						</div>
+					</div>
+					<div class="row mr-2">
+						<label for="credit_hours" class="col-sm-5 col-form-label">Credit Hours:</label>
+						<div class="col-sm-7">
+							<div class="input-group">
+								<input type="number" class="form-control" id="credit_hours" name="credit_hours" min="0">
+								<div class="input-group-append">
+									<button type="submit" class="btn btn-primary" id="course_add_submit">Add</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<div class="mb-4"> <!--Errors and notifications-->
@@ -132,21 +154,6 @@
 						<ul id="notifications"></ul>
 					</div>
 				</div>
-
-				<!--
-				<div class="mb-4">
-					<h3>Course information</h3>
-					<div class="overflow-auto p-3 mb-3 mb-md-0 mr-md-3 bg-light border scrollable_box roundBorders">
-						<p id="course_info">This course is an introduction to software engineering, 
-								and it covers the systematic development of software products. It outlines the scope of software engineering,
-							 	including life-cycle models, software process, teams, tools, testing, planning, and estimating. It concentrates 
-								on requirements, analysis, design, implementation, and maintenance of software products. The laboratory covers CASE tools,
-							  	configuration control tools, UML diagrams, integrated development environments, and project specific components. 
-							  	Prerequisite: EECS 268 and upper-level EECS eligibility. LEC.</p>
-					</div>
-				</div>
-				-->
-
 			</div>
 
 			<div class="col-lg-8 mt-4">
@@ -164,6 +171,37 @@
 									<button type="button" class="btn btn-primary" id="done">Start Planning</button>
 								</div>
 							</div>
+							<hr class="my-4">
+							<h5>Or load a plan saved in your browser:</h5>
+							<div class="input-group mb-2">
+								<select id="planSelect" class="form-control">
+									<option disabled selected value="-1">Choose a plan...</option>
+								</select>
+								<div class="input-group-append">
+									<button type="button" class="btn btn-primary" id="load-plan">Load Plan</button>
+									<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirm-delete-plan">Delete Plan</button>
+								</div>
+							</div>
+							<h5>Or import a previously exported plan:</h5>
+							<div class="input-group">
+								<textarea class="form-control" id="plan-to-import" placeholder='{"version":1,"timestamp":1604269786608,"major":"Computer Science","course_bank":["EECS 101","EECS 140"],"transfer_bank":[],"semesters":[{"semester_year":2020,"semester_season":2,"semester_courses":["EECS 168"]}]}'></textarea>
+								<div class="input-group-append">
+									<button type="button" class="btn btn-primary" id="import-plan">Import</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade" id="confirm-delete-plan">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">Delete Plan</div>
+							<div class="modal-body">Are you sure you wish to delete the selected plan?</div>
+							<div class="modal-footer">
+								<input type="button" class="btn btn-secondary" data-dismiss="modal" value="Cancel">
+								<input type="button" class="btn btn-danger" id="delete-plan" data-dismiss="modal" value="Delete">
+							</div>
 						</div>
 					</div>
 				</div>
@@ -172,7 +210,7 @@
 					<div class="col-sm-6 offset-sm-3 border p-3 bg-light">
 						<div class="input-group">
 							<select id="addSemesterSelect" class="form-control">
-								<option disabled selected>Choose a semester...</option>
+								<option disabled selected value="-1">Choose a semester...</option>
 							</select>
 							<div class="input-group-append">
 								<button type="button" class="btn btn-primary" id="add-semester-btn">Add semester</button>
@@ -209,7 +247,8 @@
 	<footer class="pt-2 my-2 border-top text-center">
 		Copyright &copy; 2020: Deepak Kumar, Drake Prebyl, James Kraijcek, Rafael Alaras, Rodridgo Figueroa Justiniano.
 		<a href="https://github.com/eecs448-locked-in-coders/gradplan-graphic" class="ml-2">GitHub Repository</a>
-		<a href="documentation/index.html"  class="ml-2">Documentation</a>
+		<a href="documentation/index.html" class="ml-2">Documentation</a>
+		<a href="tests.html" class="ml-2">Test Suite</a>
 	</footer>
 </body>
 </html>

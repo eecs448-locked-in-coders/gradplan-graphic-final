@@ -15,7 +15,7 @@ class Plan {
 		this.semesters = [];
 		this.course_bank = [];
 		this.transfer_bank = [];
-		this.fill_course_bank();
+		this.fill_course_bank_w_req_classes();
 		for (var i = 0; i < 4; i++) {
 			//Makes 8 semester of fall/spring, flips between fall and spring
 			//ONLY WOKRS IF YOU START AT FALL/SPRING
@@ -24,7 +24,58 @@ class Plan {
 			this.semesters.push(new Semester(2-start_season, start_year, []));
 			if (start_season == SPRING) start_year++;
 		}
+	}
 
+	plan_to_string() {
+		// Version exists to allows this format to be modified in future versions
+		let plan = {
+			"version": 1,
+			"timestamp": Date.now(),
+			"major": this.major.major_name,
+			"course_bank": this.course_bank.map(course => course.course_code),
+			"transfer_bank": this.transfer_bank.map(course => course.course_code),
+			"semesters": this.semesters.map(semester => ({
+				"semester_year": semester.semester_year,
+				"semester_season": semester.semester_season,
+				"semester_courses": semester.semester_courses.map(course => {
+					if (course == undefined) return "";
+					else if (course.is_custom) return [course.course_code, course.credit_hour];
+					else return course.course_code;
+				}),
+			})),
+		};
+		console.log(plan);
+		return JSON.stringify(plan);
+	}
+
+	// Return if the string is parsed successfully
+	string_to_plan(plan) {
+		try {
+			plan = JSON.parse(plan);
+			if (plan.version != 1) return false; // Unsupported version
+			this.major = MAJORS.find(major => major.major_name = plan.major);
+			this.course_bank = plan.course_bank.map(course_code => this.course_code_to_object(course_code));
+			this.transfer_bank = plan.transfer_bank.map(course_code => this.course_code_to_object(course_code));
+			this.semesters = plan.semesters.map(semester => new Semester(
+				semester.semester_season,
+				semester.semester_year,
+				semester.semester_courses.map(course_code => {
+					if (course_code == "") return undefined;
+					else if (Array.isArray(course_code)) { // custom course - recreate it
+						console.log(course_code);
+						let course = new Course(course_code[0], "Custom course", [], [], [1,1,1], course_code[1], true);
+						COURSES.push(course);
+						return course;
+					}
+					else return this.course_code_to_object(course_code)
+				}),
+			));
+			return true; // Successful parse
+		} catch (e) {
+			// An error occured, most likely due an incorrectly formatted string
+			console.log(e);
+			return false;
+		}
 	}
 
 	get_course(semester, col) {
@@ -65,7 +116,7 @@ class Plan {
 		return COURSES.find(course => course.course_code == course_code);
 	}
 
-	fill_course_bank() {
+	fill_course_bank_w_req_classes() {
 		this.course_bank = this.major.req_class.map(req_class => this.course_code_to_object(req_class));
 	}
 
@@ -83,24 +134,13 @@ class Plan {
 	}
 
 	remove_semester(season, year) {
-		let x = null;
-		// Find the requested semester object
-		for(let i=0; i<this.semesters.length; i++){
-			if((season == this.semesters[i].semester_season) && (year == this.semesters[i].semester_year)){
-				x = i;
-				for(let j=0; j<this.semesters[i].semester_courses.length; j++){
-					if (this.semesters[i].semester_courses[j].course != undefined)){
-						return;
-					}
-				}
-			}
-		}
-		// Prevent removing semesters containing courses
+	// Find the requested semester object
+	let i = this.semesters.findIndex(semester => season == semester.semester_season && year == semester.semester_year);
 
-		if(x === null){
-			return;
-		}
-		this.semesters.splice(x, 1);
+	// Prevent removing semesters containing courses
+	if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
+	this.semesters.splice(i, 1);
+
 	}
 
 	get_longest() {

@@ -36,6 +36,18 @@ header {
 	font-weight: bold;
 }
 
+.students_info input {
+	padding: 0;
+	border: 1px solid #ced4da;
+}
+
+#save-name {
+	display: inline;
+	width: 16em;
+	position: relative;
+	top: 1px;
+}
+
 .scrollable_box {
 	max-width: 800px;
 	max-height: 200px;
@@ -50,6 +62,7 @@ ul {
 }
 #course-grid th {
 	padding-left: 10px;
+	position: relative; /*for positioning delete buttons*/
 }
 #course-grid th, #course-grid td {
 	width: 120px;
@@ -71,6 +84,12 @@ ul {
 .ch.error { /*excess hours*/
 	color: red;
 	font-weight: bold;
+}
+
+.delete-semester {
+	position: absolute;
+	top: 28px;
+	left: -30px;
 }
 
 #transfer-bank tr, #course-bank tr {
@@ -118,23 +137,24 @@ ul {
         margin: 0.5cm;
     }
 
-    header nav, footer {
+    header nav, footer, .delete-semester, .no-print {
         display: none;
 	}
 
-
 	.KU_image {
 		filter: grayscale(100%) brightness(0%);
+	}
+	
+	.students_info input {
+		padding: 0;
+		border: 0;
+		font-weight: bold;
 	}
 
 	header {
 		background: white;
 		border-bottom: solid black;
 	}
-
-    .no-print {
-        display: none;
-    }
 
     .profile_picture {
         max-height: 5cm;
@@ -172,51 +192,4 @@ ul {
 
 	.bg-light { background: white !important; }
 	.border { border-color: black !important; }
-}
-
-
-/* Unused search bar
-
-.searchbar {
-	margin-bottom: auto;
-	margin-top: auto;
-	height: 30px;
-	background-color: white;
-	border-radius: 20px;
-	padding: 5px;
-}
-
-.search_input {
-	color: black;
-	border: 0;
-	outline: 0;
-	background: none;
-	width: 0;
-	caret-color:transparent;
-	line-height: 20px;
-	transition: width 0.4s linear;
-}
-
-.searchbar:hover > .search_input {
-	padding: 0 10px;
-	width: 450px;
-	caret-color: rgb(0, 81, 186);
-	transition: width 0.4s linear;
-}
-
-.searchbar:hover > .search_icon {
-	background: white;
-	color:  rgb(0, 81, 186);
-}
-
-.search_icon {
-	height: 20px;
-	width: 20px;
-	float: right;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border-radius: 50%;
-	color: rgb(0, 81, 186);
-	text-decoration: none;
 }
