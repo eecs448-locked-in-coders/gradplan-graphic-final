@@ -1,6 +1,13 @@
 const BANK_COLS = 3;
 
+/**
+* @class
+* @description Manages user interaction, updating the plan and elements on the page as required
+**/
 class Executive {
+	/**
+	* @post Dropdowns are populated and event listeners are set up on elements of the page the user can interact with
+	**/
 	constructor() {
 		this.arrowRender = new ArrowRender();
 		
@@ -162,11 +169,14 @@ class Executive {
 		//this.createTestPlan();
 	}
 	
-	// Hide welcome and start plan based on dropdowns
+	/**
+	* @pre The values of the starting semester and major dropdowns are valid
+	* @post The welcome screen is hidden and an 8-semester plan is initialized with all courses for the selected major in the course bank
+	**/
 	initPlan() {
 		let [year, season] = document.getElementById("startSemesterSelect").value.split('-').map(Number);
 		let major = document.getElementById("majorSelect").value;
-		document.getElementById("showMajor").innerHTML= "Major: " + major;
+		document.getElementById("showMajor").innerHTML = "Major: " + major;
 
 		document.getElementById("welcome").style.display = "none";
 		document.getElementById("add-semester").style.display = "";
@@ -195,7 +205,9 @@ class Executive {
 		}
 	}
 	
-	// Main function for rerendering the screen and updating errors
+	/**
+	* @post All aspects of the plan are updated: Course locations, arrows, credit hours per semester, errors/warnings, etc.
+	**/
 	update() {
 		// Update course bank and transfer credits
 		this.renderBank("course-bank", this.plan.course_bank);
@@ -241,6 +253,11 @@ class Executive {
 		this.savePlan("autosave");
 	}
 
+	/**
+	* @param html_id {string} The id of the table element to render the courses to
+	* @param arrCourse {Course[]} An array of course objects to render to the table
+	* @post The table referred to in html_id is cleared, resized, and populated with drag-and-droppable course elements
+	**/
 	renderBank(html_id, arrCourse) {
 		let grid = document.getElementById(html_id);
 		while (grid.firstChild) grid.removeChild(grid.firstChild); // Clear bank
@@ -262,8 +279,9 @@ class Executive {
 		}
 	}
 
-	// Redrawing the course grid should only be needed after drastic changes (e.g. removing a semester)
-	// The rest of the time, the users takes care of these steps by moving courses around
+	/**
+	* @post The #course-grid table is updated with rows for each semester in this.plan containing drag-and-droppable courses in the correct locations, credit hours per semester, delete buttons, etc.
+	**/
 	renderCourseGrid() {
 		let grid = document.getElementById("course-grid");
 		while (grid.firstChild) grid.removeChild(grid.firstChild); // Clear grid
@@ -308,22 +326,40 @@ class Executive {
 		this.arrowRender.resize(this.plan.semesters.length, cols);
 	}
 	
+	/**
+	* @param msg {string} The error message about the plan to display to the user
+	* @post The message is added to the elements on the page and print layoutt
+	**/
 	add_error(msg) {
 		for (let id of ["notifications", "print-notifications"]) {
 			this.makeElement("li", id, msg);
 		}
 	}
 	
+	/**
+	* @param name {string} The name the saved plan will have
+	* @post The current this.plan is saved to the browser's local storage with a name prefix specific to this applicaion
+	**/
 	savePlan(name) {
 		// 1 is for version number
 		localStorage.setItem("gpg-1-" + name, this.plan.plan_to_string());
 	}
 	
+	/**
+	* @param name {string} The name of the plan saved in the user's browser (must exist)
+	* @post The plan matching the name is retrieved from the browser's local storage and used to populate this.plan
+	**/
 	loadPlan(name) {
 		this.plan.string_to_plan(localStorage.getItem("gpg-1-" + name));
 	}
 	
-	// Helper function to reduce repetitiveness of code. All parameters except type optional.
+	/**
+	* @brief This is a helper method used to reduce the repetitiveness of this code as creating elements is done in several places
+	* @param type {string} The type of the DOM element to create
+	* @param parentId {string} The HTML id of the existing DOM element to append the new element to (optional)
+	* @param text {string} The contents of the element (optional)
+	* @param value {string} The value of the element (optional)
+	**/
 	makeElement(type, parentId, text, value) {
 		let el = document.createElement(type);
 		if (value) el.value = value;
@@ -332,6 +368,9 @@ class Executive {
 		return el;
 	}
 	
+	/**
+	* @post An example plan is created to test arrow rendering and other aspects of the code
+	**/
 	createTestPlan() {
 		document.getElementById("welcome").style.display = "none";
 		this.plan = new Plan("Computer Science", FALL, 2018);
