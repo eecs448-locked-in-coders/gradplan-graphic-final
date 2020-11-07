@@ -126,6 +126,7 @@ class Executive {
 			else {
 				this.plan.add_course(targetCell.dataset["y"], targetCell.dataset["x"], course);
 			}
+			this.checkULE(course);
 			this.update();
 		};
 		
@@ -306,6 +307,18 @@ class Executive {
 		}
 		
 		this.arrowRender.resize(this.plan.semesters.length, cols);
+	}
+
+	checkULE(course) {
+		if (!this.plan.ule) {
+			if (course == "EECS 300+") { //change this
+				//is the course an exception
+				// if not then add error
+			} else {
+				//does it satisfy ULE? (use find function)
+    			//if yes then delete from ULE bank
+			}
+		}
 	}
 	
 	add_error(msg) {
