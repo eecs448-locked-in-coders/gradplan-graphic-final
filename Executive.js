@@ -327,6 +327,11 @@ class Executive {
 		this.arrowRender.resize(this.plan.semesters.length, cols);
 	}
 
+	/**
+	* @brief checks for upper level eligibility
+	* @param major {string} Name of the major of the current plan
+	* @post adds a notification if a course needs upper level eligibility 
+	**/
 	checkULE(major) {
 		let ule_req_count = 0;
 		let ule = undefined;
@@ -339,6 +344,27 @@ class Executive {
 				break;
 			case "Electrical Engeneering":
 				ule = 2;
+				break;
+			case "Interdisciplinary Computing (Astronomy)":
+				ule = 3;
+				break;
+			case "Interdisciplinary Computing (Biology)":
+				ule = 4;
+				break;
+			case "Interdisciplinary Computing (Chemistry)":
+				ule = 5;
+				break;
+			case "Interdisciplinary Computing (Geography)":
+				ule = 6;
+				break;
+			case "Interdisciplinary Computing (Journalism: News/Information)":
+				ule = 7;
+				break;
+			case "Interdisciplinary Computing (Journalism: Strategic Communication)":
+				ule = 7;
+				break;
+			case "Interdisciplinary Computing (Physics)":
+				ule = 8;
 				break;
 			default:
 				break;
@@ -370,9 +396,12 @@ class Executive {
 					if (ULE[ule].find(course => {if (course != undefined) if (course.course_code == courses) return course;}) == undefined) {
 						let code = courses.course_code.split(" ");
 						if (code[0] == "EECS" && parseInt(code[1]) > 300) {
-							this.add_error("INVALID COURSE: " + courses.course_code + " needs Upper Level Eligibility. \n");
-							let coord = this.plan.find_course(courses.course_code);
-							document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("error");
+							//checks whether the course is an exception for ULE
+							if (ULE[9].find(course => course == courses.course_code) == undefined) {
+								this.add_error("INVALID COURSE: " + courses.course_code + " needs Upper Level Eligibility. \n");
+								let coord = this.plan.find_course(courses.course_code);
+								document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("error");
+							}
 						}
 					}
 				}
