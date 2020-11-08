@@ -11,7 +11,9 @@ class Plan {
 		course_bank = [course, course, ...]
 	*/
 	constructor(major_name, start_season, start_year) {
-		this.major = MAJORS.find(major => major.major_name = major_name);
+
+		this.major = MAJORS.find(major => major.major_name == major_name);
+		console.log(this.major);
 		this.semesters = [];
 		this.course_bank = [];
 		this.transfer_bank = [];
@@ -25,13 +27,13 @@ class Plan {
 			if (start_season == SPRING) start_year++;
 		}
 	}
-	
+
 	plan_to_string() {
 		// Version exists to allows this format to be modified in future versions
 		let plan = {
-			"version": 1, 
+			"version": 1,
 			"timestamp": Date.now(),
-			"major": this.major.major_name, 
+			"major": this.major.major_name,
 			"course_bank": this.course_bank.map(course => course.course_code),
 			"transfer_bank": this.transfer_bank.map(course => course.course_code),
 			"semesters": this.semesters.map(semester => ({
@@ -47,13 +49,13 @@ class Plan {
 		console.log(plan);
 		return JSON.stringify(plan);
 	}
-	
+
 	// Return if the string is parsed successfully
 	string_to_plan(plan) {
 		try {
 			plan = JSON.parse(plan);
 			if (plan.version != 1) return false; // Unsupported version
-			this.major = MAJORS.find(major => major.major_name = plan.major);
+			this.major = MAJORS.find(major => major.major_name == plan.major);
 			this.course_bank = plan.course_bank.map(course_code => this.course_code_to_object(course_code));
 			this.transfer_bank = plan.transfer_bank.map(course_code => this.course_code_to_object(course_code));
 			this.semesters = plan.semesters.map(semester => new Semester(
@@ -77,7 +79,7 @@ class Plan {
 			return false;
 		}
 	}
-	
+
 	get_course(semester, col) {
 		return this.semesters[semester].semester_courses[col];
 	}
@@ -95,7 +97,7 @@ class Plan {
 	add_course(semester, col, course) {
 		this.semesters[semester].add_course(col, course);
 	}
-	
+
 	remove_course(course) {
 		//check course and transfer banks
 		for (let bank of [this.course_bank, this.transfer_bank]) {
@@ -111,7 +113,7 @@ class Plan {
 			semester.remove_course(course);
 		}
 	}
-	
+
 	course_code_to_object(course_code) {
 		return COURSES.find(course => course.course_code == course_code);
 	}
@@ -140,7 +142,7 @@ class Plan {
 	// Prevent removing semesters containing courses
 	if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
 	this.semesters.splice(i, 1);
-	
+
 	}
 
 	get_longest() {
@@ -158,7 +160,7 @@ class Plan {
 	*/
 	generate_arrows() {
 		var arr_arrows = [];
-		
+
 		this.semesters.forEach((semester, y) => {
 			semester.semester_courses.forEach((course, x) => {
 				if (course != undefined) {
@@ -173,7 +175,7 @@ class Plan {
 				}
 			});
 		});
-		
+
 		return arr_arrows;
 	}
 }
