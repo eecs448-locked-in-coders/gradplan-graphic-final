@@ -79,6 +79,7 @@ COURSES = [
 	new Course("PHSX Elec 1", "Most 600+ PHSX courses", [], [], [1,1,1], 3),
 	new Course("PHSX Elec 2", "Most 600+ PHSX courses", [], [], [1,1,1], 3),
 	new Course("ECON 142/144", "Micro/Macro Economics", [], [], [1,1,1], 3),
+	new Course("CHEM 130/150", "General Chemistry I/Engineering Chemistry", [], [], [1,1,1], 5),
 	new Course("CHEM 130", "General Chemistry I", [], [], [1,1,1], 5),
 	new Course("CHEM 135", "General Chemistry II", ["CHEM 130"], [], [1,1,1], 5),
 	new Course("CHEM 330", "Organic Chemistry I", ["CHEM 135"], [], [1,0,1], 3),
@@ -152,7 +153,7 @@ ULE = [
 	["GE 2.1(1)","GE 2.1(2)","PHSX 210","PHSX 216","MATH 125","MATH 126","MATH 127", "MATH 290", //IC-G
 	 "EECS 101","EECS 140","EECS 168","EECS 210","EECS 268"],
 	["GE 2.1(1)","GE 2.1(2)","MATH 125","MATH 126","MATH 127", "MATH 290", //IC-J
-	 "EECS 101","EECS 140","EECS 168","EECS 210","EECS 268", "JOUR 150"],
+	 "EECS 101","EECS 140","EECS 168","EECS 210","EECS 268"],
 	["GE 2.1(1)","GE 2.1(2)","PHSX 210","PHSX 216","PHSX 212","PHSX 236","MATH 125","MATH 126","MATH 127","MATH 220", "MATH 290", //IC-P
 	 "EECS 101","EECS 140","EECS 168","EECS 210","EECS 268"],
 	["EECS 312","EECS 361","EECS 368","EECS 388"], //Exceptions
