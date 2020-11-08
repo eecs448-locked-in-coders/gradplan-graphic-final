@@ -253,7 +253,7 @@ class Executive {
 				document.getElementById("course-grid").rows[arrow.yOut].cells[arrow.xOut+1].firstElementChild.classList.add("error");
 			}
 		}
-		this.checkULE(this.plan.major.major_name);
+		this.checkULE();
 		
 		// Autosave plan
 		this.savePlan("autosave");
@@ -334,76 +334,38 @@ class Executive {
 
 	/**
 	* @brief checks for upper level eligibility
-	* @param major {string} Name of the major of the current plan
 	* @post adds a notification if a course needs upper level eligibility 
 	* @returns a bool of whether there is upper level eligibility
 	**/
-	checkULE(major) {
+	checkULE() {
 		let ule_req_count = 0;
-		let ule = undefined;
-		switch (major) {
-			case "Computer Science":
-				ule = 0;
-				break;
-			case "Computer Engineering":
-				ule = 1;
-				break;
-			case "Electrical Engineering":
-				ule = 2;
-				break;
-			case "Interdisciplinary Computing (Astronomy)":
-				ule = 3;
-				break;
-			case "Interdisciplinary Computing (Biology)":
-				ule = 4;
-				break;
-			case "Interdisciplinary Computing (Chemistry)":
-				ule = 5;
-				break;
-			case "Interdisciplinary Computing (Geography)":
-				ule = 6;
-				break;
-			case "Interdisciplinary Computing (Journalism: News/Information)":
-				ule = 7;
-				break;
-			case "Interdisciplinary Computing (Journalism: Strategic Communication)":
-				ule = 7;
-				break;
-			case "Interdisciplinary Computing (Physics)":
-				ule = 8;
-				break;
-			default:
-				break;
+		for (let courses of this.plan.major.ule) {
+			if (this.plan.transfer_bank.find(course => {if (course != undefined) if (course.course_code == courses) return course;}) != undefined) {
+				ule_req_count++;
+			}
 		}
-
-			for (let semester of this.plan.semesters) {
-				if (ule_req_count < ULE[ule].length && semester.semester_courses.length > 0) {
-					for (let courses of semester.semester_courses) {
-						if (courses != undefined){
-							if (ULE[ule].find(course => {if (course != undefined) if (course == courses.course_code) return course;}) == undefined) {
-								let code = courses.course_code.split(" ");
-								if ((code[0] == "EECS" && parseInt(code[1]) > 300) || (code[0] == "Sen")) {
-									//checks whether the course is an exception for ULE
-									if (ULE[9].find(course => course == courses.course_code) == undefined) {
-										this.add_error("INVALID COURSE: " + courses.course_code + " needs Upper Level Eligibility. \n");
-										let coord = this.plan.find_course(courses.course_code);
-										document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("error");
-									}
+		for (let semester of this.plan.semesters) {
+			if (ule_req_count < this.plan.major.ule.length && semester.semester_courses.length > 0) {
+				for (let courses of semester.semester_courses) {
+					if (courses != undefined){
+						if (this.plan.major.ule.find(course => {if (course != undefined) if (course == courses.course_code) return course;}) == undefined) {
+							let code = courses.course_code.split(" ");
+							if ((code[0] == "EECS" && parseInt(code[1]) > 300) || (code[0] == "Sen")) {
+								if (ULE_EXCECPTIONS.find(course => course == courses.course_code) == undefined) {
+									this.add_error("INVALID COURSE: " + courses.course_code + " needs Upper Level Eligibility. \n");
+									let coord = this.plan.find_course(courses.course_code);
+									document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("error");
 								}
-							} else {
-								ule_req_count++;
 							}
-						}
-					}
-					for (let courses of ULE[ule]) {
-						if (this.plan.transfer_bank.find(course => {if (course != undefined) if (course.course_code == courses) return course;}) != undefined) {
+						} else {
 							ule_req_count++;
 						}
 					}
-				} else {
-					return true;
 				}
+			} else {
+				return true;
 			}
+		}
 		return false;
 	}
 	
