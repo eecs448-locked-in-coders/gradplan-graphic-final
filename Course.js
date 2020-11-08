@@ -79,6 +79,7 @@ COURSES = [
 	new Course("PHSX Elec 1", "Most 600+ PHSX courses", [], [], [1,1,1], 3),
 	new Course("PHSX Elec 2", "Most 600+ PHSX courses", [], [], [1,1,1], 3),
 	new Course("ECON 142/144", "Micro/Macro Economics", [], [], [1,1,1], 3),
+	new Course("CHEM 130/150", "General Chemistry I/Engineering Chemistry", [], [], [1,1,1], 5),
 	new Course("CHEM 130", "General Chemistry I", [], [], [1,1,1], 5),
 	new Course("CHEM 135", "General Chemistry II", ["CHEM 130"], [], [1,1,1], 5),
 	new Course("CHEM 330", "Organic Chemistry I", ["CHEM 135"], [], [1,0,1], 3),
