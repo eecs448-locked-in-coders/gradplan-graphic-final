@@ -66,7 +66,7 @@ COURSES = [
 	new Course("AE 4.2", "Global cultural diversity", [], [], [1,1,1], 3),
 ];
 
-//Indices: 0 = CS; 1 = CoE; 2 = EE
+//Indices: 0 = CS; 1 = CoE; 2 = EE; 3 = Exceptions
 ULE = [
 	["GE 2.1(1)","GE 2.1(2)","PHSX 210","PHSX 216","PHSX 212","PHSX 236","MATH 125","MATH 126","MATH 127","MATH 290",
 	 "EECS 101","EECS 140","EECS 168","EECS 210","EECS 268"],
@@ -74,4 +74,5 @@ ULE = [
 	 "EECS 101","EECS 140","EECS 168","EECS 202","EECS 210","EECS 212","EECS 221","EECS 268"],
 	["GE 2.1(1)","GE 2.1(2)","PHSX 210","PHSX 216","MATH 125","MATH 126","MATH 127","MATH 220", "MATH 290",
 	 "EECS 101","EECS 140","EECS 168","EECS 202","EECS 212","EECS 221","CHEM 130"], //or CHEM 150
+	["EECS 312","EECS 361","EECS 368","EECS 388"],
 ];

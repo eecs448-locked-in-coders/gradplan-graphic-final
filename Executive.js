@@ -126,7 +126,6 @@ class Executive {
 			else {
 				this.plan.add_course(targetCell.dataset["y"], targetCell.dataset["x"], course);
 			}
-			this.checkULE(course);
 			this.update();
 		};
 		
@@ -210,7 +209,7 @@ class Executive {
 		this.arrowRender.renderArrows(arrows);
 		REDIPS.drag.init(); // Updates which elements have drag-and-drop
 		
-		// Update the credit hour displays
+		// Update the credit hour displays and the Upper level eligibility
 		for (let semester of this.plan.semesters) {
 			let credit_hours = semester.get_credit_hour();
 			document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).innerText = credit_hours + " credit hours";
@@ -237,6 +236,7 @@ class Executive {
 				document.getElementById("course-grid").rows[arrow.yOut].cells[arrow.xOut+1].firstElementChild.classList.add("error");
 			}
 		}
+		this.checkULE(this.plan.major.major_name);
 		
 		// Autosave plan
 		this.savePlan("autosave");
@@ -309,16 +309,57 @@ class Executive {
 		this.arrowRender.resize(this.plan.semesters.length, cols);
 	}
 
-	checkULE(course) {
-		if (!this.plan.ule) {
-			if (course == "EECS 300+") { //change this
-				//is the course an exception
-				// if not then add error
-			} else {
-				//does it satisfy ULE? (use find function)
-    			//if yes then delete from ULE bank
+	checkULE(major) {
+		let ule_req_count = 0;
+		let ule = undefined;
+		switch (major) {
+			case "Computer Science":
+				ule = 0;
+				break;
+			case "Computer Engineering":
+				ule = 1;
+				break;
+			case "Electrical Engeneering":
+				ule = 2;
+				break;
+			default:
+				break;
+		}
+		for (let courses of ULE[ule]) {
+			for (let semester of this.plan.semesters) {
+				if (semester.semester_courses.length > 0){
+					let ule_course = semester.semester_courses.find(course => {
+						if (course != undefined) {
+							if (course.course_code == courses){
+								return course;
+							}
+						}
+					});
+					if (ule_course != undefined) {
+						if (ule_course.course_code == courses){
+							ule_req_count++;
+						}
+					}	
+				}
+			}
+			if (this.plan.transfer_bank.find(course => {if (course != undefined) if (course.course_code == courses) return course;}) != undefined) {
+				ule_req_count++;
 			}
 		}
+		if (ule_req_count != ULE[ule].length) {
+			for (let semester of this.plan.semesters) {
+				for (let courses of semester.semester_courses) {
+					if (ULE[ule].find(course => {if (course != undefined) if (course.course_code == courses) return course;}) == undefined) {
+						let code = courses.course_code.split(" ");
+						if (code[0] == "EECS" && parseInt(code[1]) > 300) {
+							this.add_error("INVALID COURSE: " + courses.course_code + " needs Upper Level Eligibility. \n");
+							let coord = this.plan.find_course(courses.course_code);
+							document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("error");
+						}
+					}
+				}
+			}
+		}	
 	}
 	
 	add_error(msg) {

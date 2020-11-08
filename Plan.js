@@ -15,7 +15,6 @@ class Plan {
 		this.semesters = [];
 		this.course_bank = [];
 		this.transfer_bank = [];
-		this.ule = false;
 		this.fill_course_bank_w_req_classes();
 		for (var i = 0; i < 4; i++) {
 			//Makes 8 semester of fall/spring, flips between fall and spring
