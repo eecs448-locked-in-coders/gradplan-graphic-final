@@ -129,8 +129,9 @@ COURSES = [
 	new Course("GE 3H", "Arts and Humanities", [], [], [1,1,1], 3),
 	new Course("GE 3S", "Social Science", [], [], [1,1,1], 3),
 	new Course("Add A/H", "Additional GE 3H course", [], [], [1,1,1], 3),
+	new Course("Add A/H/SS", "Additional GE 3H course", [], [], [1,1,1], 3),
 	new Course("Add SS", "Additional GE 3S course", [], [], [1,1,1], 3),
 	new Course("AE 4.1", "United States cultural diversity", [], [], [1,1,1], 3),
 	new Course("AE 4.2", "Global cultural diversity", [], [], [1,1,1], 3),
-	new Course("AE 5.1", , [], [], [1,1,1], 3),
+	new Course("AE 5.1", "Social Responsibility and Ethics", [], [], [1,1,1], 3)
 ];
