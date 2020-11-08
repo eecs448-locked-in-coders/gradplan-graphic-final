@@ -49,7 +49,7 @@ const MAJORS = [
 		"Sen Elec 1", "Sen Elec 2", "Sen Elec 3",
 		"MATH 220", "ASTR 391", "ASTR 503", "ASTR 591", "ASTR 592", "ASTR 596",
 		"PHSX 210", "PHSX 212", "PHSX 216", "PHSX 236", "PHSX 313", "PHSX 316",
-		"Astr Elec 1", "Astr Elec 2"
+		"ASTR Elec 1", "ASTR Elec 2"
 		]
 	),
 	new Major("Interdisciplinary Computing (Biology)", [
@@ -59,7 +59,7 @@ const MAJORS = [
 		"GE 2.1(1)", "GE 2.1(2)", "GE 2.2", "GE 3H", "GE 3S", "AE 4.1", "AE 4.2",
 		"Sen Elec 1", "Sen Elec 2", "Sen Elec 3",
 		"PHIL 375/320/160", "BIOL 150", "BIOL 152", "BIOL 350", "BIOL 412",
-		"CHEM 130", "CHEM 135", "Biol Elec 1", "Biol Elec 2"
+		"CHEM 130", "CHEM 135", "BIOL Elec 1", "BIOL Elec 2"
 		]
 	),
 	new Major("Interdisciplinary Computing (Chemistry)", [
@@ -79,7 +79,7 @@ const MAJORS = [
 		"GE 2.1(1)", "GE 2.1(2)", "GE 2.2", "GE 3H", "GE 3S", "AE 4.1", "AE 4.2",
 		"Sen Elec 1", "Sen Elec 2", "Sen Elec 3",
 		"GEOG Basics 1", "GEOG Basics 2", "GEOG 311", "GEOG 358", "GEOG 526",
-		"GEOG 558", "PHSX 210", "PHYSX 216", "Geog Elec 1", "Geog Elec 2"
+		"GEOG 558", "PHSX 210", "PHSX 216", "GEOG Elec 1", "GEOG Elec 2"
 		]
 	),
 	new Major("Interdisciplinary Computing (Journalism: News/Information)", [
