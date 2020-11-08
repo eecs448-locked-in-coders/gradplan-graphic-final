@@ -24,60 +24,106 @@
 			
 			let testCount = 0;
 			let passCount = 0;
+			let sectionTestCount = 0;
+			let sectionPassCount = 0;
 			
 			function runTests() {
-				printSection("Course class"); // ==============================
-			
-				printSection("Major class"); // ===============================
+				// Reset
+				testCount = 0;
+				passCount = 0;
+				sectionTestCount = 0;
+				sectionPassCount = 0;
+				document.getElementById("output").innerText = "";
 				
-				printSection("Semester class"); // ============================
+				// First section used second parameter to prevent newline before heading
+				startSection("Course class", ""); // ==========================
+				
+				runTest("Course constructor correctly assigns member variables", () => {
+					let c = new Course("name", "desc", ["prereq1", "prereq2"], ["coreq1"], [1, 0, 1], 3, false);
+					return c.course_code === "name" && c.title === "desc"
+						&& JSON.stringify(c.prereq) === JSON.stringify(["prereq1", "prereq2"])
+						&& JSON.stringify(c.coreq) === JSON.stringify(["coreq1"])
+						&& JSON.stringify(c.course_semester) === JSON.stringify([1, 0, 1])
+						&& c.credit_hour === 3 && c.is_custom === false
+				});
+				
+				runTest("Course.to_html() generates correct HTML", () => {
+					let c = new Course("name", "desc", ["prereq1", "prereq2"], ["coreq1"], [1, 0, 1], 3, false);
+					return c.to_html() === '<div class="redips-drag" data-toggle="tooltip" title="desc" data-course="name">name<br>(3)</div>';
+				});
+			
+				startSection("Major class"); // ===============================
+				
+				runTest("Major constructor correctly assigns member variables", () => {
+					let m = new Major("major name", ["req1", "req2", "req3"]);
+					return m.major_name && JSON.stringify(m.req_class) === JSON.stringify(["req1", "req2", "req3"]);
+				});
+				
+				startSection("Semester class"); // ============================
 				
 				runTest("Semester.get_credit_hour() returns zero for empty semester", () => {
 					let semester = new Semester(FALL, 2018, []);
-					return semester.get_credit_hour() == 0;
+					return semester.get_credit_hour() === 0;
 				});
 				
 				runTest("Semester.get_credit_hour() returns correct number of credit-hours for non-empty semester", () => {
-					//let plan = new Plan("Computer Science", FALL, 2018);
-					//let eecs368 = plan.course_code_to_object("EECS 368");
-					//let eecs448 = plan.course_code_to_object("EECS 448");
-					let semester = new Semester(FALL, 2018, [new Course("3 ch test", "", [], [], 3), new Course("4 ch test", "", [], [], 4)]);
-					return semester.get_credit_hour() == 7;
+					let semester = new Semester(FALL, 2018, [new Course("3 ch test", "desc", [], [], [1,1,1], 3), new Course("4 ch test", "desc", [], [], [1,1,1], 4)]);
+					return semester.get_credit_hour() === 7;
 				});
 			
-				printSection("Plan class"); // ================================
+				startSection("Plan class"); // ================================
 				
 				//runTest("Plan.string_to_plan returns same plan as created with plan_to_string" () => {});
 				
 				runTest("Plan.course_code_to_object() finds the correct course object", () => {
 					let plan = new Plan("Computer Science", FALL, 2018);
 					let eecs448 = plan.course_code_to_object("EECS 448");
-					return eecs448.title == "Software Engineering I";
+					return eecs448.title === "Software Engineering I";
 				});
 				
-				printSection("Executive class"); // ===========================
+				startSection("Executive class"); // ===========================
 				
-				printSection("Arrow class"); // ===============================
+				startSection("Arrow class"); // ===============================
 				
-				printSection("ArrowRender class"); // =========================
+				startSection("ArrowRender class"); // =========================
 				
-
 				printSummary();
 			}
 			
-			function printSection(title) {
-				document.getElementById("output").innerText += ("=== " + title + " ").padEnd(80, "=") + "\n";
+			function startSection(title, overrideNewline = "\n") {
+				if (sectionTestCount != 0) {
+					document.getElementById("output").innerText += "Class results: " + sectionPassCount + "/" + sectionTestCount + " (" + (sectionPassCount/sectionTestCount*100) + "%) of tests passed\n";
+					sectionTestCount = 0;
+					sectionPassCount = 0;
+				}
+				document.getElementById("output").innerText += overrideNewline + ("=== " + title + " ").padEnd(80, "=") + "\n";
 			}
 			
-			function runTest(description, result) {
-				document.getElementById("output").innerText += "- " + description + ": " + (result() ? "PASSED" : "***FAILED***") + "\n";
+			function runTest(description, test) {
+				let result = test();
+				document.getElementById("output").innerText += "- " + description + ": " + (result ? "PASSED" : "***FAILED***") + "\n";
 				testCount++;
-				if (result) passCount++;
+				sectionTestCount++;
+				if (result) {
+					passCount++;
+					sectionPassCount++;
+				}
 			}
 			
 			// TODO: Should there also be a per-section summary?
 			function printSummary() {
-				document.getElementById("output").innerText += "Results: " + passCount + "/" + testCount + " (" + (passCount/testCount*100) + "%) of tests passed";
+				document.getElementById("output").innerText += "\nOVERALL RESULTS: " + passCount + "/" + testCount + " (" + (passCount/testCount*100) + "%) of tests passed";
+				let btn = document.getElementById("run");
+				btn.classList.remove("btn-primary");
+				if (passCount < testCount) {
+					btn.classList.add("btn-danger");
+					btn.classList.remove("btn-success");
+					btn.value = "SOME TESTS FAILED";
+				} else {
+					btn.classList.remove("btn-danger");
+					btn.classList.add("btn-success");
+					btn.value = "ALL TESTS PASSED";
+				}
 			}
 		</script>
 	</head>
