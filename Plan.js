@@ -11,7 +11,9 @@ class Plan {
 		course_bank = [course, course, ...]
 	*/
 	constructor(major_name, start_season, start_year) {
-		this.major = MAJORS.find(major => major.major_name = major_name);
+
+		this.major = MAJORS.find(major => major.major_name == major_name);
+		console.log(this.major);
 		this.semesters = [];
 		this.course_bank = [];
 		this.transfer_bank = [];
@@ -53,7 +55,7 @@ class Plan {
 		try {
 			plan = JSON.parse(plan);
 			if (plan.version != 1) return false; // Unsupported version
-			this.major = MAJORS.find(major => major.major_name = plan.major);
+			this.major = MAJORS.find(major => major.major_name == plan.major);
 			this.course_bank = plan.course_bank.map(course_code => this.course_code_to_object(course_code));
 			this.transfer_bank = plan.transfer_bank.map(course_code => this.course_code_to_object(course_code));
 			this.semesters = plan.semesters.map(semester => new Semester(

@@ -78,7 +78,7 @@ const MAJORS = [
 		"EECS 678", "MATH 125", "MATH 126", "MATH 127", "MATH 290", "MATH 526",
 		"GE 2.1(1)", "GE 2.1(2)", "GE 2.2", "GE 3H", "GE 3S", "AE 4.1", "AE 4.2",
 		"Sen Elec 1", "Sen Elec 2", "Sen Elec 3",
-		"Geog Basics 1", "Geog Basics 2", "GEOG 311", "GEOG 358", "GEOG 526",
+		"GEOG Basics 1", "GEOG Basics 2", "GEOG 311", "GEOG 358", "GEOG 526",
 		"GEOG 558", "PHSX 210", "PHYSX 216", "Geog Elec 1", "Geog Elec 2"
 		]
 	),
@@ -110,7 +110,7 @@ const MAJORS = [
 		"Sen Elec 1", "Sen Elec 2", "Sen Elec 3",
 		"MATH 220", "PHSX 210", "PHSX 212", "PHSX 216", "PHSX 236", "PHSX 313",
 		"PHSX 316", "PHSX 503", "PHSX 511", "PHSX 521", "PHSX 531",
-		"Phsx Elec 1", "Phsx Elec 2"
+		"PHSX Elec 1", "PHSX Elec 2"
 		]
 	)
 ];
