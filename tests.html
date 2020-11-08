@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Docmentation</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+		<style>
+			code, code pre {
+				color: lime;
+			}
+		</style>
+		
+		<script type="text/javascript" src="Executive.js"></script>
+		<script type="text/javascript" src="ArrowRender.js"></script>
+		<script type="text/javascript" src="Plan.js"></script>
+		<script type="text/javascript" src="Semester.js"></script>
+		<script type="text/javascript" src="Course.js"></script>
+		<script type="text/javascript" src="Major.js"></script>
+		<script>
+			window.addEventListener("DOMContentLoaded", e => {
+				document.getElementById("run").addEventListener("click", runTests);
+			});
+			
+			let testCount = 0;
+			let passCount = 0;
+			
+			function runTests() {
+				printSection("Course class"); // ==============================
+			
+				printSection("Major class"); // ===============================
+				
+				printSection("Semester class"); // ============================
+				
+				runTest("Semester.get_credit_hour() returns zero for empty semester", () => {
+					let semester = new Semester(FALL, 2018, []);
+					return semester.get_credit_hour() == 0;
+				});
+				
+				runTest("Semester.get_credit_hour() returns correct number of credit-hours for non-empty semester", () => {
+					//let plan = new Plan("Computer Science", FALL, 2018);
+					//let eecs368 = plan.course_code_to_object("EECS 368");
+					//let eecs448 = plan.course_code_to_object("EECS 448");
+					let semester = new Semester(FALL, 2018, [new Course("3 ch test", "", [], [], 3), new Course("4 ch test", "", [], [], 4)]);
+					return semester.get_credit_hour() == 7;
+				});
+			
+				printSection("Plan class"); // ================================
+				
+				//runTest("Plan.string_to_plan returns same plan as created with plan_to_string" () => {});
+				
+				runTest("Plan.course_code_to_object() finds the correct course object", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let eecs448 = plan.course_code_to_object("EECS 448");
+					return eecs448.title == "Software Engineering I";
+				});
+				
+				printSection("Executive class"); // ===========================
+				
+				printSection("Arrow class"); // ===============================
+				
+				printSection("ArrowRender class"); // =========================
+				
+
+				printSummary();
+			}
+			
+			function printSection(title) {
+				document.getElementById("output").innerText += ("=== " + title + " ").padEnd(80, "=") + "\n";
+			}
+			
+			function runTest(description, result) {
+				document.getElementById("output").innerText += "- " + description + ": " + (result() ? "PASSED" : "***FAILED***") + "\n";
+				testCount++;
+				if (result) passCount++;
+			}
+			
+			// TODO: Should there also be a per-section summary?
+			function printSummary() {
+				document.getElementById("output").innerText += "Results: " + passCount + "/" + testCount + " (" + (passCount/testCount*100) + "%) of tests passed";
+			}
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row">
+				<h1 class="col-12 mt-3">EECS 448 Team 13 Project 4 Test Suite</h1>
+				<input type="button" id="run" class="btn btn-lg btn-block btn-primary" value="RUN TESTS">
+				<code id="output" class="bg-dark w-100 p-2 my-2">
+				</code>
+			</div>
+		</div>
+	</body>
+</html>
