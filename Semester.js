@@ -12,22 +12,39 @@ class Semester {
 		this.semester_season = semester_season;
 		this.semester_year = semester_year;
 		this.semester_courses = semester_courses;
-		
+
 	}
-	
+
+	/*
+		@param: none
+		@return: String from the string array Season names, 0=Spring, 1=Summer, 2=Fall
+	*/
 	season_name() {
 		return SEASON_NAMES[this.semester_season];
-
 	}
 
+	/*
+		@param: none
+		@return: the sum of the credit hours in the semester
+	*/
 	get_credit_hour() {
 		return this.semester_courses.reduce((sum, course) => sum + (course ? course.credit_hour : 0), 0);
 	}
 
+	/*
+		@param: column index, course object,
+		@post: semster_courses will add the course object at the column index
+		@return: none
+	*/
 	add_course(col, course) {
 		this.semester_courses[col] = course;
 	}
-	
+
+	/*
+		@param: course object
+		@post: removes the course object from the course array
+		@return: none
+	*/
 	remove_course(course) {
 		let courseIndex = this.semester_courses.indexOf(course);
 		if (courseIndex != undefined) {
