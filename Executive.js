@@ -231,7 +231,7 @@ class Executive {
 				document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).classList.add("error");
 			}
 		}
-		
+
 		// Check for invalid placements
 		for (let arrow of arrows) {
 			if (!arrow.fromSide && arrow.yIn >= arrow.yOut) { // Invalid prerequisite
@@ -314,10 +314,17 @@ class Executive {
 				let td = document.createElement("td");
 				if (semester.semester_courses[j] != undefined) {
 					td.innerHTML = semester.semester_courses[j].to_html();
+
+					let current_season = semester.semester_season;
+					if (semester.semester_courses[j].course_semester[current_season] != 1)
+					{
+						td.firstElementChild.classList.add("error");
+					}
 				}
 				td.dataset["x"] = j;
 				td.dataset["y"] = i;
 				tr.appendChild(td);
+
 			}
 
 			grid.appendChild(tr);
