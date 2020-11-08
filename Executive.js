@@ -236,7 +236,7 @@ class Executive {
 				document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).classList.add("error");
 			}
 		}
-		
+
 		// Check for invalid placements
 		for (let arrow of arrows) {
 			if (!arrow.fromSide && arrow.yIn >= arrow.yOut) { // Invalid prerequisite
@@ -317,13 +317,21 @@ class Executive {
 			}
 			
 			for (let j = 0; j < cols; j++) {
-				let td = document.createElement("td");
+				let td = document.createElement("td"); //Create a table cell.
 				if (semester.semester_courses[j] != undefined) {
-					td.innerHTML = semester.semester_courses[j].to_html();
+					let sel_sem = semester.semester_courses[j];
+					td.innerHTML = sel_sem.to_html(); //Formats the contents of the table cell.
+
+					if (sel_sem.course_semester[semester.semester_season] != 1) //If the course that is being loaded into the table cell is not offered in the current semester's season then...
+					{
+						td.firstElementChild.classList.add("error"); //Stylize the cell to be red.
+						this.add_error(sel_sem.course_code+" is not offered in the "+semester.season_name()); //Display an error message.
+					}
 				}
 				td.dataset["x"] = j;
 				td.dataset["y"] = i;
 				tr.appendChild(td);
+
 			}
 
 			grid.appendChild(tr);
