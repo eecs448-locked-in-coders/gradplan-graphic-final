@@ -11,7 +11,7 @@
 				color: lime;
 			}
 		</style>
-		
+
 		<!-- Libraries -->
 		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
@@ -95,9 +95,9 @@
 				startSection("Plan class"); // ================================
 
 				//runTest("Plan.string_to_plan returns same plan as created with plan_to_string" () => {});
-				runTest("Plan.plan_to_string returns a string", () => {
+				runTest("Plan.plan_to_string() returns the stringifyed plan", () => {
 					let plan = new Plan("Computer Science", FALL, 2018);
-					return typeof plan.plan_to_string() === 'string';
+					return plan.plan_to_string().substring(40) === '{"version":1,"timestamp":1604899066873,"major":"Computer Science","course_bank":["EECS 101","EECS 140","EECS 168","EECS 210","EECS 268","EECS 368","EECS 388","EECS 448","EECS 510","EECS 560","EECS 581","EECS 582","EECS 645","EECS 660","EECS 662","EECS 665","EECS 678","MATH 125","MATH 126","MATH 127","MATH 290","MATH 526","PHSX 210","PHSX 212","PHSX 216","PHSX 236","Sen Elec 1","Sen Elec 2","Sen Elec 3","Sen Elec 4","Prof Elec 1","GE 3N","GE 2.1(1)","GE 2.1(2)","GE 2.2","GE 3H","GE 3S","Add A/H","Add SS","AE 4.1","AE 4.2"],"transfer_bank":[],"semesters":[{"semester_year":2018,"semester_season":2,"semester_courses":[]},{"semester_year":2019,"semester_season":0,"semester_courses":[]},{"semester_year":2019,"semester_season":2,"semester_courses":[]},{"semester_year":2020,"semester_season":0,"semester_courses":[]},{"semester_year":2020,"semester_season":2,"semester_courses":[]},{"semester_year":2021,"semester_season":0,"semester_courses":[]},{"semester_year":2021,"semester_season":2,"semester_courses":[]},{"semester_year":2022,"semester_season":0,"semester_courses":[]}]}'.substring(40);
 				});
 
 				runTest("Plan.course_code_to_object finds the correct course object", () => {
@@ -140,13 +140,13 @@
 					plan.add_semester(1, 2018);
 					return plan.semesters.length === 9;
 				});
-				
+
 				runTest("Plan.add_semester adds semester to middle", () => {
 					let plan = new Plan("Computer Science", SUMMER, 2019);
 					plan.add_semester(1, 2018);
 					return plan.semesters.length === 9;
 				});
-				
+
 				runTest("Plan.add_semester adds semester to end", () => {
 					let plan = new Plan("Computer Science", SUMMER, 2022);
 					plan.add_semester(1, 2018);
@@ -203,7 +203,7 @@
 					exec.plan.add_course(3, 3, exec.plan.course_code_to_object("PHSX 236"));
 					return exec.checkULE();
 				});
-				
+
 				runTest("Executive.checkULE returns false on plan not meeting ULE", () => {
 					let exec = new Executive(true);
 					exec.plan = new Plan("Interdisciplinary Computing (Geography)", SPRING, 2019);
@@ -222,54 +222,86 @@
 					//exec.plan.add_course(3, 1, exec.plan.course_code_to_object("MATH 290")); Exclude this one on purpose
 					return !exec.checkULE();
 				});
-				
+
+				runTest("Tests if savePlan() saves to local", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					exec.savePlan("Test");
+					let local_string = localStorage.getItem("gpg-1-Test");
+					return (exec.plan.plan_to_string().length == local_string.length);
+				});
+
+				runTest("Tests if loadPlan() loads from local", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					exec.savePlan("Test");
+					let local_string = localStorage.getItem("gpg-1-Test");
+					exec.loadPlan("Test");
+					return (exec.plan.plan_to_string().length == local_string.length);
+				});
+
+				runTest("Tests if add_error() is created", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					exec.add_error("Test String Error");
+					console.log(document.getElementById("notifications").firstChild.innerHTML);
+					return ("Test String Error" == document.getElementById("notifications").firstChild.innerHTML);
+				});
+
+				runTest("Tests makeElement() is created", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					exec.makeElement("li", "make-tester", "Test Make", 1);
+					return ("Test Make" == document.getElementById("make-tester").firstChild.innerHTML);
+				});
+
 				startSection("Arrow class"); // ===============================
 
 				runTest("Arrow.constructor correctly assigns member variables", () => {
 					let arr = new Arrow(1, 2, 5, 6, true);
 					return arr.xIn === 1 && arr.yIn === 2 && arr.xOut === 5 && arr.yOut === 6 && arr.fromSide === true;
 				});
-				
+
 				runTest("Arrow.startPoint returns correct pixel coordinates", () => {
 					let arr = new Arrow(1, 2, 5, 6, true);
 					return JSON.stringify(arr.startPoint()) === JSON.stringify([225, 225]);
 				});
-				
+
 				runTest("Arrow.endPoint returns correct pixel coordinates", () => {
 					let arr = new Arrow(1, 2, 5, 6, true);
 					return JSON.stringify(arr.endPoint()) === JSON.stringify([615, 585]);
 				});
-				
+
 				runTest("Arrow.node1 returns correct grid coordinates", () => {
 					let arr = new Arrow(1, 2, 5, 6, true);
 					return JSON.stringify(arr.node1()) === JSON.stringify([2, 3]);
 				});
-				
+
 				runTest("Arrow.node2 returns correct grid coordinates", () => {
 					let arr = new Arrow(1, 2, 5, 6, true);
 					return JSON.stringify(arr.node2()) === JSON.stringify([5, 3]);
 				});
 
 				startSection("ArrowRender class"); // =========================
-				
+
 				runTest("ArrowRender.constructor initializes to 0 by 0 grid", () => {
 					let ar = new ArrowRender();
 					return ar.rows === 0 && ar.cols === 0;
 				});
-				
+
 				runTest("ArrowRender.resize sets rows and columns correctly", () => {
 					let ar = new ArrowRender();
 					ar.resize(4, 5);
 					return ar.rows === 4 && ar.cols === 5;
 				});
-				
+
 				runTest("ArrowRender.resize sets SVG dimensions correctly", () => {
 					let ar = new ArrowRender();
 					ar.resize(4, 5);
 					let svg = document.querySelector("#arrows svg");
 					return svg.style.width === "400px" && svg.style.height === "600px" && svg.style.marginBottom === "-600px";
 				});
-				
+
 				runTest("ArrowRender.initChannels creates the vertical and horizontal channels correctly", () => {
 					let ar = new ArrowRender();
 					ar.resize(2, 3);
@@ -277,14 +309,14 @@
 					return ar.vertChannels.length === 3 && ar.vertChannels[1].length === 4 && ar.vertChannels[1][1][1] === false
 						&& ar.horizChannels.length === 3 && ar.horizChannels[1].length === 4 && ar.horizChannels[1][1][1] === false;
 				});
-				
+
 				runTest("ArrowRender.findColors assigns colors to the correct arrow sources", () => {
 					let ar = new ArrowRender();
 					ar.resize(4, 4);
 					let colors = ar.findColors([new Arrow(1, 1, 2, 2, false), new Arrow(1, 1, 3, 2, true), new Arrow(2, 1, 3, 2, true)]);
 					return colors[1][1] !== DEFAULT_COLOR && colors[2][1] === DEFAULT_COLOR;
 				});
-				
+
 				runTest("ArrowRender.arrowHead generates correct coordinates", () => {
 					let ar = new ArrowRender();
 					return JSON.stringify(ar.arrowHead(150, 250, DOWN, 4)) === JSON.stringify([[150,250],[146,246],[150,250],[154,246],[150,250]])
@@ -302,7 +334,7 @@
 					// Try to find a channel from row 0 col 1 to row 3 col 1
 					return ar.findVertChannel(1, 0, 3)[1] === -30;
 				});
-				
+
 				runTest("ArrowRender.findHorizChannel selects a fully unoccupied channel", () => {
 					let ar = new ArrowRender();
 					ar.resize(4, 4);
@@ -314,7 +346,7 @@
 					// Try to find a channel from row 1 col 0 to row 1 col 3
 					return ar.findHorizChannel(1, 0, 3)[1] === -20;
 				});
-				
+
 				runTest("ArrowRender.renderArrows successfully renders arrows", () => {
 					let ar = new ArrowRender();
 					ar.resize(4, 4);
@@ -344,7 +376,7 @@
 					console.error(e);
 					result = false;
 				}
-				document.getElementById("output").innerHTML += 
+				document.getElementById("output").innerHTML +=
 					(result ? "" : "<span class='bg-danger' style='color:white'>")
 					+ "- " + description + ": " + (result ? "PASSED" : "***FAILED***") + "<br>"
 					+ (result ? "" : "</span>");
@@ -383,6 +415,9 @@
 		<div style="position:absolute;left:-9999px;top:-9999px;"> <!-- Place any HTML elements required to run tests here -->
 			<table id="course-grid" style="width:400px; height:600px"></table>
 			<div id="arrows"></div>
+			<div id="make-tester"></div>
+			<div id="notifications"></div>
+			<div id="print-notifications"></div>
 		</div>
 	</body>
 </html>
