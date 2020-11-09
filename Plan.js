@@ -28,6 +28,11 @@ class Plan {
 		}
 	}
 
+	/**
+		@param: none
+		@post: creates a temp plan, takes all the neccesary strings
+		@return: {string}, the plan as a string
+	*/
 	plan_to_string() {
 		// Version exists to allows this format to be modified in future versions
 		let plan = {
@@ -50,7 +55,12 @@ class Plan {
 		return JSON.stringify(plan);
 	}
 
-	// Return if the string is parsed successfully
+	/**
+		@param: plan {object}, plan object
+		@post: none
+		@return: {bool}, function passing or not.
+		@return: Return if the string is parsed successfully
+	*/
 	string_to_plan(plan) {
 		try {
 			plan = JSON.parse(plan);
@@ -80,10 +90,19 @@ class Plan {
 		}
 	}
 
+	/**
+		@param: semester {number}, semester index for array
+		@param: column {number}, column index for array
+		@return: course at column in the semsester
+	*/
 	get_course(semester, col) {
 		return this.semesters[semester].semester_courses[col];
 	}
 
+	/**
+		@param: course_code, {string}, name of course
+		@return: semsester and column where the Course is at in the array
+	*/
 	find_course(course_code) {
 		let coords;
 		this.semesters.forEach((semester, y) => {
@@ -94,10 +113,21 @@ class Plan {
 		return coords;
 	}
 
+	/**
+		@param: semester, {number}, semester index for the array
+		@param: column, {number}, column index for the array
+		@param: course {object}, object to add in the array
+		@post: adds course object at column at semester
+	*/
 	add_course(semester, col, course) {
 		this.semesters[semester].add_course(col, course);
 	}
 
+	/**
+		@param: course {course}, course object
+		@post: delete course object from the course_bank
+		@return: none
+	*/
 	remove_course(course) {
 		//check course and transfer banks
 		for (let bank of [this.course_bank, this.transfer_bank]) {
@@ -114,14 +144,29 @@ class Plan {
 		}
 	}
 
+	/**
+		@param: course_code, {string}, course name,
+		@return: course object, with the coures_code name
+	*/
 	course_code_to_object(course_code) {
 		return COURSES.find(course => course.course_code == course_code);
 	}
 
+	/**
+		@param: none
+		@post: course_bank filled with the classes from the major.
+		@return: none
+	*/
 	fill_course_bank_w_req_classes() {
 		this.course_bank = this.major.req_class.map(req_class => this.course_code_to_object(req_class));
 	}
 
+	/**
+		@param: season {number}, number 0-2, represents spring, summer, or fall
+		@param: year {number}
+		@post: creates a semester of season and year, which is added in the array
+		@return: none
+	*/
 	add_semester(season, year) {
 		let new_order = year*3 + season;
 		for (let i = 0; i < this.semesters.length; i++) {
@@ -135,28 +180,35 @@ class Plan {
 		this.semesters.splice(this.semesters.length, 0, new Semester(season, year, []));
 	}
 
+	/**
+		@param: season {number}
+		@param: year {number}
+		@post: semester at season and year index is deleted
+		@return: none
+	*/
 	remove_semester(season, year) {
-	// Find the requested semester object
-	let i = this.semesters.findIndex(semester => season == semester.semester_season && year == semester.semester_year);
+		// Find the requested semester object
+		let i = this.semesters.findIndex(semester => season == semester.semester_season && year == semester.semester_year);
 
-	// Prevent removing semesters containing courses
-	if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
-	this.semesters.splice(i, 1);
-
+		// Prevent removing semesters containing courses
+		if (this.semesters[i].semester_courses.find(course => course != undefined)) return;
+		this.semesters.splice(i, 1);
 	}
 
+	/**
+		@param: none
+		@post: none
+		@return: {number}, length of longest semester
+	*/
 	get_longest() {
 		// Traverse through semesters, updating longest with the length of the longest semester found so far
 		return this.semesters.reduce((longest, semester) => Math.max(semester.semester_courses.length, longest), MIN_COLS);
 	}
 
-	/*
-		check each course
-		find course coordinate
-		look for course pre/co req
-		find req courses coordinate
-		create arrow
-		This function is also pulling double-duty checking validations
+	/**
+		@param: none
+		@post: generates the array of arrows for all courses and all semesters
+		@return: {array}, array of arrows numbers
 	*/
 	generate_arrows() {
 		var arr_arrows = [];
