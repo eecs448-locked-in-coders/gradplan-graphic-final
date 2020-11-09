@@ -317,15 +317,15 @@ class Executive {
 			}
 			
 			for (let j = 0; j < cols; j++) {
-				let td = document.createElement("td"); //Create a table cell.
+				let td = document.createElement("td"); // Create a table cell.
 				if (semester.semester_courses[j] != undefined) {
-					let sel_sem = semester.semester_courses[j];
-					td.innerHTML = sel_sem.to_html(); //Formats the contents of the table cell.
+					let course = semester.semester_courses[j];
+					td.innerHTML = course.to_html(); // Formats the contents of the table cell.
 
-					if (sel_sem.course_semester[semester.semester_season] != 1) //If the course that is being loaded into the table cell is not offered in the current semester's season then...
-					{
-						td.firstElementChild.classList.add("error"); //Stylize the cell to be red.
-						this.add_error(sel_sem.course_code+" is not offered in the "+semester.season_name()); //Display an error message.
+					// If the course that is being loaded into the table cell is not offered in the current semester's season.
+					if (course.course_semester[semester.semester_season] != 1) { 
+						td.firstElementChild.classList.add("error"); // Stylize the cell to be red
+						this.add_error(course.course_code + " is not offered in the " + semester.season_name()); // Display an error message
 					}
 				}
 				td.dataset["x"] = j;
@@ -354,16 +354,16 @@ class Executive {
 		}
 		for (let semester of this.plan.semesters) {
 			if (ule_req_count < this.plan.major.ule.length) {
-				if (semester.semester_courses.length > 0){
+				if (semester.semester_courses.length > 0) {
 					for (let courses of semester.semester_courses) {
-						if (courses != undefined){
+						if (courses != undefined) {
 							if (this.plan.major.ule.find(course => {if (course != undefined) if (course == courses.course_code) return course;}) == undefined) {
 								let code = courses.course_code.split(" ");
 								if ((code[0] == "EECS" && parseInt(code[1]) > 300) || (code[0] == "Sen")) {
 									if (ULE_EXCECPTIONS.find(course => course == courses.course_code) == undefined) {
-										this.add_error("INVALID COURSE: " + courses.course_code + " needs Upper Level Eligibility. \n");
+										this.add_error("WAIVER REQUIRED: " + courses.course_code + " needs Upper Level Eligibility. \n");
 										let coord = this.plan.find_course(courses.course_code);
-										document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("error");
+										document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("warning");
 									}
 								}
 							} else {

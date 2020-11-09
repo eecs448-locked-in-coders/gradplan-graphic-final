@@ -1,12 +1,16 @@
-//Has a course code, prerequisite, corequisites, course offering, credit hours
+/**
+* @class
+* @description This object is used to represent a single course which can be taken and all information about it
+**/
 class Course {
-	/*
-		course_code = string
-		prereq = [string]
-		coreq = [string]
-		course_semester = [Spring, Summer, Fall] => [bool,bool,bool] Semester
-										Remember that winter doesn't exist, its just extended spring
-		credit_hour = int
+	/**
+	* @param course_code {string} The code of this course (e.g. EECS 448)
+	* @param title {string} A name/short description of the course
+	* @param prereq {[string]} A list of course codes that are prerequisites of this course
+	* @param coreq {[string]}  A list of course codes that are corequisites of this course
+	* @param course_semester {[bool,bool,bool]} Whether the course is offered in SPRING, SUMMER, and FALL (constants are array indicies)
+	* @param credit_hour {number} The number of credit hours the course is
+	* @param is_custom {bool} Whether the course was created by the user, default false
 	*/
 	constructor(course_code, title, prereq, coreq, course_semester, credit_hour, is_custom = false) {
 		this.course_code = course_code;
@@ -18,6 +22,9 @@ class Course {
 		this.is_custom = is_custom; // Used when saving plans to strings
 	}
 
+	/**
+	* @return {string} The HTML for a draggable div representing this course
+	**/
 	to_html() {
 		return '<div class="redips-drag" data-toggle="tooltip" title="' + this.title + '" data-course="' + this.course_code + '">' + this.course_code + "<br>(" + this.credit_hour + ")</div>";
 	}

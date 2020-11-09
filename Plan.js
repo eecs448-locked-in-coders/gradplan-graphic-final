@@ -1,14 +1,18 @@
 //Major, list of semester objects, list of transfer/exempt courses
 const SPRING = 0, SUMMER = 1, FALL = 2;
 const MIN_COLS = 3; // Minimum number of columns to put courses in
+
+/**
+* @class
+* @description Represents a user's plan, including their major, all semesters, and transfer credits
+**/
 class Plan {
 
-	/*
-		major_name = major name
-		start_semester = int 0,1,2
-		start_year = int, year
-		semesters = [semester, semester, ...]
-		course_bank = [course, course, ...]
+	/**
+		@param major_name {string} Major name
+		@param start_semester {number} SPRING or FALL constant
+		@param start_year {number} year
+		@post All parameters are assigned to their respective member variables and the first 8 falls/springs after the start semester are added
 	*/
 	constructor(major_name, start_season, start_year) {
 
@@ -29,9 +33,8 @@ class Plan {
 	}
 
 	/**
-		@param: none
-		@post: creates a temp plan, takes all the neccesary strings
-		@return: {string}, the plan as a string
+		@post creates a temp plan, takes all the neccesary strings
+		@return {string}, the plan as a string
 	*/
 	plan_to_string() {
 		// Version exists to allows this format to be modified in future versions
@@ -56,10 +59,9 @@ class Plan {
 	}
 
 	/**
-		@param: plan {object}, plan object
-		@post: none
-		@return: {bool}, function passing or not.
-		@return: Return if the string is parsed successfully
+		@param plan {string} JSON-encoded string to load into the plan object
+		@post This Plan object is populated with the contents of the plan string
+		@return {bool} If the string was parsed successfully (failure may leave Plan in a partially loaded state)
 	*/
 	string_to_plan(plan) {
 		try {
@@ -91,17 +93,17 @@ class Plan {
 	}
 
 	/**
-		@param: semester {number}, semester index for array
-		@param: column {number}, column index for array
-		@return: course at column in the semsester
+		@param semester {number}, semester index for array
+		@param column {number}, column index for array
+		@return course at column in the semsester
 	*/
 	get_course(semester, col) {
 		return this.semesters[semester].semester_courses[col];
 	}
 
 	/**
-		@param: course_code, {string}, name of course
-		@return: semsester and column where the Course is at in the array
+		@param course_code {string} The code of the course to find
+		@return {[number,number]} The semsester and column where the Course is at in the Plan
 	*/
 	find_course(course_code) {
 		let coords;
@@ -114,19 +116,18 @@ class Plan {
 	}
 
 	/**
-		@param: semester, {number}, semester index for the array
-		@param: column, {number}, column index for the array
-		@param: course {object}, object to add in the array
-		@post: adds course object at column at semester
+		@param semester {number} Semester index for the array
+		@param column {number} Column index for the array
+		@param course {Course} Course to add in the array
+		@post Adds Course object at specified column in specified semester of plan
 	*/
 	add_course(semester, col, course) {
 		this.semesters[semester].add_course(col, course);
 	}
 
 	/**
-		@param: course {course}, course object
-		@post: delete course object from the course_bank
-		@return: none
+		@param course {Course} Course object to remove
+		@post Finds and deletes course object from the wherever it is in the plan
 	*/
 	remove_course(course) {
 		//check course and transfer banks
@@ -145,27 +146,24 @@ class Plan {
 	}
 
 	/**
-		@param: course_code, {string}, course name,
-		@return: course object, with the coures_code name
+		@param course_code {string} The code of the Course to find,
+		@return {Course} The Course object from COURSES matching the coures_code
 	*/
 	course_code_to_object(course_code) {
 		return COURSES.find(course => course.course_code == course_code);
 	}
 
 	/**
-		@param: none
-		@post: course_bank filled with the classes from the major.
-		@return: none
+		@post course_bank filled with the required classes for this.major
 	*/
 	fill_course_bank_w_req_classes() {
 		this.course_bank = this.major.req_class.map(req_class => this.course_code_to_object(req_class));
 	}
 
 	/**
-		@param: season {number}, number 0-2, represents spring, summer, or fall
-		@param: year {number}
-		@post: creates a semester of season and year, which is added in the array
-		@return: none
+		@param season {number} number 0-2, represents spring, summer, or fall
+		@param year {number}
+		@post creates a semester of season and year, which is added in the array
 	*/
 	add_semester(season, year) {
 		let new_order = year*3 + season;
@@ -181,10 +179,9 @@ class Plan {
 	}
 
 	/**
-		@param: season {number}
-		@param: year {number}
-		@post: semester at season and year index is deleted
-		@return: none
+		@param season {number}
+		@param year {number}
+		@post semester at season and year index is deleted
 	*/
 	remove_semester(season, year) {
 		// Find the requested semester object
@@ -196,9 +193,7 @@ class Plan {
 	}
 
 	/**
-		@param: none
-		@post: none
-		@return: {number}, length of longest semester
+		@return {number} length of longest semester
 	*/
 	get_longest() {
 		// Traverse through semesters, updating longest with the length of the longest semester found so far
@@ -206,9 +201,8 @@ class Plan {
 	}
 
 	/**
-		@param: none
-		@post: generates the array of arrows for all courses and all semesters
-		@return: {array}, array of arrows numbers
+		@post Generates the array of arrows for all prerequisite/corequisite relationships in the course grid
+		@return {Arrow[]}, array of Arrow objects to render
 	*/
 	generate_arrows() {
 		var arr_arrows = [];
