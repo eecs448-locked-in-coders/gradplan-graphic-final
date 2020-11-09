@@ -15,15 +15,15 @@ class Executive {
 			return;
 		}
 		this.arrowRender = new ArrowRender();
-		
+
 		// Add tooltips to courses
 		$('#redips-drag').tooltip({selector: '[data-toggle="tooltip"]'})
-		
+
 		// Populate options for major
 		for (let major of MAJORS) {
 			this.makeElement("option", "majorSelect", major.major_name, major.major_name);
 		}
-		
+
 		// Populate options for starting semester
 		let thisYear = new Date().getFullYear();
 		for (let year = thisYear; year >= thisYear-3; year--) {
@@ -31,10 +31,10 @@ class Executive {
 				this.makeElement("option", "startSemesterSelect", "Start in " + SEASON_NAMES[season] + " " + year, year + "-" + season);
 			}
 		}
-		
+
 		// Initialize plan when done is clicked (arrow function used to preserve this)
 		document.getElementById("done").addEventListener("click", () => this.initPlan());
-		
+
 		// Populate list of saved plans to load
 		for (let i = 0; i < localStorage.length; i++) {
 			let key = localStorage.key(i);
@@ -53,7 +53,7 @@ class Executive {
 				}
 			}
 		}
-		
+
 		// Load existing plan on click
 		document.getElementById("load-plan").addEventListener("click", () => {
 			let key = document.getElementById("planSelect").value;
@@ -66,7 +66,7 @@ class Executive {
 			// Substr to remove the gpg-1-
 			document.getElementById("save-name").value = document.getElementById("planSelect").value.substr(6);
 		});
-		
+
 		// Import plan
 		document.getElementById("import-plan").addEventListener("click", () => {
 			let plan_string = document.getElementById("plan-to-import").value;
@@ -74,7 +74,7 @@ class Executive {
 			this.plan.string_to_plan(plan_string);
 			this.update();
 		});
-		
+
 		// Delete saved plan
 		document.getElementById("delete-plan").addEventListener("click", () => {
 			let key = document.getElementById("planSelect").value;
@@ -84,7 +84,7 @@ class Executive {
 			document.getElementById("planSelect").remove(document.getElementById("planSelect").selectedIndex);
 			document.getElementById("planSelect").selectedIndex = 0;
 		});
-		
+
 		// Plan save button
 		document.getElementById("save-button").addEventListener("click", () => {
 			let name = document.getElementById("save-name").value;
@@ -93,7 +93,7 @@ class Executive {
 			name = name.replace(/[^\w\s]/g, ""); // Remove special characters from name
 			this.savePlan(name);
 		});
-		
+
 		// Plan export button
 		document.getElementById("export-button").addEventListener("click", () => {
 			// Copy plan to clipboard
@@ -104,7 +104,7 @@ class Executive {
 			textarea.select();
 			document.execCommand("copy");
 			document.body.removeChild(textarea);
-			
+
 			// Display alert that auto-closes
 			document.getElementById("plan-exported").style.display = "";
 			window.setTimeout(() => document.getElementById("plan-exported").style.display = "none", 5000);
@@ -123,10 +123,10 @@ class Executive {
 				let list = document.getElementById(id);
 				while (list.firstChild) list.removeChild(list.firstChild);
 			}
-			
+
 			// Remove tutorial if present
 			$(".tutorial").remove();
-			
+
 			let course = this.plan.course_code_to_object(targetCell.firstElementChild.dataset["course"]);
 			this.plan.remove_course(course); // Remove course from wherever it is
 			if (targetCell.dataset["bank"] == "course") {
@@ -140,21 +140,21 @@ class Executive {
 			}
 			this.update();
 		};
-		
+
 		// Adding a semester
 		document.getElementById('add-semester-btn').addEventListener('click', () => {
 			let semester = document.getElementById("addSemesterSelect").value;
 			if (semester == "-1") return; // Do nothing if dropdown not selected
 			let [year, season] = semester.split('-').map(Number);
-			
+
 			// Remove semester from dropdown
 			document.getElementById("addSemesterSelect").remove(document.getElementById("addSemesterSelect").selectedIndex);
 			document.getElementById("addSemesterSelect").selectedIndex = 0;
-			
+
 			this.plan.add_semester(season, year);
 			this.update();
 		});
-		
+
 		// Adding a custom course
 		document.getElementById("course_add_submit").addEventListener("click", () => {
 			let t_course_code = document.getElementById("course_code").value;
@@ -173,7 +173,7 @@ class Executive {
 		// Test plan
 		//this.createTestPlan();
 	}
-	
+
 	/**
 	* @pre The values of the starting semester and major dropdowns are valid
 	* @post The welcome screen is hidden and an 8-semester plan is initialized with all courses for the selected major in the course bank
@@ -191,12 +191,12 @@ class Executive {
 		this.update();
 		// Add help text in the first cell
 		document.getElementById("course-grid").rows[0].cells[1].innerHTML = "<div class='tutorial'>Drag-and-drop a course here..</div>";
-		
+
 		// Set up adding semesters - add the summers between the automatic semesters
 		for (let tmpYear = year; tmpYear < year+4; tmpYear++) {
 			this.makeElement("option", "addSemesterSelect", SEASON_NAMES[SUMMER] + " " + tmpYear, tmpYear + "-" + SUMMER);
 		}
-		
+
 		// Option to add the next few semsters
 		year += season == FALL ? 4 : 3;
 		season = 2-season;
@@ -209,7 +209,7 @@ class Executive {
 			this.makeElement("option", "addSemesterSelect", SEASON_NAMES[season] + " " + year, year + "-" + season);
 		}
 	}
-	
+
 	/**
 	* @post All aspects of the plan are updated: Course locations, arrows, credit hours per semester, errors/warnings, etc.
 	**/
@@ -219,13 +219,13 @@ class Executive {
 		this.renderBank("transfer-bank", this.plan.transfer_bank);
 		document.getElementById("print-course-bank").innerText = this.plan.course_bank.map(course => course.course_code).join(", ") || "None";
 		document.getElementById("print-transfer-bank").innerText = this.plan.transfer_bank.map(course => course.course_code).join(", ") || "None";
-		
+
 		// Update main semester grid
 		this.renderCourseGrid(); // Must call before renderArrows
 		let arrows = this.plan.generate_arrows();
 		this.arrowRender.renderArrows(arrows);
 		REDIPS.drag.init(); // Updates which elements have drag-and-drop
-		
+
 		// Update the credit hour displays and the Upper level eligibility
 		for (let semester of this.plan.semesters) {
 			let credit_hours = semester.get_credit_hour();
@@ -240,21 +240,21 @@ class Executive {
 		// Check for invalid placements
 		for (let arrow of arrows) {
 			if (!arrow.fromSide && arrow.yIn >= arrow.yOut) { // Invalid prerequisite
-				this.add_error("INVALID COURSE: " + this.plan.get_course(arrow.yIn, arrow.xIn).course_code 
+				this.add_error("INVALID COURSE: " + this.plan.get_course(arrow.yIn, arrow.xIn).course_code
 					+ " is a prerequisite of " + this.plan.get_course(arrow.yOut, arrow.xOut).course_code + "\n");
 				// Add error class to course. +1 on the x is to account for the semester name column.
 				document.getElementById("course-grid").rows[arrow.yOut].cells[arrow.xOut+1].firstElementChild.classList.add("error");
 				// TODO: Make arrow red (will require moving renderArrows call to after this loop)
 			}
 			else if (arrow.fromSide && arrow.yIn > arrow.yOut) { // Invalid corequisite
-				this.add_error("INVALID COURSE: " + this.plan.get_course(arrow.yIn, arrow.xIn).course_code 
+				this.add_error("INVALID COURSE: " + this.plan.get_course(arrow.yIn, arrow.xIn).course_code
 					+ " is a corequisite of " + this.plan.get_course(arrow.yOut, arrow.xOut).course_code + "\n");
 				// Add error class to course. +1 on the x is to account for the semester name column.
 				document.getElementById("course-grid").rows[arrow.yOut].cells[arrow.xOut+1].firstElementChild.classList.add("error");
 			}
 		}
 		this.checkULE();
-		
+
 		// Autosave plan
 		this.savePlan("autosave");
 	}
@@ -296,12 +296,12 @@ class Executive {
 		for (let i = 0; i < this.plan.semesters.length; i++) {
 			let semester = this.plan.semesters[i];
 			let tr = document.createElement("tr");
-			
+
 			let th = document.createElement("th");
 			th.className = "redips-mark";
 			th.innerHTML = semester.semester_year + " " + semester.season_name() + "<br><span class='ch' id='ch"+semester.semester_year+"-"+semester.semester_season+"'>0 credit hours</span>";
 			tr.appendChild(th);
-			
+
 			// Delete button
 			if (semester.semester_courses.length == 0) {
 				let dele = document.createElement("button");
@@ -315,7 +315,7 @@ class Executive {
 				});
 				th.appendChild(dele);
 			}
-			
+
 			for (let j = 0; j < cols; j++) {
 				let td = document.createElement("td"); // Create a table cell.
 				if (semester.semester_courses[j] != undefined) {
@@ -336,13 +336,13 @@ class Executive {
 
 			grid.appendChild(tr);
 		}
-		
+
 		this.arrowRender.resize(this.plan.semesters.length, cols);
 	}
 
 	/**
 	* @brief checks for upper level eligibility
-	* @post adds a notification if a course needs upper level eligibility 
+	* @post adds a notification if a course needs upper level eligibility
 	* @returns a bool of whether there is upper level eligibility
 	**/
 	checkULE() {
@@ -378,7 +378,7 @@ class Executive {
 		}
 		return false;
 	}
-	
+
 	/**
 	* @param msg {string} The error message about the plan to display to the user
 	* @post The message is added to the elements on the page and print layoutt
@@ -388,7 +388,7 @@ class Executive {
 			this.makeElement("li", id, msg);
 		}
 	}
-	
+
 	/**
 	* @param name {string} The name the saved plan will have
 	* @post The current this.plan is saved to the browser's local storage with a name prefix specific to this applicaion
@@ -397,7 +397,7 @@ class Executive {
 		// 1 is for version number
 		localStorage.setItem("gpg-1-" + name, this.plan.plan_to_string());
 	}
-	
+
 	/**
 	* @param name {string} The name of the plan saved in the user's browser (must exist)
 	* @post The plan matching the name is retrieved from the browser's local storage and used to populate this.plan
@@ -405,7 +405,7 @@ class Executive {
 	loadPlan(name) {
 		this.plan.string_to_plan(localStorage.getItem("gpg-1-" + name));
 	}
-	
+
 	/**
 	* @brief This is a helper method used to reduce the repetitiveness of this code as creating elements is done in several places
 	* @param type {string} The type of the DOM element to create
@@ -420,7 +420,7 @@ class Executive {
 		if (parentId) document.getElementById(parentId).appendChild(el);
 		return el;
 	}
-	
+
 	/**
 	* @post An example plan is created to test arrow rendering and other aspects of the code
 	**/
