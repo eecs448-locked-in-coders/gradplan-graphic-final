@@ -49,7 +49,7 @@ COURSES = [
 	new Course("EECS 560", "Data Structures", ["EECS 210", "EECS 448"], [], [1,0,1], 4),
 	new Course("EECS 562", "Intro to Comm System", ["EECS 212", "EECS 360"], [], [1,0,1], 4),
 	new Course("EECS 563", "Intro to Comm Network", ["EECS 168", "MATH 526", "EECS 461"], [], [1,0,0], 3),
-	new Course("EECS 581", "Computer Science Design I", ["EECS 448"], ["EECS 510", "EECS 560"], [1,0,0], 3),
+	new Course("EECS 581", "Computer Science Design I", ["EECS 448"], ["EECS 510", "EECS 560"], [0,0,1], 3),
 	new Course("EECS 582", "Computer Science Design II", ["EECS 581"], [], [1,0,0], 3),
 	new Course("EECS 645", "Computer Architecture", ["EECS 388"], [], [1,0,1], 3),
 	new Course("EECS 660", "Fndmntls of Computer Algorthms", ["EECS 560", "MATH 526"], [], [1,0,1], 3),
