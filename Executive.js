@@ -5,10 +5,15 @@ const BANK_COLS = 3;
 * @description Manages user interaction, updating the plan and elements on the page as required
 **/
 class Executive {
+
 	/**
 	* @post Dropdowns are populated and event listeners are set up on elements of the page the user can interact with
 	**/
-	constructor() {
+	constructor(test) {
+		// used for test suite
+		if (test) {
+			return;
+		}
 		this.arrowRender = new ArrowRender();
 		
 		// Add tooltips to courses
@@ -221,7 +226,7 @@ class Executive {
 		this.arrowRender.renderArrows(arrows);
 		REDIPS.drag.init(); // Updates which elements have drag-and-drop
 		
-		// Update the credit hour displays
+		// Update the credit hour displays and the Upper level eligibility
 		for (let semester of this.plan.semesters) {
 			let credit_hours = semester.get_credit_hour();
 			document.getElementById("ch" + semester.semester_year + "-" + semester.semester_season).innerText = credit_hours + " credit hours";
@@ -248,6 +253,7 @@ class Executive {
 				document.getElementById("course-grid").rows[arrow.yOut].cells[arrow.xOut+1].firstElementChild.classList.add("error");
 			}
 		}
+		this.checkULE();
 		
 		// Autosave plan
 		this.savePlan("autosave");
@@ -332,6 +338,45 @@ class Executive {
 		}
 		
 		this.arrowRender.resize(this.plan.semesters.length, cols);
+	}
+
+	/**
+	* @brief checks for upper level eligibility
+	* @post adds a notification if a course needs upper level eligibility 
+	* @returns a bool of whether there is upper level eligibility
+	**/
+	checkULE() {
+		let ule_req_count = 0;
+		for (let courses of this.plan.major.ule) {
+			if (this.plan.transfer_bank.find(course => {if (course != undefined) if (course.course_code == courses) return course;}) != undefined) {
+				ule_req_count++;
+			}
+		}
+		for (let semester of this.plan.semesters) {
+			if (ule_req_count < this.plan.major.ule.length) {
+				if (semester.semester_courses.length > 0){
+					for (let courses of semester.semester_courses) {
+						if (courses != undefined){
+							if (this.plan.major.ule.find(course => {if (course != undefined) if (course == courses.course_code) return course;}) == undefined) {
+								let code = courses.course_code.split(" ");
+								if ((code[0] == "EECS" && parseInt(code[1]) > 300) || (code[0] == "Sen")) {
+									if (ULE_EXCECPTIONS.find(course => course == courses.course_code) == undefined) {
+										this.add_error("INVALID COURSE: " + courses.course_code + " needs Upper Level Eligibility. \n");
+										let coord = this.plan.find_course(courses.course_code);
+										document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("error");
+									}
+								}
+							} else {
+								ule_req_count++;
+							}
+						}
+					}
+				}
+			} else {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
