@@ -135,3 +135,5 @@ COURSES = [
 	new Course("AE 4.2", "Global cultural diversity", [], [], [1,1,1], 3),
 	new Course("AE 5.1", "Social Responsibility and Ethics", [], [], [1,1,1], 3)
 ];
+
+ULE_EXCECPTIONS = ["EECS 312","EECS 361","EECS 368","EECS 388"];

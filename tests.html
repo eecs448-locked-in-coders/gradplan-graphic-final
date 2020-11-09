@@ -161,6 +161,45 @@
 
 				startSection("Executive class"); // ===========================
 
+				runTest("Check for upper level eligibility ", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					exec.plan.add_course(0, 1, exec.plan.course_code_to_object("EECS 168"));
+					exec.plan.add_course(0, 2, exec.plan.course_code_to_object("EECS 140"));
+					exec.plan.add_course(0, 3, exec.plan.course_code_to_object("EECS 101"));
+					exec.plan.add_course(1, 1, exec.plan.course_code_to_object("MATH 125"));
+					exec.plan.add_course(1, 3, exec.plan.course_code_to_object("GE 2.1(2)"));
+					exec.plan.add_course(2, 3, exec.plan.course_code_to_object("GE 2.1(1)"));
+					exec.plan.add_course(2, 0, exec.plan.course_code_to_object("EECS 268"));
+					exec.plan.add_course(2, 1, exec.plan.course_code_to_object("PHSX 210"));
+					exec.plan.add_course(2, 2, exec.plan.course_code_to_object("EECS 210"));
+					exec.plan.add_course(2, 4, exec.plan.course_code_to_object("PHSX 216"));
+					exec.plan.add_course(2, 5, exec.plan.course_code_to_object("MATH 126"));
+					exec.plan.add_course(3, 0, exec.plan.course_code_to_object("MATH 127"));
+					exec.plan.add_course(3, 1, exec.plan.course_code_to_object("MATH 290"));
+					exec.plan.add_course(3, 2, exec.plan.course_code_to_object("PHSX 212"));
+					exec.plan.add_course(3, 3, exec.plan.course_code_to_object("PHSX 236"));
+
+					let exec2 = new Executive(true);
+					exec2.plan = new Plan("Interdisciplinary Computing (Geography)", SPRING, 2019);
+					exec2.plan.add_course(0, 1, exec2.plan.course_code_to_object("EECS 168"));
+					exec2.plan.add_course(0, 2, exec2.plan.course_code_to_object("EECS 140"));
+					exec2.plan.add_course(0, 3, exec2.plan.course_code_to_object("EECS 101"));
+					exec2.plan.add_course(1, 1, exec2.plan.course_code_to_object("MATH 125"));
+					exec2.plan.add_course(1, 3, exec2.plan.course_code_to_object("GE 2.1(2)"));
+					exec2.plan.add_course(2, 3, exec2.plan.course_code_to_object("GE 2.1(1)"));
+					exec2.plan.add_course(2, 0, exec2.plan.course_code_to_object("EECS 268"));
+					exec2.plan.add_course(2, 1, exec2.plan.course_code_to_object("PHSX 210"));
+					exec2.plan.add_course(2, 2, exec2.plan.course_code_to_object("EECS 210"));
+					exec2.plan.add_course(2, 4, exec2.plan.course_code_to_object("PHSX 216"));
+					exec2.plan.add_course(2, 5, exec2.plan.course_code_to_object("MATH 126"));
+					exec2.plan.add_course(3, 0, exec2.plan.course_code_to_object("MATH 127"));
+					//exec2.plan.add_course(3, 1, exec2.plan.course_code_to_object("MATH 290")); Exclude this one on purpose
+				
+					return (exec.checkULE() && !exec2.checkULE());
+					
+				});
+				
 				startSection("Arrow class"); // ===============================
 
 				startSection("ArrowRender class"); // =========================
