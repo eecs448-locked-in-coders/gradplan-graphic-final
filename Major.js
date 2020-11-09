@@ -1,8 +1,13 @@
-//List of required classes, list of electives, credit hour requirements
+/**
+* @class
+* @description Represents a major: Its name, list of required classes, and list of classes for upper level eligibility
+*/
 class Major {
-	/*
-		major_name = string
-		req_class = [string]
+	/**
+	* @param major_name {string} The name of the major
+	* @param req_class {string[]} An array of course codes the major requires
+	* @param ule {string[]} An array of course codes that must be taken to have have upper level eligibility
+	* @post All parameters are assigned to their respective member variables
 	*/
 	constructor(major_name, req_class, ule) {
 		this.major_name = major_name;
