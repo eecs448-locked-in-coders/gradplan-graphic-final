@@ -131,6 +131,7 @@
 				runTest("Plan.add_semester() adds the semester", () => {
 					let plan = new Plan("Computer Science", FALL, 2018);
 					plan.add_semester(1, 2018);
+					console.log(plan);
 					return plan.semesters.length === 9;
 				});
 
@@ -162,7 +163,7 @@
 
 				startSection("Executive class"); // ===========================
 
-				runTest("Check for upper level eligibility ", () => {
+				runTest("Check for upper level eligibility", () => {
 					let exec = new Executive(true);
 					exec.plan = new Plan("Computer Science", FALL, 2018);
 					exec.plan.add_course(0, 1, exec.plan.course_code_to_object("EECS 168"));

@@ -15,9 +15,7 @@ class Plan {
 		@post All parameters are assigned to their respective member variables and the first 8 falls/springs after the start semester are added
 	*/
 	constructor(major_name, start_season, start_year) {
-
 		this.major = MAJORS.find(major => major.major_name == major_name);
-		console.log(this.major);
 		this.semesters = [];
 		this.course_bank = [];
 		this.transfer_bank = [];
@@ -54,7 +52,6 @@ class Plan {
 				}),
 			})),
 		};
-		console.log(plan);
 		return JSON.stringify(plan);
 	}
 
@@ -76,7 +73,6 @@ class Plan {
 				semester.semester_courses.map(course_code => {
 					if (course_code == "") return undefined;
 					else if (Array.isArray(course_code)) { // custom course - recreate it
-						console.log(course_code);
 						let course = new Course(course_code[0], "Custom course", [], [], [1,1,1], course_code[1], true);
 						COURSES.push(course);
 						return course;
@@ -171,6 +167,7 @@ class Plan {
 		// Edge case: Adding semester directly before first semester
 		if (new_order < this.semesters[0].semester_year*3 + this.semesters[0].semester_season) {
 			this.semesters.splice(0, 0, new Semester(season, year, []));
+			return;
 		}
 		
 		for (let i = 0; i < this.semesters.length; i++) {
