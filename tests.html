@@ -195,11 +195,39 @@
 					exec2.plan.add_course(2, 5, exec2.plan.course_code_to_object("MATH 126"));
 					exec2.plan.add_course(3, 0, exec2.plan.course_code_to_object("MATH 127"));
 					//exec2.plan.add_course(3, 1, exec2.plan.course_code_to_object("MATH 290")); Exclude this one on purpose
-				
+
 					return (exec.checkULE() && !exec2.checkULE());
-					
+
 				});
-				
+
+				runTest("Tests if savePlan() saves to local", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					exec.savePlan("Test");
+					let local_string = localStorage.getItem("gpg-1-Test");
+					return (exec.plan.plan_to_string().length == local_string.length);
+				});
+				/*
+				runTest("Tests if add_error() is retained", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					exec.add_error("Test String Error");
+
+
+					return (false);
+				});
+				*/
+
+				runTest("Tests makeElement() format", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					for (let id of ["notifications", "print-notifications"]) {
+						exec.makeElement("li", id, "Error");
+					}
+					console.log(["notifications", "print-notifications"]);
+					return (false);
+				});
+
 				startSection("Arrow class"); // ===============================
 
 				startSection("ArrowRender class"); // =========================
