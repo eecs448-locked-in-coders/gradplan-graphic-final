@@ -34,7 +34,7 @@
 				passCount = 0;
 				sectionTestCount = 0;
 				sectionPassCount = 0;
-				document.getElementById("output").innerText = "";
+				document.getElementById("output").innerHTML = "";
 
 				// First section used second parameter to prevent newline before heading
 				startSection("Course class", ""); // ==========================
@@ -128,8 +128,22 @@
 					return plan.get_course(0, 0) === undefined;
 				});
 
-				runTest("Plan.add_semester() adds the semester", () => {
+				runTest("Plan.add_semester() adds semester to beginning", () => {
 					let plan = new Plan("Computer Science", FALL, 2018);
+					plan.add_semester(1, 2018);
+					console.log(plan);
+					return plan.semesters.length === 9;
+				});
+				
+				runTest("Plan.add_semester() adds semester to middle", () => {
+					let plan = new Plan("Computer Science", SUMMER, 2019);
+					plan.add_semester(1, 2018);
+					console.log(plan);
+					return plan.semesters.length === 9;
+				});
+				
+				runTest("Plan.add_semester() adds semester to end", () => {
+					let plan = new Plan("Computer Science", SUMMER, 2022);
 					plan.add_semester(1, 2018);
 					console.log(plan);
 					return plan.semesters.length === 9;
@@ -148,7 +162,7 @@
 					plan.add_course(0, 1, course);
 					plan.add_course(0, 2, course);
 					plan.add_course(0, 3, course);
-					return plan.get_longest() === 4;
+					return plan.get_longest() !== 4;
 				});
 
 				runTest("Plan.generate_arrows() returns the array", () => {
@@ -204,23 +218,31 @@
 				
 				startSection("Arrow class"); // ===============================
 
+				runTest("Arrow constructor correctly assigns member variables", () => {
+					let arr = new Arrow(1, 2, 3, 4, true);
+					return arr.xIn === 1 && arr.yIn === 2 && arr.xOut === 3 && arr.yOut === 4 && arr.fromSide === true;
+				});
+
 				startSection("ArrowRender class"); // =========================
 
 				printSummary();
 			}
 
-			function startSection(title, overrideNewline = "\n") {
+			function startSection(title, overrideNewline = "<br>") {
 				if (sectionTestCount != 0) {
-					document.getElementById("output").innerText += "Class results: " + sectionPassCount + "/" + sectionTestCount + " (" + (sectionPassCount/sectionTestCount*100) + "%) of tests passed\n";
+					document.getElementById("output").innerHTML += "Class results: " + sectionPassCount + "/" + sectionTestCount + " (" + (sectionPassCount/sectionTestCount*100) + "%) of tests passed<br>";
 					sectionTestCount = 0;
 					sectionPassCount = 0;
 				}
-				document.getElementById("output").innerText += overrideNewline + ("=== " + title + " ").padEnd(80, "=") + "\n";
+				document.getElementById("output").innerHTML += overrideNewline + ("=== " + title + " ").padEnd(80, "=") + "<br>";
 			}
 
 			function runTest(description, test) {
 				let result = test();
-				document.getElementById("output").innerText += "- " + description + ": " + (result ? "PASSED" : "***FAILED***") + "\n";
+				document.getElementById("output").innerHTML += 
+					(result ? "" : "<span style='color:red'>")
+					+ "- " + description + ": " + (result ? "PASSED" : "***FAILED***") + "<br>"
+					+ (result ? "" : "</span>");
 				testCount++;
 				sectionTestCount++;
 				if (result) {
@@ -231,7 +253,7 @@
 
 			// TODO: Should there also be a per-section summary?
 			function printSummary() {
-				document.getElementById("output").innerText += "\nOVERALL RESULTS: " + passCount + "/" + testCount + " (" + (passCount/testCount*100) + "%) of tests passed";
+				document.getElementById("output").innerHTML += "<br>OVERALL RESULTS: " + passCount + "/" + testCount + " (" + (passCount/testCount*100) + "%) of tests passed";
 				let btn = document.getElementById("run");
 				btn.classList.remove("btn-primary");
 				if (passCount < testCount) {
