@@ -87,11 +87,76 @@
 				startSection("Plan class"); // ================================
 
 				//runTest("Plan.string_to_plan returns same plan as created with plan_to_string" () => {});
+				runTest("Plan.plan_to_string() returns a string", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					return typeof plan.plan_to_string() === 'string';
+				});
 
 				runTest("Plan.course_code_to_object() finds the correct course object", () => {
 					let plan = new Plan("Computer Science", FALL, 2018);
 					let eecs448 = plan.course_code_to_object("EECS 448");
 					return eecs448.title === "Software Engineering I";
+				});
+
+				runTest("Plan.find_course() finds the course", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					return JSON.stringify(plan.find_course("EECS 101")) === JSON.stringify([0, 0]);
+				});
+
+				runTest("Plan.add_course() adds the course", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					return JSON.stringify(plan.find_course("EECS 101")) === JSON.stringify([0, 0]);
+				});
+
+				runTest("Plan.get_course() returns the course", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					return plan.get_course(0, 0) == course;
+				});
+
+				runTest("Plan.remove_course() removes the course", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					plan.remove_course(course);
+					return plan.get_course(0, 0) === undefined;
+				});
+
+				runTest("Plan.add_semester() adds the semester", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					plan.add_semester(1, 2018);
+					return plan.semesters.length === 9;
+				});
+
+				runTest("Plan.remove_semester() removes the semester", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					plan.remove_semester(2, 2018);
+					return plan.semesters.length === 7;
+				});
+
+				runTest("Plan.get_longest() returns the longest semester", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					plan.add_course(0, 1, course);
+					plan.add_course(0, 2, course);
+					plan.add_course(0, 3, course);
+					return plan.get_longest() === 4;
+				});
+
+				runTest("Plan.generate_arrows() returns the array", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course1 = new Course("EECS 168", "Programming I",  [], ["MATH 104"], [1,1,1], 4);
+					let course2 = new Course("EECS 268", "Programming II", ["EECS 168"], [], [1,1,1], 4);
+					plan.add_course(0, 0, course1);
+					plan.add_course(1, 0, course2);
+					let arr_ar = [new Arrow(0, 0, 0, 1, false)];
+					return JSON.stringify(plan.generate_arrows()) === JSON.stringify(arr_ar);
 				});
 
 				startSection("Executive class"); // ===========================
