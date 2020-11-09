@@ -4,7 +4,7 @@ const UP = 1, DOWN = 2, LEFT = 3, RIGHT = 4;
 const LEFT_OFFSET = 120; // Offset due to the column of the chart with the semester names
 const TOP_OFFSET = 0; // Currently zero, but of padding is added for outside channels may increase
 
-const VERT_CHANNELS = [1, 3, 0, 4, 2]; // Order channels will be filled (5 vert channels)
+const VERT_CHANNELS = [2, 4, 1, 5, 0, 6, 3]; // Order channels will be filled (7 vert channels)
 const HORIZ_CHANNELS = [1, 5, 2, 4, 0, 6, 3]; // Order channels will be filled (7 horiz channels)
 
 const TD_WIDTH = 120;
@@ -40,11 +40,7 @@ class ArrowRender {
 	**/
 	constructor() {
 		this.draw = SVG().addTo(document.getElementById("arrows"));
-
-		// Default to empty SVG
-		this.rows = 0;
-		this.cols = 0;
-		this.resize();
+		this.resize(0, 0); // Default to empty SVG
 	}
 
 	/**
