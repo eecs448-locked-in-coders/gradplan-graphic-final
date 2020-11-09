@@ -83,7 +83,7 @@ class Plan {
 			return true; // Successful parse
 		} catch (e) {
 			// An error occured, most likely due an incorrectly formatted string
-			console.log(e);
+			console.error(e);
 			return false;
 		}
 	}

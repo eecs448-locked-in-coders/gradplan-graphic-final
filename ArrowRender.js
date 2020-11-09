@@ -40,11 +40,7 @@ class ArrowRender {
 	**/
 	constructor() {
 		this.draw = SVG().addTo(document.getElementById("arrows"));
-
-		// Default to empty SVG
-		this.rows = 0;
-		this.cols = 0;
-		this.resize();
+		this.resize(0, 0); // Default to empty SVG
 	}
 
 	/**
