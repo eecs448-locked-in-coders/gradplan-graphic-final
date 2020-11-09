@@ -353,20 +353,22 @@ class Executive {
 			}
 		}
 		for (let semester of this.plan.semesters) {
-			if (ule_req_count < this.plan.major.ule.length && semester.semester_courses.length > 0) {
-				for (let courses of semester.semester_courses) {
-					if (courses != undefined){
-						if (this.plan.major.ule.find(course => {if (course != undefined) if (course == courses.course_code) return course;}) == undefined) {
-							let code = courses.course_code.split(" ");
-							if ((code[0] == "EECS" && parseInt(code[1]) > 300) || (code[0] == "Sen")) {
-								if (ULE_EXCECPTIONS.find(course => course == courses.course_code) == undefined) {
-									this.add_error("INVALID COURSE: " + courses.course_code + " needs Upper Level Eligibility. \n");
-									let coord = this.plan.find_course(courses.course_code);
-									document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("error");
+			if (ule_req_count < this.plan.major.ule.length) {
+				if (semester.semester_courses.length > 0){
+					for (let courses of semester.semester_courses) {
+						if (courses != undefined){
+							if (this.plan.major.ule.find(course => {if (course != undefined) if (course == courses.course_code) return course;}) == undefined) {
+								let code = courses.course_code.split(" ");
+								if ((code[0] == "EECS" && parseInt(code[1]) > 300) || (code[0] == "Sen")) {
+									if (ULE_EXCECPTIONS.find(course => course == courses.course_code) == undefined) {
+										this.add_error("INVALID COURSE: " + courses.course_code + " needs Upper Level Eligibility. \n");
+										let coord = this.plan.find_course(courses.course_code);
+										document.getElementById("course-grid").rows[coord[0]].cells[coord[1]+1].firstElementChild.classList.add("error");
+									}
 								}
+							} else {
+								ule_req_count++;
 							}
-						} else {
-							ule_req_count++;
 						}
 					}
 				}
