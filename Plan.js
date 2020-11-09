@@ -167,6 +167,12 @@ class Plan {
 	*/
 	add_semester(season, year) {
 		let new_order = year*3 + season;
+		
+		// Edge case: Adding semester directly before first semester
+		if (new_order < this.semesters[0].semester_year*3 + this.semesters[0].semester_season) {
+			this.semesters.splice(0, 0, new Semester(season, year, []));
+		}
+		
 		for (let i = 0; i < this.semesters.length; i++) {
 			let old_order = this.semesters[i].semester_year*3 + this.semesters[i].semester_season;
 			if (old_order+1 == new_order) {
@@ -174,6 +180,7 @@ class Plan {
 				return; // Important for preventing infinite loops
 			}
 		}
+		
 		// Add semester at end if location is not in middle
 		this.semesters.splice(this.semesters.length, 0, new Semester(season, year, []));
 	}
