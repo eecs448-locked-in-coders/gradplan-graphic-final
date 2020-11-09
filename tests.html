@@ -11,7 +11,7 @@
 				color: lime;
 			}
 		</style>
-		
+
 		<script type="text/javascript" src="Executive.js"></script>
 		<script type="text/javascript" src="ArrowRender.js"></script>
 		<script type="text/javascript" src="Plan.js"></script>
@@ -22,12 +22,12 @@
 			window.addEventListener("DOMContentLoaded", e => {
 				document.getElementById("run").addEventListener("click", runTests);
 			});
-			
+
 			let testCount = 0;
 			let passCount = 0;
 			let sectionTestCount = 0;
 			let sectionPassCount = 0;
-			
+
 			function runTests() {
 				// Reset
 				testCount = 0;
@@ -35,10 +35,10 @@
 				sectionTestCount = 0;
 				sectionPassCount = 0;
 				document.getElementById("output").innerText = "";
-				
+
 				// First section used second parameter to prevent newline before heading
 				startSection("Course class", ""); // ==========================
-				
+
 				runTest("Course constructor correctly assigns member variables", () => {
 					let c = new Course("name", "desc", ["prereq1", "prereq2"], ["coreq1"], [1, 0, 1], 3, false);
 					return c.course_code === "name" && c.title === "desc"
@@ -47,50 +47,167 @@
 						&& JSON.stringify(c.course_semester) === JSON.stringify([1, 0, 1])
 						&& c.credit_hour === 3 && c.is_custom === false
 				});
-				
+
 				runTest("Course.to_html() generates correct HTML", () => {
 					let c = new Course("name", "desc", ["prereq1", "prereq2"], ["coreq1"], [1, 0, 1], 3, false);
 					return c.to_html() === '<div class="redips-drag" data-toggle="tooltip" title="desc" data-course="name">name<br>(3)</div>';
 				});
-			
+
 				startSection("Major class"); // ===============================
-				
+
 				runTest("Major constructor correctly assigns member variables", () => {
 					let m = new Major("major name", ["req1", "req2", "req3"]);
 					return m.major_name && JSON.stringify(m.req_class) === JSON.stringify(["req1", "req2", "req3"]);
 				});
-				
+
 				startSection("Semester class"); // ============================
-				
+
 				runTest("Semester.get_credit_hour() returns zero for empty semester", () => {
 					let semester = new Semester(FALL, 2018, []);
 					return semester.get_credit_hour() === 0;
 				});
-				
+
 				runTest("Semester.get_credit_hour() returns correct number of credit-hours for non-empty semester", () => {
 					let semester = new Semester(FALL, 2018, [new Course("3 ch test", "desc", [], [], [1,1,1], 3), new Course("4 ch test", "desc", [], [], [1,1,1], 4)]);
 					return semester.get_credit_hour() === 7;
 				});
-			
+
+				runTest("Semester.add_course() and Semester.remove_course() returns zero for empty semester", () => {
+					let semester = new Semester(FALL, 2018, []);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					semester.add_course(0, course);
+					semester.remove_course(course);
+					return semester.get_credit_hour() === 0;
+				});
+
+				runTest("Semester.season_name() returns the right string", () => {
+					let semester = new Semester(FALL, 2018, []);
+					return semester.season_name() === "Fall";
+				});
+
 				startSection("Plan class"); // ================================
-				
+
 				//runTest("Plan.string_to_plan returns same plan as created with plan_to_string" () => {});
-				
+				runTest("Plan.plan_to_string() returns a string", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					return typeof plan.plan_to_string() === 'string';
+				});
+
 				runTest("Plan.course_code_to_object() finds the correct course object", () => {
 					let plan = new Plan("Computer Science", FALL, 2018);
 					let eecs448 = plan.course_code_to_object("EECS 448");
 					return eecs448.title === "Software Engineering I";
 				});
-				
+
+				runTest("Plan.find_course() finds the course", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					return JSON.stringify(plan.find_course("EECS 101")) === JSON.stringify([0, 0]);
+				});
+
+				runTest("Plan.add_course() adds the course", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					return JSON.stringify(plan.find_course("EECS 101")) === JSON.stringify([0, 0]);
+				});
+
+				runTest("Plan.get_course() returns the course", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					return plan.get_course(0, 0) == course;
+				});
+
+				runTest("Plan.remove_course() removes the course", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					plan.remove_course(course);
+					return plan.get_course(0, 0) === undefined;
+				});
+
+				runTest("Plan.add_semester() adds the semester", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					plan.add_semester(1, 2018);
+					return plan.semesters.length === 9;
+				});
+
+				runTest("Plan.remove_semester() removes the semester", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					plan.remove_semester(2, 2018);
+					return plan.semesters.length === 7;
+				});
+
+				runTest("Plan.get_longest() returns the longest semester", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course = new Course("EECS 101", "New Student Seminar", [], ["MATH 104"], [0,0,1], 1);
+					plan.add_course(0, 0, course);
+					plan.add_course(0, 1, course);
+					plan.add_course(0, 2, course);
+					plan.add_course(0, 3, course);
+					return plan.get_longest() === 4;
+				});
+
+				runTest("Plan.generate_arrows() returns the array", () => {
+					let plan = new Plan("Computer Science", FALL, 2018);
+					let course1 = new Course("EECS 168", "Programming I",  [], ["MATH 104"], [1,1,1], 4);
+					let course2 = new Course("EECS 268", "Programming II", ["EECS 168"], [], [1,1,1], 4);
+					plan.add_course(0, 0, course1);
+					plan.add_course(1, 0, course2);
+					let arr_ar = [new Arrow(0, 0, 0, 1, false)];
+					return JSON.stringify(plan.generate_arrows()) === JSON.stringify(arr_ar);
+				});
+
 				startSection("Executive class"); // ===========================
+
+				runTest("Check for upper level eligibility ", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					exec.plan.add_course(0, 1, exec.plan.course_code_to_object("EECS 168"));
+					exec.plan.add_course(0, 2, exec.plan.course_code_to_object("EECS 140"));
+					exec.plan.add_course(0, 3, exec.plan.course_code_to_object("EECS 101"));
+					exec.plan.add_course(1, 1, exec.plan.course_code_to_object("MATH 125"));
+					exec.plan.add_course(1, 3, exec.plan.course_code_to_object("GE 2.1(2)"));
+					exec.plan.add_course(2, 3, exec.plan.course_code_to_object("GE 2.1(1)"));
+					exec.plan.add_course(2, 0, exec.plan.course_code_to_object("EECS 268"));
+					exec.plan.add_course(2, 1, exec.plan.course_code_to_object("PHSX 210"));
+					exec.plan.add_course(2, 2, exec.plan.course_code_to_object("EECS 210"));
+					exec.plan.add_course(2, 4, exec.plan.course_code_to_object("PHSX 216"));
+					exec.plan.add_course(2, 5, exec.plan.course_code_to_object("MATH 126"));
+					exec.plan.add_course(3, 0, exec.plan.course_code_to_object("MATH 127"));
+					exec.plan.add_course(3, 1, exec.plan.course_code_to_object("MATH 290"));
+					exec.plan.add_course(3, 2, exec.plan.course_code_to_object("PHSX 212"));
+					exec.plan.add_course(3, 3, exec.plan.course_code_to_object("PHSX 236"));
+
+					let exec2 = new Executive(true);
+					exec2.plan = new Plan("Interdisciplinary Computing (Geography)", SPRING, 2019);
+					exec2.plan.add_course(0, 1, exec2.plan.course_code_to_object("EECS 168"));
+					exec2.plan.add_course(0, 2, exec2.plan.course_code_to_object("EECS 140"));
+					exec2.plan.add_course(0, 3, exec2.plan.course_code_to_object("EECS 101"));
+					exec2.plan.add_course(1, 1, exec2.plan.course_code_to_object("MATH 125"));
+					exec2.plan.add_course(1, 3, exec2.plan.course_code_to_object("GE 2.1(2)"));
+					exec2.plan.add_course(2, 3, exec2.plan.course_code_to_object("GE 2.1(1)"));
+					exec2.plan.add_course(2, 0, exec2.plan.course_code_to_object("EECS 268"));
+					exec2.plan.add_course(2, 1, exec2.plan.course_code_to_object("PHSX 210"));
+					exec2.plan.add_course(2, 2, exec2.plan.course_code_to_object("EECS 210"));
+					exec2.plan.add_course(2, 4, exec2.plan.course_code_to_object("PHSX 216"));
+					exec2.plan.add_course(2, 5, exec2.plan.course_code_to_object("MATH 126"));
+					exec2.plan.add_course(3, 0, exec2.plan.course_code_to_object("MATH 127"));
+					//exec2.plan.add_course(3, 1, exec2.plan.course_code_to_object("MATH 290")); Exclude this one on purpose
+				
+					return (exec.checkULE() && !exec2.checkULE());
+					
+				});
 				
 				startSection("Arrow class"); // ===============================
-				
+
 				startSection("ArrowRender class"); // =========================
-				
+
 				printSummary();
 			}
-			
+
 			function startSection(title, overrideNewline = "\n") {
 				if (sectionTestCount != 0) {
 					document.getElementById("output").innerText += "Class results: " + sectionPassCount + "/" + sectionTestCount + " (" + (sectionPassCount/sectionTestCount*100) + "%) of tests passed\n";
@@ -99,7 +216,7 @@
 				}
 				document.getElementById("output").innerText += overrideNewline + ("=== " + title + " ").padEnd(80, "=") + "\n";
 			}
-			
+
 			function runTest(description, test) {
 				let result = test();
 				document.getElementById("output").innerText += "- " + description + ": " + (result ? "PASSED" : "***FAILED***") + "\n";
@@ -110,7 +227,7 @@
 					sectionPassCount++;
 				}
 			}
-			
+
 			// TODO: Should there also be a per-section summary?
 			function printSummary() {
 				document.getElementById("output").innerText += "\nOVERALL RESULTS: " + passCount + "/" + testCount + " (" + (passCount/testCount*100) + "%) of tests passed";

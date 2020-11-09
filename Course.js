@@ -49,8 +49,8 @@ COURSES = [
 	new Course("EECS 560", "Data Structures", ["EECS 210", "EECS 448"], [], [1,0,1], 4),
 	new Course("EECS 562", "Intro to Comm System", ["EECS 212", "EECS 360"], [], [1,0,1], 4),
 	new Course("EECS 563", "Intro to Comm Network", ["EECS 168", "MATH 526", "EECS 461"], [], [1,0,0], 3),
-	new Course("EECS 581", "Computer Science Design I", ["EECS 448"], ["EECS 510", "EECS 560"], [1,0,1], 3),
-	new Course("EECS 582", "Computer Science Design II", ["EECS 581"], [], [1,0,1], 3),
+	new Course("EECS 581", "Computer Science Design I", ["EECS 448"], ["EECS 510", "EECS 560"], [1,0,0], 3),
+	new Course("EECS 582", "Computer Science Design II", ["EECS 581"], [], [1,0,0], 3),
 	new Course("EECS 645", "Computer Architecture", ["EECS 388"], [], [1,0,1], 3),
 	new Course("EECS 660", "Fndmntls of Computer Algorthms", ["EECS 560", "MATH 526"], [], [1,0,1], 3),
 	new Course("EECS 662", "Programming Languages", ["EECS 368", "EECS 560"], [], [1,0,1], 3),
@@ -79,6 +79,7 @@ COURSES = [
 	new Course("PHSX Elec 1", "Most 600+ PHSX courses", [], [], [1,1,1], 3),
 	new Course("PHSX Elec 2", "Most 600+ PHSX courses", [], [], [1,1,1], 3),
 	new Course("ECON 142/144", "Micro/Macro Economics", [], [], [1,1,1], 3),
+	new Course("CHEM 130/150", "General Chemistry I/Engineering Chemistry", [], [], [1,1,1], 5),
 	new Course("CHEM 130", "General Chemistry I", [], [], [1,1,1], 5),
 	new Course("CHEM 135", "General Chemistry II", ["CHEM 130"], [], [1,1,1], 5),
 	new Course("CHEM 330", "Organic Chemistry I", ["CHEM 135"], [], [1,0,1], 3),
@@ -134,3 +135,5 @@ COURSES = [
 	new Course("AE 4.2", "Global cultural diversity", [], [], [1,1,1], 3),
 	new Course("AE 5.1", "Social Responsibility and Ethics", [], [], [1,1,1], 3)
 ];
+
+ULE_EXCECPTIONS = ["EECS 312","EECS 361","EECS 368","EECS 388"];
