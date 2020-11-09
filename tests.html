@@ -95,9 +95,9 @@
 				startSection("Plan class"); // ================================
 
 				//runTest("Plan.string_to_plan returns same plan as created with plan_to_string" () => {});
-				runTest("Plan.plan_to_string returns a string", () => {
+				runTest("Plan.plan_to_string() returns the stringifyed plan", () => {
 					let plan = new Plan("Computer Science", FALL, 2018);
-					return typeof plan.plan_to_string() === 'string';
+					return plan.plan_to_string().substring(40) === '{"version":1,"timestamp":1604899066873,"major":"Computer Science","course_bank":["EECS 101","EECS 140","EECS 168","EECS 210","EECS 268","EECS 368","EECS 388","EECS 448","EECS 510","EECS 560","EECS 581","EECS 582","EECS 645","EECS 660","EECS 662","EECS 665","EECS 678","MATH 125","MATH 126","MATH 127","MATH 290","MATH 526","PHSX 210","PHSX 212","PHSX 216","PHSX 236","Sen Elec 1","Sen Elec 2","Sen Elec 3","Sen Elec 4","Prof Elec 1","GE 3N","GE 2.1(1)","GE 2.1(2)","GE 2.2","GE 3H","GE 3S","Add A/H","Add SS","AE 4.1","AE 4.2"],"transfer_bank":[],"semesters":[{"semester_year":2018,"semester_season":2,"semester_courses":[]},{"semester_year":2019,"semester_season":0,"semester_courses":[]},{"semester_year":2019,"semester_season":2,"semester_courses":[]},{"semester_year":2020,"semester_season":0,"semester_courses":[]},{"semester_year":2020,"semester_season":2,"semester_courses":[]},{"semester_year":2021,"semester_season":0,"semester_courses":[]},{"semester_year":2021,"semester_season":2,"semester_courses":[]},{"semester_year":2022,"semester_season":0,"semester_courses":[]}]}'.substring(40);
 				});
 
 				runTest("Plan.course_code_to_object finds the correct course object", () => {
@@ -230,25 +230,29 @@
 					let local_string = localStorage.getItem("gpg-1-Test");
 					return (exec.plan.plan_to_string().length == local_string.length);
 				});
-				/*
-				runTest("Tests if add_error() is retained", () => {
+
+				runTest("Tests if loadPlan() loads from local", () => {
+					let exec = new Executive(true);
+					exec.plan = new Plan("Computer Science", FALL, 2018);
+					exec.savePlan("Test");
+					let local_string = localStorage.getItem("gpg-1-Test");
+					exec.loadPlan("Test");
+					return (exec.plan.plan_to_string().length == local_string.length);
+				});
+
+				runTest("Tests if add_error() is created", () => {
 					let exec = new Executive(true);
 					exec.plan = new Plan("Computer Science", FALL, 2018);
 					exec.add_error("Test String Error");
-
-
-					return (false);
+					console.log(document.getElementById("notifications").firstChild.innerHTML);
+					return ("Test String Error" == document.getElementById("notifications").firstChild.innerHTML);
 				});
-				*/
 
-				runTest("Tests makeElement() format", () => {
+				runTest("Tests makeElement() is created", () => {
 					let exec = new Executive(true);
 					exec.plan = new Plan("Computer Science", FALL, 2018);
-					for (let id of ["notifications", "print-notifications"]) {
-						exec.makeElement("li", id, "Error");
-					}
-					console.log(["notifications", "print-notifications"]);
-					return (false);
+					exec.makeElement("li", "make-tester", "Test Make", 1);
+					return ("Test Make" == document.getElementById("make-tester").firstChild.innerHTML);
 				});
 
 				startSection("Arrow class"); // ===============================
@@ -411,6 +415,9 @@
 		<div style="position:absolute;left:-9999px;top:-9999px;"> <!-- Place any HTML elements required to run tests here -->
 			<table id="course-grid" style="width:400px; height:600px"></table>
 			<div id="arrows"></div>
+			<div id="make-tester"></div>
+			<div id="notifications"></div>
+			<div id="print-notifications"></div>
 		</div>
 	</body>
 </html>
